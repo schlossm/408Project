@@ -1,4 +1,4 @@
-package dfDatabaseFramework;
+package dfDatabaseFramework.DFSQL;
 
 public class DFSQLClauseStruct
 {

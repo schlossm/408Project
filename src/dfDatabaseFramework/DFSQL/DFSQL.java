@@ -1,7 +1,7 @@
-package dfDatabaseFramework;
-import dfDatabaseFramework.JoinStruct;
-import dfDatabaseFramework.WhereStruct;
-import dfDatabaseFramework.DFSQLClauseStruct;
+package dfDatabaseFramework.DFSQL;
+import dfDatabaseFramework.DFSQL.JoinStruct;
+import dfDatabaseFramework.DFSQL.WhereStruct;
+import dfDatabaseFramework.DFSQL.DFSQLClauseStruct;
 import java.util.*;
 
 public class DFSQL 
