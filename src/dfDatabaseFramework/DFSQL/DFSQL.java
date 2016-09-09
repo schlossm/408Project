@@ -54,7 +54,7 @@ public class DFSQL
     		}
     		
     		returnString = returnString.substring(0, returnString.length() - 2) + ";";
-    		System.out.print(returnString);
+    		System.out.println(returnString);
     	}
     	
     	return returnString;
