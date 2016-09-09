@@ -5,16 +5,10 @@
  * @author michaelschloss
  *
  */
-package dfDatabase;
-
-///SQL class errors
-enum MSSQLError
-{
-	conditionAlreadyExists, conditionNotOfEquivelentSize, cannotUseAllRowsSQLSpecifier, cannotUseEmptyValue, lengthTooLong, conditionsMustBeEqual;
-}
+package dfDatabaseFramework;
 
 ///The various clauses to perform Joins and Where Statements
-enum MSSQLConjunctionClause
+enum DFSQLConjunctionClause
 {
 	and, or, none, equals, notEquals, greaterThan, lessThan, greaterThanOrEqualTo, lessThanOrEqualTo,
 	leftOuter, rightOuter, fullOuter, cross, inner, natural;
