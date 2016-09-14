@@ -1,4 +1,5 @@
-package objects;
+package UIKit;
+import objects.*;
 
 /*
  * LocalStorage.java
