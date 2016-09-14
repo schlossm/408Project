@@ -17,6 +17,8 @@ public class DFSQL
     private DFSQLClauseStruct[] updateStatements;
     private ArrayList<DFSQL> appendedDFSQL;
     
+    public String formattedSQLStatement = this.formattedSQLStatement();
+    
     public DFSQL() { }
     
     public DFSQL append(DFSQL object)
@@ -26,13 +28,13 @@ public class DFSQL
         return this;
     }
     
-    public String formattedSQLStatement() throws DFSQLError
+    String formattedSQLStatement()
     {
     	String returnString = "";
     	if (updateStatements != null)	//This will be an UPDATE SET
     	{
-    		if (fromTables == null)		{ throw DFSQLError.cannotUseEmptyValue; }
-    		if (fromTables.length != 1)	{ throw DFSQLError.lengthTooLong; }
+    		if (fromTables == null)		{ return ""; }
+    		if (fromTables.length != 1)	{ return ""; }
     		
     		returnString = "UPDATE `" + fromTables[0] + "` SET ";
     		

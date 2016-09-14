@@ -1,8 +1,4 @@
 package database;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.lang.reflect.Field;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -34,7 +30,7 @@ public class DFDatabase
 	private final String readFile			= "ReadFile.php";
 	private final String writeFile			= "WriteFile.php";
 	private final String websiteUserName	= "";
-    private final String websiteUserPass	= "";
+	private final String websiteUserPass	= "";
     private final String databaseUserPass	= "";
     private final String encryptionKey		= "";
     private final char[] hexArray			= "0123456789ABCDEF".toCharArray();
@@ -42,14 +38,14 @@ public class DFDatabase
     public final DFDataDownloader dataDownloader	= new DFDataDownloader(website, readFile, websiteUserName, websiteUserPass, databaseUserPass);
 	public final DFDataUploader dataUploader		= new DFDataUploader(website, writeFile, websiteUserName, websiteUserPass, databaseUserPass);
 	
-	public final DFDataSizePrinter dataSizePrinter = new DFDataSizePrinter();
+	public final DFDataSizePrinter dataSizePrinter = DFDataSizePrinter.current;
 	
 	Cipher encryptor, decryptor;
 	
 	private DFDatabase() 
 	{ 
 		try 
-		{
+		{			
 			Security.addProvider(new BouncyCastleProvider());
 			
 			encryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
@@ -152,13 +148,12 @@ public class DFDatabase
         return new String(hexChars);
     }
     
-    public static byte[] hexToBytes(String s) 
+    private byte[] hexToBytes(String s) 
     {
         int len = s.length();
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-                                 + Character.digit(s.charAt(i+1), 16));
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i+1), 16));
         }
         return data;
     }

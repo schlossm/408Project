@@ -2,9 +2,9 @@ package dfDatabaseFramework.DFSQL;
 
 public class WhereStruct 
 {
-	public DFSQLConjunctionClause conjunction;
-	public DFSQLConjunctionClause joiner;
-	public DFSQLClauseStruct clause;
+	DFSQLConjunctionClause conjunction;
+	DFSQLConjunctionClause joiner;
+	DFSQLClauseStruct clause;
 	
 	public WhereStruct(DFSQLConjunctionClause conjunction, DFSQLConjunctionClause joiner, DFSQLClauseStruct clause)
 	{

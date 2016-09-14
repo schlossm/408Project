@@ -3,6 +3,10 @@ import java.util.*;
 
 public class DFDataSizePrinter
 {
+	public static final DFDataSizePrinter current = new DFDataSizePrinter();
+	
+	private DFDataSizePrinter() { }
+	
 	public void printDataSize(Integer dataSize)
     {
         Integer startSize = 0;

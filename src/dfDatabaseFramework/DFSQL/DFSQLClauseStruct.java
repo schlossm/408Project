@@ -2,8 +2,8 @@ package dfDatabaseFramework.DFSQL;
 
 public class DFSQLClauseStruct
 {
-	public String leftHandSide;
-	public String rightHandSide;
+	String leftHandSide;
+	String rightHandSide;
 	
 	public DFSQLClauseStruct(String left, String right)
 	{
