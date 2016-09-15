@@ -42,6 +42,9 @@ public class DFDatabase
 	
 	Cipher encryptor, decryptor;
 	
+	/*
+	 * @deprecated Use `defaultDatabase` instead to return the singleton instance of DFDatabase
+	 */
 	private DFDatabase() 
 	{ 
 		try 
@@ -109,6 +112,16 @@ public class DFDatabase
     
     public String encryptString(String decryptedString)
     {
+    	return decryptedString;
+    }
+    
+    public String decryptString(String encryptedString)
+    {
+    	return encryptedString;
+    }
+    
+    String _encryptString(String decryptedString)
+    {
     	byte[] byteText = decryptedString.getBytes();
 		try
 		{
@@ -122,7 +135,7 @@ public class DFDatabase
 		}
     }
     
-    public String decryptString(String encryptedString)
+    String _decryptString(String encryptedString)
     {
     	byte[] byteText = hexToBytes(encryptedString);
 		try
