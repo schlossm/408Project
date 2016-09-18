@@ -9,9 +9,11 @@ import JSON_translation.*;
  */
 public class User {
 	private String username;
+	
 	public enum UserType {
 		USER, MOD, ADMIN
 	}
+	
 	private UserType userType;
 	private boolean isBanned;
 	
