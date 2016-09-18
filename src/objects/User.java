@@ -1,5 +1,6 @@
 package objects;
 import JSON_translation.*;
+import java.io.Serializable;
 
 /*
  * User.java
@@ -7,7 +8,7 @@ import JSON_translation.*;
  * 
  * Object that holds user data
  */
-public class User {
+public class User implements Serializable {
 	private String username;
 	
 	public enum UserType {
