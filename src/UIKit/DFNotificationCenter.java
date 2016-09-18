@@ -14,6 +14,9 @@ class DFNotificationCenterObject
 	}
 }
 
+/*
+*	An extremely simply Notification Observer and Poster
+*/
 public class DFNotificationCenter
 {
 	public static final DFNotificationCenter defaultCenter = new DFNotificationCenter();
