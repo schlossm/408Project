@@ -17,7 +17,7 @@ public class main
 		System.out.println(database.decryptString(database.encryptString("How are you")));
 		
 		User testUser = new User("username"); // can be deleted eventually
-		System.out.println(testUser.toString());
+		System.out.println(testUser.toString()); // ""
 	}
 
 }
