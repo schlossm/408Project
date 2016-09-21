@@ -1,5 +1,7 @@
 package database;
 import java.lang.reflect.Field;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -26,17 +28,17 @@ public class DFDatabase
 {
 	public static final DFDatabase defaultDatabase = new DFDatabase();
 	
-	private final String website			= "";
+	private final String website			= "debateforum.michaelschlosstech.com";
 	private final String readFile			= "ReadFile.php";
 	private final String writeFile			= "WriteFile.php";
-	private final String websiteUserName	= "";
-	private final String websiteUserPass	= "";
-    private final String databaseUserPass	= "";
+	private final String websiteUserName	= "DFJavaApp";
+	private final String websiteUserPass	= "3xT-MA8-HEm-sTd";
+    private final String databaseUserPass	= "3xT-MA8-HEm-sTd";
     private final String encryptionKey		= "";
     private final char[] hexArray			= "0123456789ABCDEF".toCharArray();
     
-    public final DFDataDownloader dataDownloader	= new DFDataDownloader(website, readFile, websiteUserName, websiteUserPass, databaseUserPass);
-	public final DFDataUploader dataUploader		= new DFDataUploader(website, writeFile, websiteUserName, websiteUserPass, databaseUserPass);
+    private final DFDataDownloader dataDownloader	= new DFDataDownloader(website, readFile, websiteUserName, databaseUserPass);
+	private final DFDataUploader   dataUploader		= new DFDataUploader(website, writeFile, websiteUserName, databaseUserPass);
 	
 	public final DFDataSizePrinter dataSizePrinter = DFDataSizePrinter.current;
 	
@@ -67,6 +69,12 @@ public class DFDatabase
 			IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
 			encryptor.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
 			decryptor.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
+			
+			Authenticator.setDefault (new Authenticator() {
+			    protected PasswordAuthentication getPasswordAuthentication() {
+			        return new PasswordAuthentication (websiteUserName, websiteUserPass.toCharArray());
+			    }
+			});
 		} 
 		catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e)
 		{

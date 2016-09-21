@@ -15,18 +15,16 @@ public class DFDataUploader
 {
 	private String website;
 	private String writeFile;
-	private String websiteUserName;
-    private String websiteUserPass;
+	private String databaseUserName;
     private String databaseUserPass;
     
     public DFDatabaseCallbackDelegate delegate;
 	
-    public DFDataUploader(String website, String writeFile, String websiteUserName, String websiteUserPass, String databaseUserPass)
+    public DFDataUploader(String website, String writeFile, String databaseUserName, String databaseUserPass)
     {
     	this.website = website;
     	this.writeFile = writeFile;
-    	this.websiteUserName = websiteUserName;
-    	this.websiteUserPass = websiteUserPass;
+    	this.databaseUserName = databaseUserName;
     	this.databaseUserPass = databaseUserPass;
     }
     
@@ -34,7 +32,7 @@ public class DFDataUploader
 	{
 		try
 		{
-			String urlParameters  = "Password="+ databaseUserPass + "&Username="+ websiteUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement;
+			String urlParameters  = "Password="+ databaseUserPass + "&Username="+ databaseUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement;
 			byte[] postData       = urlParameters.getBytes(StandardCharsets.UTF_8);
 			int    postDataLength = postData.length;
 			String request        = website + "/" + writeFile;

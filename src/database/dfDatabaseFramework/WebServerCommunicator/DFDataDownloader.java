@@ -18,18 +18,16 @@ public class DFDataDownloader
 {
 	private String website;
 	private String readFile;
-	private String websiteUserName;
-    private String websiteUserPass;
+	private String databaseUserName;
     private String databaseUserPass;
     
     public DFDatabaseCallbackDelegate delegate;
 	
-    public DFDataDownloader(String website, String readFile, String websiteUserName, String websiteUserPass, String databaseUserPass)
+    public DFDataDownloader(String website, String readFile, String databaseUserName, String databaseUserPass)
     {
     	this.website = website;
     	this.readFile = readFile;
-    	this.websiteUserName = websiteUserName;
-    	this.websiteUserPass = websiteUserPass;
+    	this.databaseUserName = databaseUserName;
     	this.databaseUserPass = databaseUserPass;
     }
     
@@ -37,7 +35,7 @@ public class DFDataDownloader
 	{
 		try
 		{
-			String urlParameters  = "Password="+ databaseUserPass + "&Username="+ websiteUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement;
+			String urlParameters  = "Password="+ databaseUserPass + "&Username="+ databaseUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement;
 			byte[] postData       = urlParameters.getBytes(StandardCharsets.UTF_8);
 			int    postDataLength = postData.length;
 			String request        = website + "/" + readFile;
