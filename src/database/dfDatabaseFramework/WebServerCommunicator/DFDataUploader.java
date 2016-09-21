@@ -32,7 +32,7 @@ public class DFDataUploader
 	{
 		try
 		{
-			String urlParameters  = "Password="+ databaseUserPass + "&Username="+ databaseUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement;
+			String urlParameters  = "Password="+ databaseUserPass + "&Username="+ databaseUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement();
 			byte[] postData       = urlParameters.getBytes(StandardCharsets.UTF_8);
 			int    postDataLength = postData.length;
 			String request        = website + "/" + writeFile;

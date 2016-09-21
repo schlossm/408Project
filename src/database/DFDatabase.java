@@ -28,7 +28,7 @@ public class DFDatabase
 {
 	public static final DFDatabase defaultDatabase = new DFDatabase();
 	
-	private final String website			= "debateforum.michaelschlosstech.com";
+	private final String website			= "http://debateforum.michaelschlosstech.com";
 	private final String readFile			= "ReadFile.php";
 	private final String writeFile			= "WriteFile.php";
 	private final String websiteUserName	= "DFJavaApp";
@@ -84,41 +84,16 @@ public class DFDatabase
     
     public void executeSQLStatement(DFSQL statement, DFDatabaseCallbackDelegate delegate)
     {
-    	try
+    	if (statement.formattedSQLStatement().contains("UPDATE") || statement.formattedSQLStatement().contains("INSERT"))
     	{
-    		Field field = DFSQL.class.getDeclaredField("updateStatements");
-    		field.setAccessible(true);
-    		field.get(statement);
-    		
     		dataUploader.delegate = delegate;
     		dataUploader.uploadDataWith(statement);
     	}
-    	catch (Exception e)
+    	else
     	{
-    		if (e.getClass() == NullPointerException.class)
-    		{
-    			try
-    	    	{
-    	    		Field field = DFSQL.class.getDeclaredField("insertRows");
-    	    		Field field2 = DFSQL.class.getDeclaredField("insertData");
-    	    		field.setAccessible(true);
-    	    		field2.setAccessible(true);
-    	    		field.get(statement);
-    	    		field2.get(statement);
-    	    		
-    	    		dataUploader.delegate = delegate;
-    	    		dataUploader.uploadDataWith(statement);
-    	    	}
-    	    	catch (Exception e2)
-    	    	{
-    	    		dataDownloader.delegate = delegate;
-    	    		dataDownloader.downloadDataWith(statement);
-    	    		return;
-    	    	}
-    		}
-    		return;
+    		dataDownloader.delegate = delegate;
+    		dataDownloader.downloadDataWith(statement);
     	}
-    	return;
     }
     
     public String encryptString(String decryptedString)

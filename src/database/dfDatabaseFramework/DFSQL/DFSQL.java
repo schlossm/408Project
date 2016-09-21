@@ -17,8 +17,6 @@ public class DFSQL
     private DFSQLClauseStruct[] updateStatements;
     private ArrayList<DFSQL> appendedDFSQL;
     
-    public String formattedSQLStatement = this.formattedSQLStatement();
-    
     public DFSQL() { }
     
     public DFSQL append(DFSQL object)
@@ -28,7 +26,7 @@ public class DFSQL
         return this;
     }
     
-    String formattedSQLStatement()
+    public final String formattedSQLStatement()
     {
     	String returnString = "";
     	if (updateStatements != null)	//This will be an UPDATE SET
@@ -57,8 +55,50 @@ public class DFSQL
     		
     		returnString = returnString.substring(0, returnString.length() - 2) + ";";
     		System.out.println(returnString);
+    		return returnString;
     	}
     	
+    	if (insertRows != null)
+    	{
+    		if (fromTables == null)		{ return ""; }
+    		if (fromTables.length != 1)	{ return ""; }
+    		
+    		returnString = "INSERT INTO `" + fromTables[0] + "`(";
+    		for (String row : insertRows)
+    		{
+    			returnString += row + ",";
+    		}
+    		returnString = returnString.substring(0, returnString.length() - 1) + ") VALUES (";
+    		for (String value : insertData)
+    		{
+    			if (value.contains(" "))
+    			{
+    				returnString += "'" + value + "',";
+    			}
+    			else
+    			{
+    				returnString += value + ",";
+    			}
+    		}
+    		returnString = returnString.substring(0, returnString.length() - 1) + ");";
+    		return returnString;
+    	}
+    	
+    	if (selectRows == null) return ""; //We're assuming all that's left is SELECT statements
+    	
+    	returnString = "SELECT ";
+    	for (String row : selectRows)
+    	{
+    		returnString += row + ",";
+    	}
+    	returnString = returnString.substring(0, returnString.length() - 1) + " FROM ";
+    	for (String table : fromTables)
+    	{
+    		returnString += table + ",";
+    	}
+    	returnString = returnString.substring(0, returnString.length() - 1);
+    	
+    	returnString += ";";
     	return returnString;
     }
     
