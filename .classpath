@@ -2,5 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="src/dfDatabaseFramework/bcprov-ext-jdk15on-155.jar"/>
+	<classpathentry kind="lib" path="src/dfDatabaseFramework/commons-crypto-1.0.0-sources.jar"/>
+	<classpathentry kind="lib" path="src/dfDatabaseFramework/commons-crypto-1.0.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
