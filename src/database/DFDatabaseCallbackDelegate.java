@@ -8,7 +8,7 @@ import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploaderReturnSt
 public interface DFDatabaseCallbackDelegate
 {
 	/*
-	 * Called once data is done downloading from or uploading to the database.
+	 * Called once data is done downloading from the database.
 	 * @param error error will be null if call was successful, else it'll contain relevant info.
 	 */
 	public void returnedData(@Nullable JsonObject jsonObject, @Nullable DFError error);
