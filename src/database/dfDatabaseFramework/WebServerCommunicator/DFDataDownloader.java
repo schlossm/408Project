@@ -62,7 +62,7 @@ public class DFDataDownloader
 	        
 	        if (response == "" ||  response == null || response.contains("No Data"))
 	        {
-	        	DFError error = new DFError(1, "No data was returned.  Please check the SQL Statement delivered and try again.");
+	        	DFError error = new DFError(1, "No data was returned.  Please try again if this is in error");
 	        	delegate.returnedData(null, error);
 	        }
 	        else
@@ -74,7 +74,7 @@ public class DFDataDownloader
 		}
 		catch(Exception e)
 		{
-			DFError error = new DFError(0, "There was an unkown error.  Please check the SQL Statement delivered and try again.");
+			DFError error = new DFError(0, "There was an unkown error.  Please try again.");
         	delegate.returnedData(null, error);
 		}
 		finally

@@ -16,8 +16,6 @@ import objects.*;
  */
 public class Main implements DFDatabaseCallbackDelegate
 {
-	boolean done = false;
-	
 	public static void main(String[] args)
 	{
 		new Main().uploadTest();
@@ -28,10 +26,12 @@ public class Main implements DFDatabaseCallbackDelegate
 		DFDatabase database = DFDatabase.defaultDatabase;
 		try
 		{
-			database.executeSQLStatement(new DFSQL().select("userID").from("User"), this);
-			
-			while (done==false);
-		} catch (DFSQLError e) 
+			String[] rows = { "moderated", "postID" };
+			String[] values = { "0", "2" };
+			DFSQL statement = new DFSQL().select("userID").from("User");//.joinOn("UserComment", "userID", "2").whereAndEquals(rows, values);
+			database.executeSQLStatement(statement, this);
+		} 
+		catch (DFSQLError e) 
 		{
 			e.printStackTrace();
 		}
@@ -46,15 +46,21 @@ public class Main implements DFDatabaseCallbackDelegate
 		}
 		else
 		{
-			System.out.println(jsonObject.toString());
+			System.out.println(jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("userID")); //prints 'testuser'
 		}
-		done = true;
 	}
 
 	@Override
 	public void uploadStatus(DFDataUploaderReturnStatus success, DFError error) 
 	{
-		
+		if (error != null)
+		{
+			System.out.println(error.description);
+		}
+		else
+		{
+			System.out.println(success);
+		}
 	}
 
 }
