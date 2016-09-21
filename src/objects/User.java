@@ -18,6 +18,9 @@ public class User implements Serializable {
 	private UserType userType;
 	private boolean isBanned;
 	
+	/*
+	 * Constructor for existing user
+	 */
 	public User(String username) {
 		/*
 		 * TODO: Get values from database
@@ -25,10 +28,17 @@ public class User implements Serializable {
 		this.username = username;
 		this.userType = UserType.USER;
 		this.isBanned = false;
-		
-		/*
-		 * TODO: handle new user
-		 */
+	}
+	
+	/*
+	 * Constructor for JSON translation
+	 * layer to use for a new user to
+	 * pass back to the UI layer
+	 */
+	public User(String username, UserType userType, boolean isBanned) {
+		this.username = username;
+		this.userType = userType;
+		this.isBanned = isBanned;
 	}
 	
 	public String getUsername() {
