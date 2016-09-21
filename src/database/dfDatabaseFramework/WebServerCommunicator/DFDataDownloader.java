@@ -35,12 +35,12 @@ public class DFDataDownloader
 	{
 		try
 		{
-			String urlParameters  = "Password="+ databaseUserPass + "&Username="+ databaseUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement;
-			byte[] postData       = urlParameters.getBytes(StandardCharsets.UTF_8);
-			int    postDataLength = postData.length;
-			String request        = website + "/" + readFile;
-			URL    url            = new URL(request);
-			HttpURLConnection conn= (HttpURLConnection)url.openConnection();           
+			String urlParameters 	= "Password="+ databaseUserPass + "&Username="+ databaseUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement;
+			byte[] postData       	= urlParameters.getBytes(StandardCharsets.UTF_8);
+			int    postDataLength 	= postData.length;
+			String request        	= website + "/" + readFile;
+			URL    url            	= new URL(request);
+			HttpURLConnection conn	= (HttpURLConnection)url.openConnection();           
 			conn.setDoOutput(true);
 			conn.setInstanceFollowRedirects(false);
 			conn.setRequestMethod("POST");
@@ -48,7 +48,7 @@ public class DFDataDownloader
 			conn.setRequestProperty("charset", "utf-8");
 			conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
 			conn.setUseCaches(false);
-			try( DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) 
+			try(DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) 
 			{
 			   wr.write(postData);
 			}
@@ -59,7 +59,7 @@ public class DFDataDownloader
 	            sb.append((char)c);
 	        String response = sb.toString();
 	        
-	        if (response == "" ||  response == null)
+	        if (response == "" ||  response == null || response.contains("No Data"))
 	        {
 	        	DFError error = new DFError(1, "No data was returned.  Please check the SQL Statement delivered and try again.");
 	        	delegate.returnedData(null, error);
