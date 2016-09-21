@@ -3,6 +3,8 @@ import JSON_translation.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.sun.istack.internal.Nullable;
+
 
 public class Debate implements Serializable {
 	boolean isOpen;
@@ -20,8 +22,8 @@ public class Debate implements Serializable {
 	void closeDebate(Debate toBeClosed){
 		toBeClosed.isOpen = false;
 	}
-	Debate getDebateWithTitle(String title){
-		Debate oldDebate;
+	@Nullable Debate getDebateWithTitle(String title){
+		Debate oldDebate = null;
 		/*
 		 * TODO: Get old debate from database
 		 */

@@ -1,3 +1,5 @@
+package UI;
+
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;

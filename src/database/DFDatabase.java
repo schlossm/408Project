@@ -17,10 +17,10 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
-import dfDatabaseFramework.DFSQL.DFSQL;
-import dfDatabaseFramework.Utilities.DFDataSizePrinter;
-import dfDatabaseFramework.WebServerCommunicator.DFDataDownloader;
-import dfDatabaseFramework.WebServerCommunicator.DFDataUploader;
+import database.dfDatabaseFramework.DFSQL.DFSQL;
+import database.dfDatabaseFramework.Utilities.DFDataSizePrinter;
+import database.dfDatabaseFramework.WebServerCommunicator.DFDataDownloader;
+import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploader;
 
 public class DFDatabase
 {
@@ -48,7 +48,7 @@ public class DFDatabase
 	private DFDatabase() 
 	{ 
 		try 
-		{			
+		{
 			Security.addProvider(new BouncyCastleProvider());
 			
 			encryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
@@ -74,7 +74,7 @@ public class DFDatabase
 		}
 	}
     
-    public void executeSQLStatement(DFSQL statement)
+    public void executeSQLStatement(DFSQL statement, DFDatabaseCallbackDelegate delegate)
     {
     	try
     	{
@@ -82,6 +82,7 @@ public class DFDatabase
     		field.setAccessible(true);
     		field.get(statement);
     		
+    		dataUploader.delegate = delegate;
     		dataUploader.uploadDataWith(statement);
     	}
     	catch (Exception e)
@@ -97,10 +98,12 @@ public class DFDatabase
     	    		field.get(statement);
     	    		field2.get(statement);
     	    		
+    	    		dataUploader.delegate = delegate;
     	    		dataUploader.uploadDataWith(statement);
     	    	}
     	    	catch (Exception e2)
     	    	{
+    	    		dataDownloader.delegate = delegate;
     	    		dataDownloader.downloadDataWith(statement);
     	    		return;
     	    	}
