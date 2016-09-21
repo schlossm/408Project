@@ -17,8 +17,6 @@ public class DFSQL
     private DFSQLClauseStruct[] updateStatements;
     private ArrayList<DFSQL> appendedDFSQL;
     
-    public String formattedSQLStatement = this.formattedSQLStatement();
-    
     public DFSQL() { }
     
     public DFSQL append(DFSQL object)
@@ -28,7 +26,7 @@ public class DFSQL
         return this;
     }
     
-    String formattedSQLStatement()
+    public final String formattedSQLStatement()
     {
     	String returnString = "";
     	if (updateStatements != null)	//This will be an UPDATE SET
@@ -57,8 +55,157 @@ public class DFSQL
     		
     		returnString = returnString.substring(0, returnString.length() - 2) + ";";
     		System.out.println(returnString);
+    		return returnString;
     	}
     	
+    	if (insertRows != null)
+    	{
+    		if (fromTables == null)		{ return ""; }
+    		if (fromTables.length != 1)	{ return ""; }
+    		
+    		returnString = "INSERT INTO `" + fromTables[0] + "`(";
+    		for (String row : insertRows)
+    		{
+    			returnString += row + ",";
+    		}
+    		returnString = returnString.substring(0, returnString.length() - 1) + ") VALUES (";
+    		for (String value : insertData)
+    		{
+    			if (value.contains(" "))
+    			{
+    				returnString += "'" + value + "',";
+    			}
+    			else
+    			{
+    				returnString += value + ",";
+    			}
+    		}
+    		returnString = returnString.substring(0, returnString.length() - 1) + ");";
+    		return returnString;
+    	}
+    	
+    	if (selectRows == null) return ""; //We're assuming all that's left is SELECT statements
+    	
+    	returnString = "SELECT ";
+    	for (String row : selectRows)
+    	{
+    		returnString += "`" + row + "`,";
+    	}
+    	returnString = returnString.substring(0, returnString.length() - 1) + " FROM ";
+    	for (String table : fromTables)
+    	{
+    		returnString += "`" + table + "`,";
+    	}
+    	returnString = returnString.substring(0, returnString.length() - 1);
+    	
+    	if (joinStatements != null)
+    	{
+    		for (JoinStruct joinStatement : joinStatements)
+    		{
+    			String left = joinStatement.clause.leftHandSide;
+    			String right = joinStatement.clause.rightHandSide;
+    			
+    			if (left.contains(" "))
+    			{
+    				left = "'" + left + "'";
+    			}
+    			if (right.contains(" "))
+    			{
+    				right = "'" + right + "'";
+    			}
+    			
+    			//leftOuter, rightOuter, fullOuter, cross, inner, natural
+    			if (joinStatement.joinType == DFSQLConjunctionClause.natural)
+    			{
+    				returnString += " NATURAL JOIN " + joinStatement.table + " ON " + left + "=" + right;
+    			}
+    			else if (joinStatement.joinType == DFSQLConjunctionClause.leftOuter)
+    			{
+    				returnString += " LEFT OUTER JOIN " + joinStatement.table + " ON " + left + "=" + right;
+    			}
+    			else if (joinStatement.joinType == DFSQLConjunctionClause.rightOuter)
+    			{
+    				returnString += " RIGHT OUTER JOIN " + joinStatement.table + " ON " + left + "=" + right;
+    			}
+    			else if (joinStatement.joinType == DFSQLConjunctionClause.fullOuter)
+    			{
+    				returnString += " FULL OUTER JOIN " + joinStatement.table + " ON " + left + "=" + right;
+    			}
+    			else if (joinStatement.joinType == DFSQLConjunctionClause.cross)
+    			{
+    				returnString += " CROSS JOIN " + joinStatement.table + " ON " + left + "=" + right;
+    			}
+    			else if (joinStatement.joinType == DFSQLConjunctionClause.inner)
+    			{
+    				returnString += " INNER JOIN " + joinStatement.table + " ON " + left + "=" + right;
+    			}
+    		}
+    	}
+    	
+    	if (whereStatements != null)
+    	{
+    		returnString += " WHERE";
+    		for (WhereStruct whereStatement : whereStatements)
+    		{
+    			String left = whereStatement.clause.leftHandSide;
+    			String right = whereStatement.clause.rightHandSide;
+    			
+    			if (left.contains(" "))
+    			{
+    				left = "'" + left + "'";
+    			}
+    			if (right.contains(" "))
+    			{
+    				right = "'" + right + "'";
+    			}
+    			String joiner = "";
+				if (whereStatement.joiner == DFSQLConjunctionClause.equals)
+				{
+					joiner = "=";
+				}
+				else if (whereStatement.joiner == DFSQLConjunctionClause.notEquals)
+				{
+					joiner = "!=";
+				}
+				else if (whereStatement.joiner == DFSQLConjunctionClause.greaterThan)
+				{
+					joiner = ">";
+				}
+				else if (whereStatement.joiner == DFSQLConjunctionClause.greaterThanOrEqualTo)
+				{
+					joiner = ">=";
+				}
+				else if (whereStatement.joiner == DFSQLConjunctionClause.lessThan)
+				{
+					joiner = "<";
+				}
+				else if (whereStatement.joiner == DFSQLConjunctionClause.lessThanOrEqualTo)
+				{
+					joiner = "<=";
+				}
+				
+    			if (whereStatement.conjunction == DFSQLConjunctionClause.none)
+    			{
+    				returnString += " " + left + joiner + right;
+    			}
+    			else
+    			{
+    				String conjunction = "";
+    				if (whereStatement.conjunction == DFSQLConjunctionClause.and)
+    				{
+    					conjunction = " AND";
+    				}
+    				else if (whereStatement.conjunction == DFSQLConjunctionClause.or)
+    				{
+    					conjunction = " OR";
+    				}
+    				
+    				returnString += " " + left + joiner + right + conjunction;
+    			}
+    		}
+    	}
+    	
+    	returnString += ";";
     	return returnString;
     }
     

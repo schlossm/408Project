@@ -1,4 +1,9 @@
+import com.google.gson.JsonObject;
+
 import database.*;
+import database.dfDatabaseFramework.DFSQL.DFSQL;
+import database.dfDatabaseFramework.DFSQL.DFSQLError;
+import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploaderReturnStatus;
 import objects.*;
 
 /*
@@ -9,15 +14,53 @@ import objects.*;
  * Executable starter function:
  * loads UI among other things
  */
-public class Main
+public class Main implements DFDatabaseCallbackDelegate
 {
 	public static void main(String[] args)
 	{
+		new Main().uploadTest();
+	}
+	
+	public void uploadTest()
+	{
 		DFDatabase database = DFDatabase.defaultDatabase;
-		System.out.println(database.decryptString(database.encryptString("How are you")));
-		
-		User testUser = new User("username"); // can be deleted eventually
-		System.out.println(testUser.toString()); // ""
+		try
+		{
+			String[] rows = { "moderated", "postID" };
+			String[] values = { "0", "2" };
+			DFSQL statement = new DFSQL().select("userID").from("User");//.joinOn("UserComment", "userID", "2").whereAndEquals(rows, values);
+			database.executeSQLStatement(statement, this);
+		} 
+		catch (DFSQLError e) 
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void returnedData(JsonObject jsonObject, DFError error)
+	{
+		if (error != null)
+		{
+			System.out.println(error.description);
+		}
+		else
+		{
+			System.out.println(jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("userID")); //prints 'testuser'
+		}
+	}
+
+	@Override
+	public void uploadStatus(DFDataUploaderReturnStatus success, DFError error) 
+	{
+		if (error != null)
+		{
+			System.out.println(error.description);
+		}
+		else
+		{
+			System.out.println(success);
+		}
 	}
 
 }
