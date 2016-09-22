@@ -45,7 +45,7 @@ public class User implements Serializable {
 		this.username = username;
 		this.userType = userType;
 		this.isBanned = isBanned;
-	}
+	}	
 	
 	public String getUsername() {
 		return this.username;
