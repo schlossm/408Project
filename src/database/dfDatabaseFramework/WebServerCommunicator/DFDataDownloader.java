@@ -55,12 +55,13 @@ public class DFDataDownloader
 			   wr.write(postData);
 			}
 
-			DFDatabase.defaultDatabase.dataSizePrinter.printDataSize(conn.getContentLength());
+
 			Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 			StringBuilder sb = new StringBuilder();
 	        for (int c; (c = in.read()) >= 0;)
 	            sb.append((char)c);
 	        String response = sb.toString();
+			DFDatabase.defaultDatabase.dataSizePrinter.printDataSize(response.length());
 	        
 	        if (Objects.equals(response, "") || response.contains("No Data"))
 	        {

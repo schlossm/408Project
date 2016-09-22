@@ -34,7 +34,7 @@ public class DFDatabase
 	public final DFDataSizePrinter dataSizePrinter = DFDataSizePrinter.current;
 	
 	private Cipher encryptor, decryptor;
-	
+
 	/*
 	 * @deprecated Use `defaultDatabase` instead to return the singleton instance of DFDatabase
 	 */

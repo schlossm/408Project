@@ -27,10 +27,10 @@ public class User implements Serializable {
 		/*
 		 * TODO: Get values from database
 		 */
-		this.jsonQuery = new UserQuery();
+		jsonQuery = new UserQuery();
 		
 		this.username = username;
-		this.userType = userType.USER; //this.jsonQuery.getUserPriv(username);
+		this.userType = UserType.USER; //this.jsonQuery.getUserPriv(username);
 		this.isBanned = false; //this.jsonQuery.getUserBanStatus(username);
 	}
 	
@@ -40,7 +40,7 @@ public class User implements Serializable {
 	 * pass back to the UI layer
 	 */
 	public User(String username, UserType userType, boolean isBanned) {
-		this.jsonQuery = new UserQuery();
+		jsonQuery = new UserQuery();
 		
 		this.username = username;
 		this.userType = userType;
