@@ -1,5 +1,6 @@
 import database.*;
 import objects.*;
+import UI.*;
 
 /*
  * Main.java
@@ -18,6 +19,8 @@ public class main
 		
 		User testUser = new User("username"); // can be deleted eventually
 		System.out.println(testUser.toString()); // ""
+		
+		Frame frame = new Frame("School of Thought");
 	}
 
 }

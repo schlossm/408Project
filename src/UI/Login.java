@@ -1,3 +1,7 @@
+package UI;
+
+import objects.*;
+import database.*;
 import javax.swing.JPanel;
 import javax.swing.JFormattedTextField;
 import javax.swing.JPasswordField;
@@ -15,7 +19,7 @@ public class Login extends JPanel implements ActionListener{
 	public JButton logIn;
 	public Frame frame;
 	
-	public Login() {
+	public Login(Frame f) {
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -38,19 +42,23 @@ public class Login extends JPanel implements ActionListener{
 		c.gridy = 1;
 		this.add(password, c);
 				
-		logIn = new JButton("Login");
+		logIn = new JButton("Submit");
 		c.gridx = 1;
 		c.gridy = 2;
 		this.add(logIn, c);
 		logIn.setActionCommand("logIn");
-		
+		logIn.addActionListener(this);
 		this.setVisible(true);
 	}
 	
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
+		if (e.getActionCommand().equals("logIn")) {
+			System.out.println("password is " + password.getText());
+			DFDatabase.defaultDatabase.encryptString(password.getText());
+			//if ()
+		}
 	}
 	
 }
