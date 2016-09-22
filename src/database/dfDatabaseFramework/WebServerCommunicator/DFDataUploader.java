@@ -1,4 +1,8 @@
 package database.dfDatabaseFramework.WebServerCommunicator;
+import database.DFDatabaseCallbackDelegate;
+import database.DFError;
+import database.dfDatabaseFramework.DFSQL.DFSQL;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
@@ -6,17 +10,14 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-
-import database.DFDatabaseCallbackDelegate;
-import database.DFError;
-import database.dfDatabaseFramework.DFSQL.DFSQL;
+import java.util.Objects;
 
 public class DFDataUploader 
 {
-	private String website;
-	private String writeFile;
-	private String databaseUserName;
-    private String databaseUserPass;
+	private final String website;
+	private final String writeFile;
+	private final String databaseUserName;
+    private final String databaseUserPass;
     
     public DFDatabaseCallbackDelegate delegate;
 	
@@ -56,9 +57,9 @@ public class DFDataUploader
 	            sb.append((char)c);
 	        String response = sb.toString();
 	        
-	        if (response == "" ||  response == null)
+	        if (Objects.equals(response, ""))
 	        {
-	        	DFError error = new DFError(1, "No data was returned.  Please check the SQL Statement delivered and try again.");
+	        	DFError error = new DFError(1, "No data was returned.   Please try again if this is in error.");
 	        	delegate.uploadStatus(DFDataUploaderReturnStatus.error, error);
 	        	return;
 	        }
@@ -74,7 +75,7 @@ public class DFDataUploader
 		}
 		catch(Exception e)
 		{
-			DFError error = new DFError(0, "There was an unkown error.  Please check the SQL Statement delivered and try again.");
+			DFError error = new DFError(0, "There was an unknown error.  Please try again.");
         	delegate.uploadStatus(DFDataUploaderReturnStatus.error, error);
 		}
 	}

@@ -1,4 +1,11 @@
 package database.dfDatabaseFramework.WebServerCommunicator;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import database.DFDatabase;
+import database.DFDatabaseCallbackDelegate;
+import database.DFError;
+import database.dfDatabaseFramework.DFSQL.DFSQL;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
@@ -6,20 +13,14 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-import database.DFDatabaseCallbackDelegate;
-import database.DFError;
-import database.dfDatabaseFramework.DFSQL.*;
+import java.util.Objects;
 
 public class DFDataDownloader 
 {
-	private String website;
-	private String readFile;
-	private String databaseUserName;
-    private String databaseUserPass;
+	private final String website;
+	private final String readFile;
+	private final String databaseUserName;
+    private final String databaseUserPass;
     
     public DFDatabaseCallbackDelegate delegate;
 	
@@ -53,14 +54,15 @@ public class DFDataDownloader
 			{
 			   wr.write(postData);
 			}
-			
+
+			DFDatabase.defaultDatabase.dataSizePrinter.printDataSize(conn.getContentLength());
 			Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 			StringBuilder sb = new StringBuilder();
 	        for (int c; (c = in.read()) >= 0;)
 	            sb.append((char)c);
 	        String response = sb.toString();
 	        
-	        if (response == "" ||  response == null || response.contains("No Data"))
+	        if (Objects.equals(response, "") || response.contains("No Data"))
 	        {
 	        	DFError error = new DFError(1, "No data was returned.  Please try again if this is in error");
 	        	delegate.returnedData(null, error);
@@ -74,12 +76,8 @@ public class DFDataDownloader
 		}
 		catch(Exception e)
 		{
-			DFError error = new DFError(0, "There was an unkown error.  Please try again.");
+			DFError error = new DFError(0, "There was an unknown error.  Please try again.");
         	delegate.returnedData(null, error);
-		}
-		finally
-		{
-			
 		}
 	}
 }

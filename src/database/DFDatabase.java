@@ -1,14 +1,9 @@
 package database;
-import java.lang.reflect.Field;
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.Security;
-import java.util.Arrays;
+import database.dfDatabaseFramework.DFSQL.DFSQL;
+import database.dfDatabaseFramework.Utilities.DFDataSizePrinter;
+import database.dfDatabaseFramework.WebServerCommunicator.DFDataDownloader;
+import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploader;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -16,13 +11,10 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-
-import database.dfDatabaseFramework.DFSQL.DFSQL;
-import database.dfDatabaseFramework.Utilities.DFDataSizePrinter;
-import database.dfDatabaseFramework.WebServerCommunicator.DFDataDownloader;
-import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploader;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+import java.security.*;
+import java.util.Arrays;
 
 public class DFDatabase
 {
@@ -34,20 +26,19 @@ public class DFDatabase
 	private final String websiteUserName	= "DFJavaApp";
 	private final String websiteUserPass	= "3xT-MA8-HEm-sTd";
     private final String databaseUserPass	= "3xT-MA8-HEm-sTd";
-    private final String encryptionKey		= "";
-    private final char[] hexArray			= "0123456789ABCDEF".toCharArray();
+	private final char[] hexArray			= "0123456789ABCDEF".toCharArray();
     
     private final DFDataDownloader dataDownloader	= new DFDataDownloader(website, readFile, websiteUserName, databaseUserPass);
 	private final DFDataUploader   dataUploader		= new DFDataUploader(website, writeFile, websiteUserName, databaseUserPass);
 	
 	public final DFDataSizePrinter dataSizePrinter = DFDataSizePrinter.current;
 	
-	Cipher encryptor, decryptor;
+	private Cipher encryptor, decryptor;
 	
 	/*
 	 * @deprecated Use `defaultDatabase` instead to return the singleton instance of DFDatabase
 	 */
-	private DFDatabase() 
+	private DFDatabase()
 	{ 
 		try 
 		{
@@ -55,7 +46,8 @@ public class DFDatabase
 			
 			encryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
 			decryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
-			
+
+			String encryptionKey = "";
 			byte[] key = encryptionKey.getBytes();
 			MessageDigest sha = MessageDigest.getInstance("SHA-1");
 			key = sha.digest(key);
@@ -101,12 +93,14 @@ public class DFDatabase
     	return decryptedString;
     }
     
-    public String decryptString(String encryptedString)
+    @SuppressWarnings("unused")
+	public String decryptString(String encryptedString)
     {
     	return encryptedString;
     }
     
-    String _encryptString(String decryptedString)
+    @SuppressWarnings("unused")
+	String _encryptString(String decryptedString)
     {
     	byte[] byteText = decryptedString.getBytes();
 		try
@@ -121,7 +115,8 @@ public class DFDatabase
 		}
     }
     
-    String _decryptString(String encryptedString)
+    @SuppressWarnings("unused")
+	String _decryptString(String encryptedString)
     {
     	byte[] byteText = hexToBytes(encryptedString);
 		try

@@ -1,5 +1,6 @@
 package database;
-import java.util.*;
+
+import java.util.Dictionary;
 
 public class DFError 
 {
