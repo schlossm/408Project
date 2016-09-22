@@ -63,7 +63,7 @@ public class UserTest {
 
 	@Test
 	public void testGetUsername() {
-		String name = "testUser";
+		String name = "testuser";
 		User u = new User(name);
 		assertEquals(name, u.getUsername());
 	}
