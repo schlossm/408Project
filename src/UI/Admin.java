@@ -1,5 +1,6 @@
 package UI;
 
+import objects.*;
 import javax.swing.JPanel;
 import javax.swing.JFormattedTextField;
 import javax.swing.ButtonGroup;
@@ -15,24 +16,32 @@ public class Admin extends JPanel implements ActionListener{
 	public JFormattedTextField searchUser, searchComment;
 	public JButton searchUserButton, banUserButton, unbanUserButton, searchCommentButton, hideCommentButton, showCommentButton;
 	public JRadioButton user, mod, admin;
-	private int privilege; //0 = banned user, 1 = user, 2 = moderator, 3 = administrator
+	private User u;
 	
-	public Admin(int privilege) {
+	public Admin(User u) {
+		this.u = u;
+		
 		label1 = new JLabel("Enter a Username");
 		searchUser = new JFormattedTextField();
 		searchUserButton = new JButton("Search");
 		searchUserButton.setActionCommand("searchUser");
+		searchUser.addActionListener(this);
 		banUserButton = new JButton("Ban");
 		banUserButton.setActionCommand("banUser");
+		banUserButton.addActionListener(this);
 		unbanUserButton = new JButton("Unban");
 		unbanUserButton.setActionCommand("unbanUser");
+		unbanUserButton.addActionListener(this);
 		
 		user = new JRadioButton("User");
 		user.setActionCommand("setUser");
+		user.addActionListener(this);
 		mod = new JRadioButton("Moderator");
 		mod.setActionCommand("setMod");
+		mod.addActionListener(this);
 		admin = new JRadioButton("Administrator");
 		admin.setActionCommand("setAdmin");
+		admin.addActionListener(this);
 		
 		ButtonGroup group = new ButtonGroup();
 		group.add(user);
@@ -43,14 +52,14 @@ public class Admin extends JPanel implements ActionListener{
 		searchComment = new JFormattedTextField();
 		searchCommentButton = new JButton("Search");
 		searchCommentButton.setActionCommand("searchComment");
+		searchCommentButton.addActionListener(this);
 		hideCommentButton = new JButton("Hide");
 		hideCommentButton.setActionCommand("hideComment");
+		hideCommentButton.addActionListener(this);
 		showCommentButton = new JButton("Show");
 		showCommentButton.setActionCommand("showComment");
+		showCommentButton.addActionListener(this);
 		
-
-		
-		this.privilege = privilege;
 		this.add(label1);
 		this.add(searchUser);
 		this.add(searchUserButton);
@@ -69,9 +78,35 @@ public class Admin extends JPanel implements ActionListener{
 	}
 	
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
+		if (e.getActionCommand().equals("searchUser")) {
+			
+		}
+		else if (e.getActionCommand().equals("banUser")) {
+			
+		}
+		else if (e.getActionCommand().equals("unbanUser")) {
+			
+		}
+		else if (e.getActionCommand().equals("setUser")) {
+			
+		}
+		else if (e.getActionCommand().equals("setMod")) {
+			
+		}
+		else if (e.getActionCommand().equals("setAdmin")) {
+			
+		}
+		else if (e.getActionCommand().equals("searchComment")) {
+			
+		}
+		else if (e.getActionCommand().equals("hideComment")) {
+			
+		}
+		else if (e.getActionCommand().equals("showComment")) {
+			
+		}
 	}
 	
 }
