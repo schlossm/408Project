@@ -1,5 +1,6 @@
 import com.google.gson.JsonObject;
 
+import UI.Frame;
 import database.*;
 import database.dfDatabaseFramework.DFSQL.DFSQL;
 import database.dfDatabaseFramework.DFSQL.DFSQLError;
@@ -18,7 +19,7 @@ public class Main implements DFDatabaseCallbackDelegate
 {
 	public static void main(String[] args)
 	{
-		new Main().uploadTest();
+		Frame frame = new Frame("School of Thought");
 	}
 	
 	public void uploadTest()

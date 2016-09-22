@@ -14,21 +14,21 @@ public class Post implements Serializable {
 		this.message = text;
 		this.timeStamp = makeTimestamp();
 	}
-	Post createPost(User user, String text){
+	public Post createPost(User user, String text){
 		Post newPost = new Post(user.getUsername(), text);
 		
 		return newPost;
 	}
-	String getPoster(){
+	public String getPoster(){
 		return this.username;
 	}
-	String getText(){
+	public String getText(){
 		return this.message;
 	}
-	String getTimestamp(){
+	public String getTimestamp(){
 		return this.timeStamp;
 	}
-	String makeTimestamp(){
+	public String makeTimestamp(){
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		 this.timeStamp = dateFormat.format(new Date());
 		 return timeStamp;
