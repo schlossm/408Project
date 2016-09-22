@@ -84,6 +84,15 @@ public class User implements Serializable {
 		return this.isBanned;
 	}
 	
+	public boolean equals(Object o) {
+		if (o != null) {
+			if (o instanceof User && this.toString() == o.toString())
+				return true;
+		}
+		
+		return false;
+	}
+	
 	public String toString() {
 		return "username:\t" + this.username + "\n"
 				+ "userType:\t" + this.userType + "\n"
