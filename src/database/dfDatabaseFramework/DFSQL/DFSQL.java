@@ -49,7 +49,69 @@ public class DFSQL
     			returnString += "`" + left + "`=" + right + ", ";
     		}
     		
-    		returnString = returnString.substring(0, returnString.length() - 2) + ";";
+    		returnString = returnString.substring(0, returnString.length() - 2);
+    		
+    		if (whereStatements != null)
+        	{
+        		returnString += " WHERE";
+        		for (WhereStruct whereStatement : whereStatements)
+        		{
+        			String left = whereStatement.clause.leftHandSide;
+        			String right = whereStatement.clause.rightHandSide;
+        			
+        			if (right.contains(" ") || hasCharacter(right))
+        			{
+        				right = "'" + right + "'";
+        			}
+        			String joiner = "";
+    				if (whereStatement.joiner == DFSQLConjunctionClause.equals)
+    				{
+    					joiner = "=";
+    				}
+    				else if (whereStatement.joiner == DFSQLConjunctionClause.notEquals)
+    				{
+    					joiner = "!=";
+    				}
+    				else if (whereStatement.joiner == DFSQLConjunctionClause.greaterThan)
+    				{
+    					joiner = ">";
+    				}
+    				else if (whereStatement.joiner == DFSQLConjunctionClause.greaterThanOrEqualTo)
+    				{
+    					joiner = ">=";
+    				}
+    				else if (whereStatement.joiner == DFSQLConjunctionClause.lessThan)
+    				{
+    					joiner = "<";
+    				}
+    				else if (whereStatement.joiner == DFSQLConjunctionClause.lessThanOrEqualTo)
+    				{
+    					joiner = "<=";
+    				}
+    				
+        			if (whereStatement.conjunction == DFSQLConjunctionClause.none)
+        			{
+        				returnString += " `" + left + "`" + joiner + right;
+        			}
+        			else
+        			{
+        				String conjunction = "";
+        				if (whereStatement.conjunction == DFSQLConjunctionClause.and)
+        				{
+        					conjunction = " AND";
+        				}
+        				else if (whereStatement.conjunction == DFSQLConjunctionClause.or)
+        				{
+        					conjunction = " OR";
+        				}
+        				
+        				returnString += " `" + left + "`" + joiner + right + conjunction;
+        			}
+        		}
+        	}
+        	
+        	returnString += ";";
+    		
     		System.out.println(returnString);
     		return returnString;
     	}
