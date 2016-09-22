@@ -41,16 +41,12 @@ public class DFSQL
     			String left = statement.leftHandSide;
     			String right = statement.rightHandSide;
     			
-    			if (left.contains(" "))
-    			{
-    				left = "'" + left + "'";
-    			}
-    			if (right.contains(" "))
+    			if (right.contains(" ") || hasCharacter(right))
     			{
     				right = "'" + right + "'";
     			}
     			
-    			returnString += left + "=" + right + ", ";
+    			returnString += "`" + left + "`=" + right + ", ";
     		}
     		
     		returnString = returnString.substring(0, returnString.length() - 2) + ";";
@@ -66,12 +62,12 @@ public class DFSQL
     		returnString = "INSERT INTO `" + fromTables[0] + "`(";
     		for (String row : insertRows)
     		{
-    			returnString += row + ",";
+    			returnString += "`" + row + "`,";
     		}
     		returnString = returnString.substring(0, returnString.length() - 1) + ") VALUES (";
     		for (String value : insertData)
     		{
-    			if (value.contains(" "))
+    			if (value.contains(" ") || hasCharacter(value))
     			{
     				returnString += "'" + value + "',";
     			}
@@ -105,10 +101,6 @@ public class DFSQL
     			String left = joinStatement.clause.leftHandSide;
     			String right = joinStatement.clause.rightHandSide;
     			
-    			if (left.contains(" "))
-    			{
-    				left = "'" + left + "'";
-    			}
     			if (right.contains(" "))
     			{
     				right = "'" + right + "'";
@@ -117,27 +109,27 @@ public class DFSQL
     			//leftOuter, rightOuter, fullOuter, cross, inner, natural
     			if (joinStatement.joinType == DFSQLConjunctionClause.natural)
     			{
-    				returnString += " NATURAL JOIN " + joinStatement.table + " ON " + left + "=" + right;
+    				returnString += " NATURAL JOIN `" + joinStatement.table + "` ON `" + left + "`=" + right;
     			}
     			else if (joinStatement.joinType == DFSQLConjunctionClause.leftOuter)
     			{
-    				returnString += " LEFT OUTER JOIN " + joinStatement.table + " ON " + left + "=" + right;
+    				returnString += " LEFT OUTER JOIN `" + joinStatement.table + "` ON `" + left + "`=" + right;
     			}
     			else if (joinStatement.joinType == DFSQLConjunctionClause.rightOuter)
     			{
-    				returnString += " RIGHT OUTER JOIN " + joinStatement.table + " ON " + left + "=" + right;
+    				returnString += " RIGHT OUTER JOIN `" + joinStatement.table + "` ON `" + left + "`=" + right;
     			}
     			else if (joinStatement.joinType == DFSQLConjunctionClause.fullOuter)
     			{
-    				returnString += " FULL OUTER JOIN " + joinStatement.table + " ON " + left + "=" + right;
+    				returnString += " FULL OUTER JOIN `" + joinStatement.table + "` ON `" + left + "`=" + right;
     			}
     			else if (joinStatement.joinType == DFSQLConjunctionClause.cross)
     			{
-    				returnString += " CROSS JOIN " + joinStatement.table + " ON " + left + "=" + right;
+    				returnString += " CROSS JOIN `" + joinStatement.table + "` ON `" + left + "`=" + right;
     			}
     			else if (joinStatement.joinType == DFSQLConjunctionClause.inner)
     			{
-    				returnString += " INNER JOIN " + joinStatement.table + " ON " + left + "=" + right;
+    				returnString += " INNER JOIN `" + joinStatement.table + "` ON `" + left + "`=" + right;
     			}
     		}
     	}
@@ -150,11 +142,7 @@ public class DFSQL
     			String left = whereStatement.clause.leftHandSide;
     			String right = whereStatement.clause.rightHandSide;
     			
-    			if (left.contains(" "))
-    			{
-    				left = "'" + left + "'";
-    			}
-    			if (right.contains(" "))
+    			if (right.contains(" ") || hasCharacter(right))
     			{
     				right = "'" + right + "'";
     			}
@@ -186,7 +174,7 @@ public class DFSQL
 				
     			if (whereStatement.conjunction == DFSQLConjunctionClause.none)
     			{
-    				returnString += " " + left + joiner + right;
+    				returnString += " `" + left + "`" + joiner + right;
     			}
     			else
     			{
@@ -200,13 +188,31 @@ public class DFSQL
     					conjunction = " OR";
     				}
     				
-    				returnString += " " + left + joiner + right + conjunction;
+    				returnString += " `" + left + "`" + joiner + right + conjunction;
     			}
     		}
     	}
     	
     	returnString += ";";
     	return returnString;
+    }
+    
+    private boolean hasCharacter(String string)
+    {
+    	String lowered = string.toLowerCase();
+    	if (lowered.contains("a") || lowered.contains("b") || lowered.contains("c") ||
+    			lowered.contains("d") || lowered.contains("e") || lowered.contains("f") ||
+    			lowered.contains("g") || lowered.contains("h") || lowered.contains("i") ||
+    			lowered.contains("j") || lowered.contains("k") || lowered.contains("l") ||
+    			lowered.contains("m") || lowered.contains("n") || lowered.contains("o") ||
+    			lowered.contains("p") || lowered.contains("q") || lowered.contains("r") ||
+    			lowered.contains("s") || lowered.contains("t") || lowered.contains("u") ||
+    			lowered.contains("v") || lowered.contains("w") || lowered.contains("x") ||
+    			lowered.contains("y") || lowered.contains("z"))
+    	{
+    		return true;
+    	}
+    	return false;	
     }
     
     //MARK: - SELECT Constructors

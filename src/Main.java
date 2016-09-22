@@ -27,8 +27,8 @@ public class Main implements DFDatabaseCallbackDelegate
 		try
 		{
 			String[] rows = { "moderated", "postID" };
-			String[] values = { "0", "2" };
-			DFSQL statement = new DFSQL().select("userID").from("User");//.joinOn("UserComment", "userID", "2").whereAndEquals(rows, values);
+			String[] values = { "hello", "2" };
+			DFSQL statement = new DFSQL().select("userID").from("User").whereEquals("userID", "testuser");
 			database.executeSQLStatement(statement, this);
 		} 
 		catch (DFSQLError e) 
