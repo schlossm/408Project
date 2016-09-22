@@ -103,7 +103,8 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		int convertedUserType = userPriviligeEnumToIntConverter(newUserType);
 		DFSQL dfsql = new DFSQL();
 		try {
-			dfsql.update("User", "priviligeLevel", String.valueOf(convertedUserType)).whereEquals("userID", userName);
+			dfsql.update("User", "privilegeLevel", String.valueOf(convertedUserType)).whereEquals("userID", userName);
+			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 			return false;
@@ -113,8 +114,11 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 	
 	public boolean updateBanStatus(String userName, boolean newBanStatus){
 		DFSQL dfsql = new DFSQL();
+		int newbanStatusInt = newBanStatus ? 1 : 0;
+		System.out.println(newbanStatusInt);
 		try {
-			dfsql.update("User", "banned", String.valueOf(newBanStatus)).whereEquals("userID", userName);
+			dfsql.update("User", "banned", String.valueOf(newbanStatusInt)).whereEquals("userID", userName);
+			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 			return false;
@@ -158,9 +162,12 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 	public static void main(String[] args)
 	{
 		UserQuery userQuery = new UserQuery();
-		System.out.println(userQuery.getUserPriv("naveenTest1"));
+		//System.out.println(userQuery.getUserBanStatus("naveenTest1"));
 		//userQuery.addNewUser("naveenTest1", "dasdsada", UserType.USER);
-		userQuery.getUser("testuser");
+		userQuery.modifyUserPriv("naveenTest1", UserType.MOD);
+		System.out.println(userQuery.getUserPriv("naveenTest1"));
+		System.out.println(userQuery.getUserPriv("testuser"));
+		//userQuery.getUser("testuser");
 		System.out.println("end reached");
 	}
 }
