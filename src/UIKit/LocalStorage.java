@@ -38,6 +38,7 @@ public class LocalStorage {
 			
 			objOut.writeObject(object);
 			objOut.close();
+			fileOut.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
