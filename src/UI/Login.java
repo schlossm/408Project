@@ -1,6 +1,8 @@
 package UI;
 
 import objects.*;
+import objects.User.UserType;
+import JSON_translation.*;
 import database.*;
 import javax.swing.JPanel;
 import javax.swing.JFormattedTextField;
@@ -19,7 +21,8 @@ public class Login extends JPanel implements ActionListener{
 	public JButton logIn;
 	public Frame frame;
 	
-	public Login(Frame f) {
+	public Login(Frame frame) {
+		this.frame = frame;
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -55,9 +58,31 @@ public class Login extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getActionCommand().equals("logIn")) {
+			UserQuery uq = new UserQuery();
+			//DebateQuery dq = new DebateQuery();
+			//RulesQuery rq = new RulesQuery();
+			//Debate d = dq.getDebateObject();
+			Debate d = null;
+			
 			System.out.println("password is " + password.getText());
-			DFDatabase.defaultDatabase.encryptString(password.getText());
-			//if ()
+			User u = null;
+			if (uq.verifyUserLogin(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()))){
+				u = uq.getUser(username.getText());
+			}
+			if (u != null) {
+				frame.tabs.removeAll();
+				frame.remove(frame.tabs);
+				
+				frame.debate = new DebateThread(u, d);
+				frame.tabs.addTab("Debate", frame.debate);
+				
+				if (u.getUserType().equals(UserType.MOD) || u.getUserType().equals(UserType.ADMIN)) {
+					frame.admin = new Admin(u);
+					frame.tabs.addTab("Administration", frame.admin);
+				}
+				//frame.rules = rq.getRules();
+				//frame.tabs.addTab("Rules", frame.rules);
+			}
 		}
 	}
 	

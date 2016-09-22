@@ -15,8 +15,6 @@ public class Frame extends JFrame {
 	public Frame(String title) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		this.setSize(new Dimension(Window.WIDTH, Window.HEIGHT));
-		
 		login = new Login(this);
 		//debate = new DebateThread("If all living things have a conscious and unconscious thought, can a being with artificial intelligence ever be considered living?", "It seems impossible for a machine to ever have an unconsious thought because code executes exactly what it intends to.", "408Bosses");
 		//debate = new DebateThread();
@@ -27,9 +25,9 @@ public class Frame extends JFrame {
 		tabs = new JTabbedPane();
 		tabs.add("Log In", login);
 		tabs.add("Create Account", account);
-		tabs.add("Debate", debate);
-		tabs.add("Administration", admin);
-		tabs.add("Rules", rules);
+		//tabs.add("Debate", debate);
+		//tabs.add("Administration", admin);
+		//tabs.add("Rules", rules);
 		tabs.setVisible(true);
 		
 		add(tabs);
