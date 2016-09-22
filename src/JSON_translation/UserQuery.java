@@ -3,6 +3,7 @@ package JSON_translation;
 import org.json.*;
 
 import com.google.gson.JsonObject;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import database.DFDatabase;
 import database.DFDatabaseCallbackDelegate;
@@ -14,6 +15,8 @@ import objects.User;
 import objects.User.UserType;
 
 public class UserQuery implements DFDatabaseCallbackDelegate{
+	private JsonObject jsonObject;
+	
 	public User getUser(String username){
 		String userJSONStr, usernameRecieved;
 		UserType userType;
@@ -24,79 +27,87 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		DFSQL dfsql = new DFSQL();
 		String[] selectedRows = {"UserID", "priviligeLevel", "banned"};
 		try {
-			dfsql.select(selectedRows).from("User").whereEquals("userId", username);
-		} catch (DFSQLError e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		//get UsERpRIVILIGE
-		//GET 
-		//DFDATABASE.defaultdatabase.executedsplstaement()
-		
-		userJSONStr = "";
-		JSONObject userJSON;
-		try{
-			userJSON = new JSONObject(userJSONStr);
-			usernameRecieved = userJSON.getString("userID");
-			isBanned = userJSON.getBoolean("banned");
-			switch(userJSON.getInt("priviligeLevel")){
-				case 1 : userType = UserType.MOD;
-					break;
-				case 2 : userType = UserType.ADMIN;
-					break;
-				default : userType = UserType.USER;
-			}
-			//requestedUser = new User(usernameRecieved, userType, isBanned);
-		} catch (Exception e){
-			 
-		}
-		return requestedUser;
-	}
-	
-	public boolean getUserBanStatus(String username){
-		String userJSONStr, usernameRecieved;
-		boolean isBanned;
-		DFSQL dfsql = new DFSQL();
-		try {
-			dfsql.select("banned").from("User").whereEquals("userID", username);
+			dfsql.select(selectedRows).from("User").whereEquals("userID", username);
 			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
 		} catch (DFSQLError e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
-		return true;
+		usernameRecieved = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("userID").getAsString();
+		isBanned = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsBoolean();
+		int userPrivInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel").getAsInt();
+		userType = userPriviligeIntToEnumConverter(userPrivInt);
+		
+		User user = new User(usernameRecieved, userType, isBanned);
+		return user;
+	}
+	
+	public boolean getUserBanStatus(String username){
+		boolean isBanned;
+		try {
+			DFSQL dfsql = new DFSQL().select("banned").from("User").whereEquals("userID", username);
+			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+		} catch (DFSQLError e1) {
+			e1.printStackTrace();
+		}		
+		isBanned = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsBoolean();
+
+		return isBanned;
 	}
 		
-	//Getter 
+	public UserType getUserPriv(String username){
+		try {
+			DFSQL dfsql = new DFSQL().select("privilegeLevel").from("User").whereEquals("userID", username);
+			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+		} catch (DFSQLError e1) {
+			e1.printStackTrace();
+		}
+		int userTypeInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel").getAsInt();
+		System.out.println(userTypeInt);
+		return userPriviligeIntToEnumConverter(userTypeInt);
+	}
 	
-	public boolean addNewUser(String userName, String pw, UserType userType){
+	public User addNewUser(String userName, String pw, UserType userType){
 		//INSERT INTO USER VALUES (userName, pw, userTypeInt, isbanned)
 		int convertedUserType = userPriviligeEnumToIntConverter(userType);
-
+		boolean isaddSuccess;
 		String[] rows = {"userID", "password", "privilegeLevel", "banned"};
 		String[] values = {userName, pw,  String.valueOf(convertedUserType), String.valueOf(0)};
 		DFSQL dfsql = new DFSQL();
 		try {
 			dfsql.insert("User", values, rows);
-			System.out.println(dfsql.formattedSQLStatement);
+			System.out.println(dfsql.formattedSQLStatement());
 			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
 		} catch (DFSQLError e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-			return false;
+			isaddSuccess = false;
 		}
-		return true;
+		isaddSuccess = true;
+		if(isaddSuccess){
+			return getUser(userName);
+		} else {
+			return null;
+		}
 	}
 	
-	public int userPriviligeEnumToIntConverter(UserType userType){
+	private int userPriviligeEnumToIntConverter(UserType userType){
 		if(userType == UserType.USER)
 			return 0;
 		else if(userType == UserType.MOD)
 			return 1;
 		else
 			return 2;
+	}
+	
+	private UserType userPriviligeIntToEnumConverter(int userType){
+		if(userType == 0)
+			return UserType.USER;
+		else if(userType == 1)
+			return UserType.MOD;
+		else
+			return UserType.ADMIN;
 	}
 	
 	public boolean modifyUserPriv(String userName, UserType newUserType){
@@ -129,9 +140,14 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 
 	@Override
 	public void returnedData(JsonObject jsonObject, DFError error) {
-		System.out.println(error.code);
-		System.out.println(error.description);
-		System.out.println(error.userInfo);
+		this.jsonObject = null;
+		if(error != null){
+			System.out.println(error.code);
+			System.out.println(error.description);
+			System.out.println(error.userInfo);
+		} else {
+			this.jsonObject = jsonObject;
+		}
 	}
 
 	@Override
@@ -139,7 +155,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		if(success == DFDataUploaderReturnStatus.success){
 			System.out.println("success uploading this");
 		} else if (success == DFDataUploaderReturnStatus.failure) {
-			System.out.println("Faiylure uploading this");
+			System.out.println("Failure uploading this");
 		}
 		else if(success == DFDataUploaderReturnStatus.error){
 			System.out.println("Error uploading this");
@@ -154,8 +170,9 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 	public static void main(String[] args)
 	{
 		UserQuery userQuery = new UserQuery();
-		//userQuery.getUserBanStatus("testUser");
-		userQuery.addNewUser("naveenTest1", "dasdsada", UserType.USER);
+		userQuery.getUserBanStatus("testuser");
+		//userQuery.addNewUser("naveenTest1", "dasdsada", UserType.USER);
+		
 		System.out.println("end reached");
 	}
 }

@@ -31,6 +31,19 @@ public class User implements Serializable {
 		 */
 	}
 	
+	public User(String username, UserType userType, boolean isBanned) {
+		/*
+		 * TODO: Get values from database
+		 */
+		this.username = username;
+		this.userType = userType;
+		this.isBanned = isBanned;
+		
+		/*
+		 * TODO: handle new user
+		 */
+	}
+	
 	public String getUsername() {
 		return this.username;
 	}
