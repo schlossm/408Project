@@ -9,10 +9,14 @@ public class Post implements Serializable {
 	private String username;
 	private String timeStamp;
 	private String message;
+	private Boolean  isHidden;
+	private int numReports;
 	public  Post(String username, String text){
 		this.username = username;
 		this.message = text;
 		this.timeStamp = makeTimestamp();
+		this.isHidden =  false;
+		this.numReports = 0;
 	}
 	public Post createPost(User user, String text){
 		Post newPost = new Post(user.getUsername(), text);
@@ -35,21 +39,24 @@ public class Post implements Serializable {
 	}
 	
 	public void hidePost() {
-		/* Mod/Admin would hide this post
-		 * TO DO
+		this.isHidden = true;
+		/*
+		 * TODO: Update the UI on if post was hidden
 		 */
 	}
 	
 	public void showPost() {
-		/* Mod/Admin would show this post
-		 * TO DO
+		this.isHidden  = false;
+		/*
+		 * TODO: Update the UI on if post was shown
 		 */
 	}
 	
 	public void report() {
-		/* Mod/Admin would be notified that this post was reported
-		 * TO DO
-		 */
+		this.numReports++;	
+	/*
+	 * TODO: Message admin/moderators
+	 */
 	}
 	
 }
