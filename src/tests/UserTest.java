@@ -51,52 +51,78 @@ public class UserTest {
 	 */
 	@Test
 	public void testUser() {
-		fail("Not yet implemented");
+		User u = new User("testusername");
+		assertTrue(u != null);
+	}
+	
+	@Test
+	public void testUser2() {
+		User u = new User("testusername1", User.UserType.USER, false);
+		assertTrue(u != null);
 	}
 
 	@Test
 	public void testGetUsername() {
-		fail("Not yet implemented");
+		String name = "testUser";
+		User u = new User(name);
+		assertEquals(name, u.getUsername());
 	}
 
 	@Test
 	public void testMakeUser() {
-		fail("Not yet implemented");
+		User u = new User("mynewname2643");
+		u.makeUser();
+		assertEquals(u.getUserType(), User.UserType.USER);
 	}
 
 	@Test
 	public void testMakeMod() {
-		fail("Not yet implemented");
+		User u = new User("UserName2048");
+		u.makeMod();
+		assertEquals(u.getUserType(), User.UserType.MOD);
 	}
 
 	@Test
 	public void testMakeAdmin() {
-		fail("Not yet implemented");
+		User u = new User("AlexRosenberg");
+		u.makeAdmin();
+		assertEquals(u.getUserType(), User.UserType.ADMIN);
 	}
 
 	@Test
 	public void testGetUserType() {
-		fail("Not yet implemented");
+		User u = new User("HelloWorld00", User.UserType.USER, false);
+		assertEquals(u.getUserType(), User.UserType.USER);
 	}
 
 	@Test
 	public void testBan() {
-		fail("Not yet implemented");
+		User u = new User("n00tn00t", User.UserType.USER, false);
+		u.ban();
+		assertTrue(u.isBanned());
 	}
 
 	@Test
 	public void testUnban() {
-		fail("Not yet implemented");
+		User u = new User("nootnoot", User.UserType.USER, false);
+		u.unban();
+		assertFalse(u.isBanned());
 	}
 
 	@Test
 	public void testIsBanned() {
-		fail("Not yet implemented");
+		User u = new User("outrageousUserName", User.UserType.USER, false);
+		u.ban();
+		assertTrue(u.isBanned());
 	}
 
 	@Test
 	public void testToString() {
-		fail("Not yet implemented");
+		User u = new User("BigBadAdmin", User.UserType.ADMIN, false);
+		String uToString = "username:\t" + u.getUsername() + "\n"
+				+ "userType:\t" + u.getUserType() + "\n"
+				+ "isBanned\t" + u.isBanned();
+		assertEquals(u.toString(), uToString);
 	}
 
 }
