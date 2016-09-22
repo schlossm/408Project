@@ -27,11 +27,11 @@ public class User implements Serializable {
 		/*
 		 * TODO: Get values from database
 		 */
-		User.jsonQuery = new UserQuery();
+		this.jsonQuery = new UserQuery();
 		
 		this.username = username;
-		this.userType = userType.USER; //User.jsonQuery.getUserPriv(username);
-		this.isBanned = false; //User.jsonQuery.getUserBanStatus(username);
+		this.userType = userType.USER; //this.jsonQuery.getUserPriv(username);
+		this.isBanned = false; //this.jsonQuery.getUserBanStatus(username);
 	}
 	
 	/*
@@ -40,7 +40,7 @@ public class User implements Serializable {
 	 * pass back to the UI layer
 	 */
 	public User(String username, UserType userType, boolean isBanned) {
-		User.jsonQuery = new UserQuery();
+		this.jsonQuery = new UserQuery();
 		
 		this.username = username;
 		this.userType = userType;
@@ -58,7 +58,7 @@ public class User implements Serializable {
 		/*
 		 * TODO: Set value in database
 		 */
-		//if (User.jsonQuery.modifyUserPriv(this.username, UserType.USER))
+		//if (this.jsonQuery.modifyUserPriv(this.username, UserType.USER))
 			this.userType = UserType.USER;
 	}
 	
@@ -66,7 +66,7 @@ public class User implements Serializable {
 		/*
 		 * TODO: Set value in database
 		 */
-		//if (User.jsonQuery.modifyUserPriv(this.username, UserType.MOD))
+		//if (this.jsonQuery.modifyUserPriv(this.username, UserType.MOD))
 			this.userType = UserType.MOD;
 	}
 	
@@ -74,7 +74,7 @@ public class User implements Serializable {
 		/*
 		 * TODO: Set value in database
 		 */
-		//if (User.jsonQuery.modifyUserPriv(this.username, UserType.ADMIN))
+		//if (this.jsonQuery.modifyUserPriv(this.username, UserType.ADMIN))
 			this.userType = UserType.ADMIN;
 	}
 	
@@ -86,7 +86,7 @@ public class User implements Serializable {
 		/*
 		 * TODO: set value in database
 		 */
-		//if (User.jsonQuery.setBanStatus(this.username, true))
+		//if (this.jsonQuery.setBanStatus(this.username, true))
 			this.isBanned = true;
 	}
 	
@@ -94,7 +94,7 @@ public class User implements Serializable {
 		/*
 		 * TODO: set value in database
 		 */
-		//if (User.jsonQuery.setBanStatus(this.username, false))
+		//if (this.jsonQuery.setBanStatus(this.username, false))
 			this.isBanned = false;
 	}
 	
