@@ -38,22 +38,25 @@ public class Post implements Serializable {
 		 return timeStamp;
 	}
 	
-	public void hidePost() {
+	public Boolean hidePost() {
 		this.isHidden = true;
+		return this.isHidden;
 		/*
 		 * TODO: Update the UI on if post was hidden
 		 */
 	}
 	
-	public void showPost() {
+	public Boolean showPost() {
 		this.isHidden  = false;
+		return this.isHidden;
 		/*
 		 * TODO: Update the UI on if post was shown
 		 */
 	}
 	
-	public void report() {
+	public int report() {
 		this.numReports++;	
+		return this.numReports;
 	/*
 	 * TODO: Message admin/moderators
 	 */
