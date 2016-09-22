@@ -1,10 +1,8 @@
 package JSON_translation;
 
-import org.json.*;
 
 import com.google.gson.JsonObject;
 import com.sun.org.apache.bcel.internal.generic.NEW;
-
 import database.DFDatabase;
 import database.DFDatabaseCallbackDelegate;
 import database.DFError;
@@ -43,8 +41,9 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		}		
-		isBanned = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsBoolean();
-
+		int isBannedInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsInt();
+		if(isBannedInt == 0){isBanned = false;}
+		else {isBanned = true;}
 		return isBanned;
 	}
 		
@@ -164,9 +163,9 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		UserQuery userQuery = new UserQuery();
 		//System.out.println(userQuery.getUserBanStatus("naveenTest1"));
 		//userQuery.addNewUser("naveenTest1", "dasdsada", UserType.USER);
-		userQuery.modifyUserPriv("naveenTest1", UserType.MOD);
-		System.out.println(userQuery.getUserPriv("naveenTest1"));
-		System.out.println(userQuery.getUserPriv("testuser"));
+		userQuery.updateBanStatus("testUser", false);
+		System.out.println(userQuery.getUserBanStatus("naveenTest1"));
+		System.out.println(userQuery.getUserBanStatus("testuser"));
 		//userQuery.getUser("testuser");
 		System.out.println("end reached");
 	}
