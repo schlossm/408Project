@@ -35,7 +35,8 @@ public class DFDataDownloader
 	{
 		try
 		{
-			String urlParameters 	= "Password="+ databaseUserPass + "&Username="+ databaseUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement;
+			System.out.println(SQLStatement.formattedSQLStatement());
+			String urlParameters 	= "Password="+ databaseUserPass + "&Username="+ databaseUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement();
 			byte[] postData       	= urlParameters.getBytes(StandardCharsets.UTF_8);
 			int    postDataLength 	= postData.length;
 			String request        	= website + "/" + readFile;
@@ -61,20 +62,24 @@ public class DFDataDownloader
 	        
 	        if (response == "" ||  response == null || response.contains("No Data"))
 	        {
-	        	DFError error = new DFError(1, "No data was returned.  Please check the SQL Statement delivered and try again.");
+	        	DFError error = new DFError(1, "No data was returned.  Please try again if this is in error");
 	        	delegate.returnedData(null, error);
-	        	return;
 	        }
-	        
-	        Gson gsonConverter = new Gson();
-	        JsonObject object = gsonConverter.fromJson(response, JsonObject.class);
-	        
-	        delegate.returnedData(object, null);
+	        else
+	        {
+	        	Gson gsonConverter = new Gson();
+	        	JsonObject object = gsonConverter.fromJson(response, JsonObject.class);
+	        	delegate.returnedData(object, null);
+	        }
 		}
 		catch(Exception e)
 		{
-			DFError error = new DFError(0, "There was an unkown error.  Please check the SQL Statement delivered and try again.");
+			DFError error = new DFError(0, "There was an unkown error.  Please try again.");
         	delegate.returnedData(null, error);
+		}
+		finally
+		{
+			
 		}
 	}
 }
