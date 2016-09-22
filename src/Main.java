@@ -29,7 +29,7 @@ public class Main implements DFDatabaseCallbackDelegate
 		{
 			String[] rows = { "moderated", "postID" };
 			String[] values = { "hello", "2" };
-			DFSQL statement = new DFSQL().select("userID").from("User").whereEquals("userID", "testuser");
+			DFSQL statement = new DFSQL().update("Users", "blah", "blah blah").whereEquals("userID", "testuser");
 			database.executeSQLStatement(statement, this);
 		} 
 		catch (DFSQLError e) 
