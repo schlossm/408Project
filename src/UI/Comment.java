@@ -5,6 +5,7 @@ import objects.*;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import java.awt.BorderLayout;
+import javax.swing.JOptionPane;
 
 import javax.swing.JLabel;
 
@@ -38,7 +39,7 @@ public class Comment extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getActionCommand().equals("report")) {
-			
+			JOptionPane.showMessageDialog(this, "Thank you. This comment has been flagged for revision.");
 		}
 	}
 }

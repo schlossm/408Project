@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
+import javax.swing.JOptionPane;
 import java.awt.Dimension;
 import java.awt.event.*;
 import java.awt.*;
@@ -56,7 +57,7 @@ public class DebateThread extends JPanel implements ActionListener{
 			c.gridy = 2;
 			this.add(addPoll, c);
 			
-			comment = new JTextArea("Write a comment in here");
+			comment = new JTextArea("Write a comment in here.");
 			c.gridx = 1;
 			c.gridy = 2;
 			this.add(comment, c);
@@ -80,7 +81,10 @@ public class DebateThread extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getActionCommand().equals("comment")) {
+			
 			Post userPost = new Post(u.getUsername(), comment.getText());
+			JOptionPane.showMessageDialog(this, "Your comment has beet submitted.");
+			comment.setText("");
 			d.post(userPost);
 			populateComments(d.getPosts());
 		}
@@ -89,17 +93,17 @@ public class DebateThread extends JPanel implements ActionListener{
 	private void populateComments(ArrayList<Post> commentArray) {
 
 		commentList.setLayout(new BoxLayout(commentList, BoxLayout.PAGE_AXIS));
+		commentList.removeAll();
 		JScrollPane scrollPane = new JScrollPane(commentList);
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridwidth = 3;
 		c.gridx = 0;
 		c.gridy = 1;
-		this.remove(commentList);
-		commentList = new JPanel();
 		for (int i = 0; i < commentArray.size(); i++) {
 			commentList.add(new Comment(commentArray.get(i)));
 		}
+		this.remove(1);
 		this.add(scrollPane, c);
 	}
 	

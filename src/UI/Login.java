@@ -9,6 +9,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import java.awt.Dimension;
 import java.awt.event.*;
@@ -20,6 +21,7 @@ public class Login extends JPanel implements ActionListener{
 	public JPasswordField password;
 	public JButton logIn;
 	public Frame frame;
+	public UserQuery uq = new UserQuery();
 	
 	public Login(Frame frame) {
 		this.frame = frame;
@@ -58,30 +60,35 @@ public class Login extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getActionCommand().equals("logIn")) {
-			UserQuery uq = new UserQuery();
 			//DebateQuery dq = new DebateQuery();
 			//RulesQuery rq = new RulesQuery();
 			//Debate d = dq.getDebateObject();
 			Debate d = null;
 			
 			System.out.println("password is " + password.getText());
+			System.out.println("encrypted is " + DFDatabase.defaultDatabase.encryptString(password.getText()));
 			User u = null;
 			if (uq.verifyUserLogin(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()))){
 				u = uq.getUser(username.getText());
-			}
-			if (u != null) {
-				frame.tabs.removeAll();
-				frame.remove(frame.tabs);
-				
-				frame.debate = new DebateThread(u, d);
-				frame.tabs.addTab("Debate", frame.debate);
-				
-				if (u.getUserType().equals(UserType.MOD) || u.getUserType().equals(UserType.ADMIN)) {
-					frame.admin = new Admin(u);
-					frame.tabs.addTab("Administration", frame.admin);
+				if (u != null) {
+					JOptionPane.showMessageDialog(this, "Login was successful.");
+					
+					frame.tabs.removeAll();
+					frame.remove(frame.tabs);
+					
+					frame.debate = new DebateThread(u, d);
+					frame.tabs.addTab("Debate", frame.debate);
+					
+					if (u.getUserType().equals(UserType.MOD) || u.getUserType().equals(UserType.ADMIN)) {
+						frame.admin = new Admin(u);
+						frame.tabs.addTab("Administration", frame.admin);
+					}
+					//frame.rules = rq.getRules();
+					//frame.tabs.addTab("Rules", frame.rules);
 				}
-				//frame.rules = rq.getRules();
-				//frame.tabs.addTab("Rules", frame.rules);
+			}
+			else {
+				JOptionPane.showMessageDialog(this, "The username or password is invalid.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
