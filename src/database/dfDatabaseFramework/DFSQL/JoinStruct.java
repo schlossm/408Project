@@ -2,9 +2,9 @@ package database.dfDatabaseFramework.DFSQL;
 
 class JoinStruct 
 {
-	DFSQLConjunctionClause joinType;
-	String table;
-	DFSQLClauseStruct clause;
+	final DFSQLConjunctionClause joinType;
+	final String table;
+	final DFSQLClauseStruct clause;
 	
 	JoinStruct(DFSQLConjunctionClause type, String table, DFSQLClauseStruct clause)
 	{

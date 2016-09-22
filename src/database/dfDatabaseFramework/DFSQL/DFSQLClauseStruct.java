@@ -1,9 +1,10 @@
 package database.dfDatabaseFramework.DFSQL;
 
+@SuppressWarnings("WeakerAccess")
 public class DFSQLClauseStruct
 {
-	String leftHandSide;
-	String rightHandSide;
+	final String leftHandSide;
+	final String rightHandSide;
 	
 	public DFSQLClauseStruct(String left, String right)
 	{

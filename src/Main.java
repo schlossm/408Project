@@ -1,3 +1,4 @@
+
 import com.google.gson.JsonObject;
 import UI.*;
 
@@ -6,6 +7,8 @@ import database.dfDatabaseFramework.DFSQL.DFSQL;
 import database.dfDatabaseFramework.DFSQL.DFSQLError;
 import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploaderReturnStatus;
 import objects.*;
+import UI.Frame;
+
 
 /*
  * Main.java
@@ -53,16 +56,8 @@ public class Main implements DFDatabaseCallbackDelegate
 	}
 
 	@Override
-	public void uploadStatus(DFDataUploaderReturnStatus success, DFError error) 
-	{
-		if (error != null)
-		{
-			System.out.println(error.description);
-		}
-		else
-		{
-			System.out.println(success);
-		}
+	public void uploadStatus(DFDataUploaderReturnStatus success, DFError error) {
+		// TODO Auto-generated method stub
+		
 	}
-
 }

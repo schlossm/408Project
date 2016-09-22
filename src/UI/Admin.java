@@ -1,6 +1,5 @@
 package UI;
 
-
 import objects.*;
 import javax.swing.JPanel;
 import javax.swing.JFormattedTextField;
