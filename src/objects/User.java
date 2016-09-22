@@ -18,6 +18,8 @@ public class User implements Serializable {
 	private UserType userType;
 	private boolean isBanned;
 	
+	static UserQuery jsonQuery;
+	
 	/*
 	 * Constructor for existing user
 	 */
@@ -25,9 +27,11 @@ public class User implements Serializable {
 		/*
 		 * TODO: Get values from database
 		 */
+		this.jsonQuery = new UserQuery();
+		
 		this.username = username;
-		this.userType = UserType.USER;
-		this.isBanned = false;
+		this.userType = userType.USER; //this.jsonQuery.getUserPriv(username);
+		this.isBanned = false; //this.jsonQuery.getUserBanStatus(username);
 	}
 	
 	/*
@@ -36,6 +40,8 @@ public class User implements Serializable {
 	 * pass back to the UI layer
 	 */
 	public User(String username, UserType userType, boolean isBanned) {
+		this.jsonQuery = new UserQuery();
+		
 		this.username = username;
 		this.userType = userType;
 		this.isBanned = isBanned;
@@ -52,21 +58,24 @@ public class User implements Serializable {
 		/*
 		 * TODO: Set value in database
 		 */
-		this.userType = UserType.USER;
+		//if (this.jsonQuery.modifyUserPriv(this.username, UserType.USER))
+			this.userType = UserType.USER;
 	}
 	
 	public void makeMod() {
 		/*
 		 * TODO: Set value in database
 		 */
-		this.userType = UserType.MOD;
+		//if (this.jsonQuery.modifyUserPriv(this.username, UserType.MOD))
+			this.userType = UserType.MOD;
 	}
 	
 	public void makeAdmin() {
 		/*
 		 * TODO: Set value in database
 		 */
-		this.userType = UserType.ADMIN;
+		//if (this.jsonQuery.modifyUserPriv(this.username, UserType.ADMIN))
+			this.userType = UserType.ADMIN;
 	}
 	
 	public UserType getUserType() {
@@ -77,14 +86,16 @@ public class User implements Serializable {
 		/*
 		 * TODO: set value in database
 		 */
-		this.isBanned = true;
+		//if (this.jsonQuery.setBanStatus(this.username, true))
+			this.isBanned = true;
 	}
 	
 	public void unban() {
 		/*
 		 * TODO: set value in database
 		 */
-		this.isBanned = false;
+		//if (this.jsonQuery.setBanStatus(this.username, false))
+			this.isBanned = false;
 	}
 	
 	public boolean isBanned() {

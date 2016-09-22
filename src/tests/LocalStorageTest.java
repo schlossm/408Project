@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import UIKit.*;
+import objects.*;
 
 /*
  * LocalStorageTest.java
@@ -17,9 +18,13 @@ import UIKit.*;
  * Test the LocalStorage class
  */
 public class LocalStorageTest {
+	static User u;
+	static String file;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		u = new User("savedUser", User.UserType.USER, false);
+		file = "testSaveObjectToFile.ser";
 	}
 
 	@AfterClass
@@ -36,12 +41,14 @@ public class LocalStorageTest {
 
 	@Test
 	public void testSaveObjectToFile() {
-		fail("Not yet implemented");
+		LocalStorage.saveObjectToFile(u, file);
 	}
 
 	@Test
 	public void testLoadObjectFromFile() {
-		fail("Not yet implemented");
+		Object obj = LocalStorage.loadObjectFromFile(file);
+		User v = (User) obj;
+		assertEquals(u.toString(), v.toString());
 	}
 
 }
