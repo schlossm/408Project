@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import JSON_translation.*;
+import JSON_translation.UserQuery.InvalidUserException;
 import objects.User;
 import objects.User.UserType;
 
@@ -68,13 +69,23 @@ public class UserQueryTest {
 	
 	@Test
 	public void testGetUserBanStatus() {
-		boolean banStatus = userQuery.getUserBanStatus(name);
+		boolean banStatus = false;
+		try {
+			banStatus = userQuery.getUserBanStatus(name);
+		} catch (InvalidUserException e) {
+			fail("Invalid username Entered!");
+		}
 		assertFalse(banStatus);
 	}
 
 	@Test
 	public void testGetUserPriv() {
-		UserType userType = userQuery.getUserPriv(name);
+		UserType userType = null;
+		try {
+			userType = userQuery.getUserPriv(name);
+		} catch (InvalidUserException e) {
+			fail("Invalid username Entered!");
+		}
 		assertEquals(userType, UserType.USER);
 	}
 
@@ -82,7 +93,12 @@ public class UserQueryTest {
 	public void testModifyUserPriv() {
 		boolean uploadStatus = userQuery.modifyUserPriv(name, User.UserType.MOD);
 		assertTrue(uploadStatus);
-		UserType userType = userQuery.getUserPriv(name);
+		UserType userType = null;
+		try {
+			userType = userQuery.getUserPriv(name);
+		} catch (InvalidUserException e) {
+			fail("Invalid username Entered!");
+		}
 		assertEquals(userType, UserType.MOD);
 		uploadStatus = userQuery.modifyUserPriv(name, User.UserType.USER);
 		assertTrue(uploadStatus);
@@ -92,16 +108,25 @@ public class UserQueryTest {
 	public void testUpdateUserBanStatus() {
 		boolean uploadStatus = userQuery.updateBanStatus(name, true);
 		assertTrue(uploadStatus);
-		boolean userBanStatus = userQuery.getUserBanStatus(name);
-		assertEquals(userBanStatus, true);
+		boolean banStatus = false;
+		try {
+			banStatus = userQuery.getUserBanStatus(name);
+		} catch (InvalidUserException e) {
+			fail("Invalid username Entered!");
+		}
+		assertEquals(banStatus, true);
 		uploadStatus = userQuery.updateBanStatus(name, false);
 		assertTrue(uploadStatus);
 	}
 	
 	@Test
 	public void testInvalidUsernamegetUserBanStatus(){
-		UserType userType = userQuery.getUserPriv(invalidName);
-		assertNull(userType);
+		try {
+			userQuery.getUserBanStatus(invalidName);
+		} catch (InvalidUserException e) {
+			return;
+		}
+		fail("Invalid Username Entered and not handled");
 	}
 	
 	@Test

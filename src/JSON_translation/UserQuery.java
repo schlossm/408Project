@@ -1,6 +1,8 @@
 package JSON_translation;
 
 
+import javax.print.attribute.standard.RequestingUserName;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.sun.org.apache.bcel.internal.generic.NEW;
@@ -35,34 +37,43 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		return user;
 	}
 	
-	public boolean getUserBanStatus(String username){
+	public boolean getUserBanStatus(String username) throws InvalidUserException{
 		boolean isBanned;
+		int isBannedInt = 0;
 		try {
 			DFSQL dfsql = new DFSQL().select("banned").from("User").whereEquals("userID", username);
 			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+			isBannedInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsInt();
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
-		}		
-		int isBannedInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsInt();
+		} catch (NullPointerException e2){
+			throw new InvalidUserException("Invalid User Supplied. User is not in database. Please check the username carefully");
+		}
+		
 		if(isBannedInt == 0){isBanned = false;}
 		else {isBanned = true;}
 		return isBanned;
 	}
 		
-	public UserType getUserPriv(String username){
+	public UserType getUserPriv(String username) throws InvalidUserException{
+		int userTypeInt = 0;
 		try {
 			DFSQL dfsql = new DFSQL().select("privilegeLevel").from("User").whereEquals("userID", username);
 			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+			userTypeInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel").getAsInt();
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
+		} catch (NullPointerException e2){
+			throw new InvalidUserException("Invalid User Supplied. User is not in database. Please check the username carefully");
 		}
-		JsonElement jsonElement = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel");
-		if(jsonElement == null){
-			return null;
-		}
-		int userTypeInt = jsonElement.getAsInt();
+		
 		return userPriviligeIntToEnumConverter(userTypeInt);
 	}
+	
+	public class InvalidUserException extends Exception{
+		public InvalidUserException(String message) {super(message);}
+	}
+	
 	
 	public User addNewUser(String userName, String pw, UserType userType){
 		int convertedUserType = userPriviligeEnumToIntConverter(userType);
@@ -144,6 +155,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 			System.out.println(error.code);
 			System.out.println(error.description);
 			System.out.println(error.userInfo);
+			this.jsonObject = null;
 		} else {
 			this.jsonObject = jsonObject;
 		}
@@ -174,7 +186,11 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		//System.out.println(userQuery.getUserBanStatus("naveenTest1"));
 		userQuery.addNewUser("naveenTest1", "dasdsada", UserType.USER);
 		//userQuery.modifyUserPriv("testUser", UserType.USER);
-		//System.out.println(userQuery.getUserPriv("naveenTest1"));
+		try{
+			System.out.println(userQuery.getUserPriv("naveenTest1"));
+		} catch (InvalidUserException e){
+			System.out.println("Exception caught");
+		}
 		//System.out.println(userQuery.getUserPriv("testUser1212"));
 		//userQuery.getUser("testuser");
 		System.out.println("end reached");
