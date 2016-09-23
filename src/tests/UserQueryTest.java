@@ -21,7 +21,7 @@ import objects.User.UserType;
 
 public class UserQueryTest {
 	private static UserQuery userQuery;
-	private static String name;
+	private static String name, invalidName;
 	/*
 	 * This method is run only once before anything else
 	 */
@@ -43,6 +43,7 @@ public class UserQueryTest {
 	@Before
 	public void setUp() throws Exception {
 		 name = "testuser";
+		 invalidName = "testUsermessedUp";
 	}
 
 	/*
@@ -95,5 +96,17 @@ public class UserQueryTest {
 		assertEquals(userBanStatus, true);
 		uploadStatus = userQuery.updateBanStatus(name, false);
 		assertTrue(uploadStatus);
+	}
+	
+	@Test
+	public void testInvalidUsernamegetUserBanStatus(){
+		UserType userType = userQuery.getUserPriv(invalidName);
+		assertNull(userType);
+	}
+	
+	@Test
+	public void testInvalidAddNewUser(){
+		User user =userQuery.addNewUser("naveenTest1", "dasdsada", UserType.USER);
+		assertNull(user);
 	}
 }

@@ -1,6 +1,7 @@
 package JSON_translation;
 
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import database.DFDatabase;
@@ -14,6 +15,7 @@ import objects.User.UserType;
 
 public class UserQuery implements DFDatabaseCallbackDelegate{
 	private JsonObject jsonObject;
+	private DFDataUploaderReturnStatus uploadSuccess;
 	
 	public User getUser(String username){		
 		DFSQL dfsql = new DFSQL();
@@ -54,7 +56,11 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		}
-		int userTypeInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel").getAsInt();
+		JsonElement jsonElement = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel");
+		if(jsonElement == null){
+			return null;
+		}
+		int userTypeInt = jsonElement.getAsInt();
 		return userPriviligeIntToEnumConverter(userTypeInt);
 	}
 	
@@ -72,7 +78,9 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 			e1.printStackTrace();
 			isaddSuccess = false;
 		}
-		isaddSuccess = true;
+		if(uploadSuccess == DFDataUploaderReturnStatus.success){ isaddSuccess = true; }
+		else{isaddSuccess = false;}
+
 		if(isaddSuccess){
 			return getUser(userName);
 		} else {
@@ -143,6 +151,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 
 	@Override
 	public void uploadStatus(DFDataUploaderReturnStatus success, DFError error) {
+		this.uploadSuccess = null;
 		if(success == DFDataUploaderReturnStatus.success){
 			System.out.println("success uploading this");
 		} else if (success == DFDataUploaderReturnStatus.failure) {
@@ -156,16 +165,17 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		} else {
 			System.out.println("I have no clue!");
 		}
+		this.uploadSuccess = success;
 	}
 	
 	public static void main(String[] args)
 	{
 		UserQuery userQuery = new UserQuery();
 		//System.out.println(userQuery.getUserBanStatus("naveenTest1"));
-		//userQuery.addNewUser("naveenTest1", "dasdsada", UserType.USER);
-		userQuery.modifyUserPriv("testUser", UserType.USER);
-		System.out.println(userQuery.getUserPriv("naveenTest1"));
-		System.out.println(userQuery.getUserPriv("testuser"));
+		userQuery.addNewUser("naveenTest1", "dasdsada", UserType.USER);
+		//userQuery.modifyUserPriv("testUser", UserType.USER);
+		//System.out.println(userQuery.getUserPriv("naveenTest1"));
+		//System.out.println(userQuery.getUserPriv("testUser1212"));
 		//userQuery.getUser("testuser");
 		System.out.println("end reached");
 	}
