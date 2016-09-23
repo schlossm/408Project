@@ -19,6 +19,7 @@ import java.util.Arrays;
 public class DFDatabase
 {
 	public static final DFDatabase defaultDatabase = new DFDatabase();
+	public static Thread mainThread;
 	
 	private final String website			= "http://debateforum.michaelschlosstech.com";
 	private final String readFile			= "ReadFile.php";
