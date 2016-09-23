@@ -163,9 +163,9 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		UserQuery userQuery = new UserQuery();
 		//System.out.println(userQuery.getUserBanStatus("naveenTest1"));
 		//userQuery.addNewUser("naveenTest1", "dasdsada", UserType.USER);
-		userQuery.updateBanStatus("testUser", false);
-		System.out.println(userQuery.getUserBanStatus("naveenTest1"));
-		System.out.println(userQuery.getUserBanStatus("testuser"));
+		userQuery.modifyUserPriv("testUser", UserType.USER);
+		System.out.println(userQuery.getUserPriv("naveenTest1"));
+		System.out.println(userQuery.getUserPriv("testuser"));
 		//userQuery.getUser("testuser");
 		System.out.println("end reached");
 	}
