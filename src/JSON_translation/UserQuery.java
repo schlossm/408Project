@@ -144,9 +144,9 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		return true;
 	}
 	
-	public boolean verifyUserLogin(String UserName, String password){
+	/*public boolean verifyUserLogin(String UserName, String password){
 		return false;
-	}
+	}*/
 
 	@Override
 	public void returnedData(JsonObject jsonObject, DFError error) {
