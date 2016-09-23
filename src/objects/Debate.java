@@ -34,16 +34,7 @@ public class Debate implements Serializable {
 	}
 	public void post(Post post){
 		list.add(post);
-	}
-	
-<<<<<<< HEAD
-	public String getTitle() {
-		return title;
-	}
-	
-	public boolean isOpen() {
-		return isOpen;
-=======
+	}	
 	public String getTitle() 
 	{
 		 return this.title;
@@ -52,6 +43,6 @@ public class Debate implements Serializable {
 	public boolean isOpen() 
 	{
 		 return this.isOpen();
->>>>>>> origin/master
+
 	}
 }
