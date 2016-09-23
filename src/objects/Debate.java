@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.sun.istack.internal.Nullable;
-
+ 
 
 public class Debate implements Serializable {
 	boolean isOpen;
@@ -44,5 +44,6 @@ public class Debate implements Serializable {
 	public boolean isOpen() 
 	{
 		 return this.isOpen();
+
 	}
 }
