@@ -19,7 +19,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 	private JsonObject jsonObject;
 	private DFDataUploaderReturnStatus uploadSuccess;
 	
-	public User getUser(String username)throws InvalidUserException{		
+	public User getUser(String username) {		
 		DFSQL dfsql = new DFSQL();
 		String[] selectedRows = {"userID", "privilegeLevel", "banned"};
 		String usernameRecieved = null;
@@ -34,7 +34,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		} catch (NullPointerException e2){
-			throw new InvalidUserException("Invalid username Entered");
+			return null;
 		}
 		if(isBannedInt == 0){isBanned = false;}
 		else {isBanned = true;}
@@ -99,11 +99,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		else{isaddSuccess = false;}
 
 		if(isaddSuccess){
-			try {
-				return getUser(userName);
-			} catch (InvalidUserException e) {
-				return null;
-			}
+			return getUser(userName);
 		} else {
 			return null;
 		}
