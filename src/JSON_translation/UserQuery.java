@@ -37,6 +37,10 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		return user;
 	}
 	
+	public boolean verifyUserLogin(String username, String password) {
+		return false;
+	}
+	
 	public boolean getUserBanStatus(String username) throws InvalidUserException{
 		boolean isBanned;
 		int isBannedInt = 0;

@@ -22,8 +22,8 @@ public class Main implements DFDatabaseCallbackDelegate
 {
 	public static void main(String[] args)
 	{
-		new Main().uploadTest();
 		Frame f = new Frame("School of Thought");
+		new Main().uploadTest();
 	}
 	
 	public void uploadTest()
