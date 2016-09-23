@@ -44,7 +44,7 @@ public class DFDatabase
 			encryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
 			decryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
-			String encryptionKey = "";
+			String encryptionKey = "A97525E2C26F8B2DDFDF8212F1D62";
 			byte[] key = encryptionKey.getBytes();
 			MessageDigest sha = MessageDigest.getInstance("SHA-1");
 			key = sha.digest(key);
