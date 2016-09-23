@@ -35,9 +35,6 @@ public class DFDatabase
 	
 	private Cipher encryptor, decryptor;
 
-	/*
-	 * @deprecated Use `defaultDatabase` instead to return the singleton instance of DFDatabase
-	 */
 	private DFDatabase()
 	{ 
 		try 
