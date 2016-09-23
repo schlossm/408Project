@@ -136,7 +136,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		System.out.println(newbanStatusInt);
 		try {
 			dfsql.update("User", "banned", String.valueOf(newbanStatusInt)).whereEquals("userID", userName);
-			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this); 
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 			return false;
@@ -144,8 +144,21 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		return true;
 	}
 	
-	public boolean verifyUserLogin(String UserName, String password){
-		return true;
+	public boolean verifyUserLogin(String userName, String password){
+		DFSQL dfsql = new DFSQL();
+		String[] selectedRows = {"userID", "password"};
+		String databasePassword = "";
+		try {
+			dfsql.select(selectedRows).from("User").whereEquals("userID", userName);
+			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+			databasePassword = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("password").getAsString();
+		} catch (DFSQLError e1) {
+			e1.printStackTrace();
+		} catch (NullPointerException e2){
+			return false;
+		}
+		if(databasePassword.equals(password)){return true;}
+		else {return false;}
 	}
 
 	@Override
@@ -184,13 +197,14 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 	{
 		UserQuery userQuery = new UserQuery();
 		//System.out.println(userQuery.getUserBanStatus("naveenTest1"));
-		userQuery.addNewUser("naveenTest1", "dasdsada", UserType.USER);
+		//userQuery.addNewUser("naveenTest1", "dasdsada", UserType.USER);
 		//userQuery.modifyUserPriv("testUser", UserType.USER);
 		try{
 			System.out.println(userQuery.getUserPriv("naveenTest1"));
 		} catch (InvalidUserException e){
 			System.out.println("Exception caught");
 		}
+		System.out.println(userQuery.verifyUserLogin("naveenTest", "dasdsada"));
 		//System.out.println(userQuery.getUserPriv("testUser1212"));
 		//userQuery.getUser("testuser");
 		System.out.println("end reached");
