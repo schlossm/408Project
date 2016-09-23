@@ -24,11 +24,15 @@ public class User implements Serializable {
 	 * Constructor for existing user
 	 */
 	public User(String username) {
-		User.jsonQuery = new UserQuery();
+		try {
+			User.jsonQuery = new UserQuery();
 		
-		this.username = username;
-		this.userType = User.jsonQuery.getUserPriv(username);
-		this.isBanned = User.jsonQuery.getUserBanStatus(username);
+			this.username = username;
+			this.userType = User.jsonQuery.getUserPriv(username);
+			this.isBanned = User.jsonQuery.getUserBanStatus(username);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/*
@@ -52,18 +56,30 @@ public class User implements Serializable {
 	 * Demote to normal user status
 	 */
 	public void makeUser() {
-		if (User.jsonQuery.modifyUserPriv(this.username, UserType.USER))
-			this.userType = UserType.USER;
+		try {
+			if (User.jsonQuery.modifyUserPriv(this.username, UserType.USER))
+				this.userType = UserType.USER;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void makeMod() {
-		if (User.jsonQuery.modifyUserPriv(this.username, UserType.MOD))
-			this.userType = UserType.MOD;
+		try {
+			if (User.jsonQuery.modifyUserPriv(this.username, UserType.MOD))
+				this.userType = UserType.MOD;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void makeAdmin() {
-		if (User.jsonQuery.modifyUserPriv(this.username, UserType.ADMIN))
-			this.userType = UserType.ADMIN;
+		try {
+			if (User.jsonQuery.modifyUserPriv(this.username, UserType.ADMIN))
+				this.userType = UserType.ADMIN;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public UserType getUserType() {
@@ -71,13 +87,21 @@ public class User implements Serializable {
 	}
 	
 	public void ban() {
-		if (User.jsonQuery.updateBanStatus(this.username, true))
-			this.isBanned = true;
+		try {
+			if (User.jsonQuery.updateBanStatus(this.username, true))
+				this.isBanned = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void unban() {
-		if (User.jsonQuery.updateBanStatus(this.username, false))
-			this.isBanned = false;
+		try {
+			if (User.jsonQuery.updateBanStatus(this.username, false))
+				this.isBanned = false;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public boolean isBanned() {
