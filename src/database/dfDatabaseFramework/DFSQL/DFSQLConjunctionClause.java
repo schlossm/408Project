@@ -5,5 +5,5 @@ public enum DFSQLConjunctionClause
 {
 	and, or, none,
 	equals, notEquals, greaterThan, lessThan, greaterThanOrEqualTo, lessThanOrEqualTo,
-	leftOuter, rightOuter, fullOuter, cross, inner, natural;
+	leftOuter, rightOuter, fullOuter, cross, inner, natural
 }

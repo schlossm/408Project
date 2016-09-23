@@ -2,10 +2,11 @@ package database.dfDatabaseFramework.DFSQL;
 
 public class JoinParam
 {
-	String table;
-	String leftHandSide;
-	String rightHandSide;
+	final String table;
+	final String leftHandSide;
+	final String rightHandSide;
 	
+	@SuppressWarnings("unused")
 	public JoinParam(String table, String leftHandSide, String rightHandSide)
 	{
 		this.table = table;

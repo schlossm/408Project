@@ -1,10 +1,11 @@
 package database.dfDatabaseFramework.DFSQL;
 
-public class WhereStruct 
+@SuppressWarnings("WeakerAccess")
+public class WhereStruct
 {
-	DFSQLConjunctionClause conjunction;
-	DFSQLConjunctionClause joiner;
-	DFSQLClauseStruct clause;
+	final DFSQLConjunctionClause conjunction;
+	final DFSQLConjunctionClause joiner;
+	final DFSQLClauseStruct clause;
 	
 	public WhereStruct(DFSQLConjunctionClause conjunction, DFSQLConjunctionClause joiner, DFSQLClauseStruct clause)
 	{

@@ -33,4 +33,23 @@ public class Post implements Serializable {
 		 this.timeStamp = dateFormat.format(new Date());
 		 return timeStamp;
 	}
+	
+	public void hidePost() {
+		/* Mod/Admin would hide this post
+		 * TO DO
+		 */
+	}
+	
+	public void showPost() {
+		/* Mod/Admin would show this post
+		 * TO DO
+		 */
+	}
+	
+	public void report() {
+		/* Mod/Admin would be notified that this post was reported
+		 * TO DO
+		 */
+	}
+	
 }
