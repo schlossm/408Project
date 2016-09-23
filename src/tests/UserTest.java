@@ -51,8 +51,11 @@ public class UserTest {
 	 */
 	@Test
 	public void testUser() {
-		User u = new User("testusername");
+		User u = new User("testuser");
 		assertTrue(u != null);
+		
+		//User v = new User("testuserNOT");
+		//assertTrue(v != null);
 	}
 	
 	@Test
@@ -63,28 +66,28 @@ public class UserTest {
 
 	@Test
 	public void testGetUsername() {
-		String name = "testUser";
+		String name = "testuser";
 		User u = new User(name);
 		assertEquals(name, u.getUsername());
 	}
 
 	@Test
 	public void testMakeUser() {
-		User u = new User("mynewname2643");
+		User u = new User("testuser");
 		u.makeUser();
 		assertEquals(u.getUserType(), User.UserType.USER);
 	}
 
 	@Test
 	public void testMakeMod() {
-		User u = new User("UserName2048");
+		User u = new User("testuser");
 		u.makeMod();
 		assertEquals(u.getUserType(), User.UserType.MOD);
 	}
 
 	@Test
 	public void testMakeAdmin() {
-		User u = new User("AlexRosenberg");
+		User u = new User("testuser");
 		u.makeAdmin();
 		assertEquals(u.getUserType(), User.UserType.ADMIN);
 	}
