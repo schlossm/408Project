@@ -1,6 +1,9 @@
 package JSON_translation;
 
 
+import javax.print.attribute.standard.RequestingUserName;
+
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import database.DFDatabase;
@@ -14,6 +17,7 @@ import objects.User.UserType;
 
 public class UserQuery implements DFDatabaseCallbackDelegate{
 	private JsonObject jsonObject;
+	private DFDataUploaderReturnStatus uploadSuccess;
 	
 	public User getUser(String username){		
 		DFSQL dfsql = new DFSQL();
@@ -33,30 +37,43 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		return user;
 	}
 	
-	public boolean getUserBanStatus(String username){
+	public boolean getUserBanStatus(String username) throws InvalidUserException{
 		boolean isBanned;
+		int isBannedInt = 0;
 		try {
 			DFSQL dfsql = new DFSQL().select("banned").from("User").whereEquals("userID", username);
 			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+			isBannedInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsInt();
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
-		}		
-		int isBannedInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsInt();
+		} catch (NullPointerException e2){
+			throw new InvalidUserException("Invalid User Supplied. User is not in database. Please check the username carefully");
+		}
+		
 		if(isBannedInt == 0){isBanned = false;}
 		else {isBanned = true;}
 		return isBanned;
 	}
 		
-	public UserType getUserPriv(String username){
+	public UserType getUserPriv(String username) throws InvalidUserException{
+		int userTypeInt = 0;
 		try {
 			DFSQL dfsql = new DFSQL().select("privilegeLevel").from("User").whereEquals("userID", username);
 			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+			userTypeInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel").getAsInt();
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
+		} catch (NullPointerException e2){
+			throw new InvalidUserException("Invalid User Supplied. User is not in database. Please check the username carefully");
 		}
-		int userTypeInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel").getAsInt();
+		
 		return userPriviligeIntToEnumConverter(userTypeInt);
 	}
+	
+	public class InvalidUserException extends Exception{
+		public InvalidUserException(String message) {super(message);}
+	}
+	
 	
 	public User addNewUser(String userName, String pw, UserType userType){
 		int convertedUserType = userPriviligeEnumToIntConverter(userType);
@@ -72,7 +89,9 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 			e1.printStackTrace();
 			isaddSuccess = false;
 		}
-		isaddSuccess = true;
+		if(uploadSuccess == DFDataUploaderReturnStatus.success){ isaddSuccess = true; }
+		else{isaddSuccess = false;}
+
 		if(isaddSuccess){
 			return getUser(userName);
 		} else {
@@ -125,9 +144,9 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		return true;
 	}
 	
-	public boolean verifyUserLogin(String UserName, String password){
+	/*public boolean verifyUserLogin(String UserName, String password){
 		return false;
-	}
+	}*/
 
 	@Override
 	public void returnedData(JsonObject jsonObject, DFError error) {
@@ -136,6 +155,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 			System.out.println(error.code);
 			System.out.println(error.description);
 			System.out.println(error.userInfo);
+			this.jsonObject = null;
 		} else {
 			this.jsonObject = jsonObject;
 		}
@@ -143,6 +163,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 
 	@Override
 	public void uploadStatus(DFDataUploaderReturnStatus success, DFError error) {
+		this.uploadSuccess = null;
 		if(success == DFDataUploaderReturnStatus.success){
 			System.out.println("success uploading this");
 		} else if (success == DFDataUploaderReturnStatus.failure) {
@@ -156,16 +177,21 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		} else {
 			System.out.println("I have no clue!");
 		}
+		this.uploadSuccess = success;
 	}
 	
 	public static void main(String[] args)
 	{
 		UserQuery userQuery = new UserQuery();
 		//System.out.println(userQuery.getUserBanStatus("naveenTest1"));
-		//userQuery.addNewUser("naveenTest1", "dasdsada", UserType.USER);
-		userQuery.updateBanStatus("testUser", false);
-		System.out.println(userQuery.getUserBanStatus("naveenTest1"));
-		System.out.println(userQuery.getUserBanStatus("testuser"));
+		userQuery.addNewUser("naveenTest1", "dasdsada", UserType.USER);
+		//userQuery.modifyUserPriv("testUser", UserType.USER);
+		try{
+			System.out.println(userQuery.getUserPriv("naveenTest1"));
+		} catch (InvalidUserException e){
+			System.out.println("Exception caught");
+		}
+		//System.out.println(userQuery.getUserPriv("testUser1212"));
 		//userQuery.getUser("testuser");
 		System.out.println("end reached");
 	}
