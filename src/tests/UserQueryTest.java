@@ -163,7 +163,7 @@ public class UserQueryTest {
 		assertFalse(isPresent);
 	}
 	
-	/*@Test
+	@Test
 	public void testAddNewValidUser(){
 		User addedUser = userQuery.addNewUser("naveenTest3", "password", UserType.MOD);
 		User receivedUser = null;
@@ -173,7 +173,7 @@ public class UserQueryTest {
 		assertEquals(receivedUser.getUserType(), addedUser.getUserType());
 		assertEquals(receivedUser.isBanned(), addedUser.isBanned());
 		assertEquals(receivedUser.getUsername(), addedUser.getUsername());
-	}*/
+	}
 	
 	@Test
 	public void testAddNewInvalidUser(){
