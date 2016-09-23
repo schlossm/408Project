@@ -93,9 +93,9 @@ public class User implements Serializable {
 		return false;
 	}
 	
-	/*public int hashCode() {
+	public int hashCode() {
 		return (this.username + this.userType + this.isBanned).hashCode();
-	}*/
+	}
 	
 	public String toString() {
 		return "username:\t" + this.username + "\n"
