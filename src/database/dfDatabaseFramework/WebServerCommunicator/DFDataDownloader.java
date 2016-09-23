@@ -15,13 +15,14 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-public class DFDataDownloader 
+public class DFDataDownloader implements Runnable
 {
 	private final String website;
 	private final String readFile;
 	private final String databaseUserName;
     private final String databaseUserPass;
-    
+    private DFSQL statement;
+
     public DFDatabaseCallbackDelegate delegate;
 	
     public DFDataDownloader(String website, String readFile, String databaseUserName, String databaseUserPass)
@@ -34,51 +35,75 @@ public class DFDataDownloader
     
 	public void downloadDataWith(DFSQL SQLStatement)
 	{
-		try
+		if (DFDatabase.defaultDatabase.debug == 1)
 		{
 			System.out.println(SQLStatement.formattedSQLStatement());
-			String urlParameters 	= "Password="+ databaseUserPass + "&Username="+ databaseUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement();
+		}
+		DFDataDownloader threadedDownloader = new DFDataDownloader(website, readFile, databaseUserName, databaseUserPass);
+		threadedDownloader.statement = SQLStatement;
+		threadedDownloader.delegate = delegate;
+		new Thread(threadedDownloader).start();
+	}
+
+	@Override
+	public void run()
+	{
+		try
+		{
+			if (DFDatabase.defaultDatabase.debug == 1)
+			{
+				System.out.println("Downloading Data...");
+			}
+			String urlParameters 	= "Password="+ databaseUserPass + "&Username="+ databaseUserName + "&SQLQuery=" + statement.formattedSQLStatement();
 			byte[] postData       	= urlParameters.getBytes(StandardCharsets.UTF_8);
 			int    postDataLength 	= postData.length;
 			String request        	= website + "/" + readFile;
 			URL    url            	= new URL(request);
-			HttpURLConnection conn	= (HttpURLConnection)url.openConnection();           
+			HttpURLConnection conn	= (HttpURLConnection)url.openConnection();
 			conn.setDoOutput(true);
 			conn.setInstanceFollowRedirects(false);
 			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded"); 
+			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			conn.setRequestProperty("charset", "utf-8");
 			conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
 			conn.setUseCaches(false);
-			try(DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) 
+			try(DataOutputStream wr = new DataOutputStream(conn.getOutputStream()))
 			{
-			   wr.write(postData);
+				wr.write(postData);
 			}
-
 
 			Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 			StringBuilder sb = new StringBuilder();
-	        for (int c; (c = in.read()) >= 0;)
-	            sb.append((char)c);
-	        String response = sb.toString();
+			for (int c; (c = in.read()) >= 0;)
+				sb.append((char)c);
+			String response = sb.toString();
 			DFDatabase.defaultDatabase.dataSizePrinter.printDataSize(response.length());
-	        
-	        if (Objects.equals(response, "") || response.contains("No Data"))
-	        {
-	        	DFError error = new DFError(1, "No data was returned.  Please try again if this is in error");
-	        	delegate.returnedData(null, error);
-	        }
-	        else
-	        {
-	        	Gson gsonConverter = new Gson();
-	        	JsonObject object = gsonConverter.fromJson(response, JsonObject.class);
-	        	delegate.returnedData(object, null);
-	        }
+			if (DFDatabase.defaultDatabase.debug == 1)
+			{
+				System.out.println("Data Downloaded!");
+				System.out.println(response);
+			}
+
+			if (Objects.equals(response, "") || response.contains("No Data"))
+			{
+				DFError error = new DFError(1, "No data was returned.  Please try again if this is in error");
+				delegate.returnedData(null, error);
+			}
+			else
+			{
+				Gson gsonConverter = new Gson();
+				JsonObject object = gsonConverter.fromJson(response, JsonObject.class);
+				delegate.returnedData(object, null);
+			}
 		}
 		catch(Exception e)
 		{
+			if (DFDatabase.defaultDatabase.debug == 1)
+			{
+				e.printStackTrace();
+			}
 			DFError error = new DFError(0, "There was an unknown error.  Please try again.");
-        	delegate.returnedData(null, error);
+			delegate.returnedData(null, error);
 		}
 	}
 }

@@ -32,6 +32,8 @@ public class DFDatabase
 	private final DFDataUploader   dataUploader		= new DFDataUploader(website, writeFile, websiteUserName, databaseUserPass);
 	
 	public final DFDataSizePrinter dataSizePrinter = DFDataSizePrinter.current;
+
+	public int debug = 0;
 	
 	private Cipher encryptor, decryptor;
 
