@@ -19,26 +19,28 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 	private JsonObject jsonObject;
 	private DFDataUploaderReturnStatus uploadSuccess;
 	
-	public User getUser(String username){		
+	public User getUser(String username)throws InvalidUserException{		
 		DFSQL dfsql = new DFSQL();
 		String[] selectedRows = {"userID", "privilegeLevel", "banned"};
+		String usernameRecieved = null;
+		boolean isBanned;
+		int isBannedInt = 0, userPrivInt = 0;
 		try {
 			dfsql.select(selectedRows).from("User").whereEquals("userID", username);
 			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+			 usernameRecieved = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("userID").getAsString();
+			 isBannedInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsInt();
+			 userPrivInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel").getAsInt();
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
+		} catch (NullPointerException e2){
+			throw new InvalidUserException("Invalid username Entered");
 		}
-		
-		String usernameRecieved = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("userID").getAsString();
-		boolean isBanned = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsBoolean();
-		int userPrivInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel").getAsInt();
+		if(isBannedInt == 0){isBanned = false;}
+		else {isBanned = true;}
 		UserType userType = userPriviligeIntToEnumConverter(userPrivInt);
 		User user = new User(usernameRecieved, userType, isBanned);
 		return user;
-	}
-	
-	public boolean verifyUserLogin(String username, String password) {
-		return false;
 	}
 	
 	public boolean getUserBanStatus(String username) throws InvalidUserException{
@@ -97,7 +99,11 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		else{isaddSuccess = false;}
 
 		if(isaddSuccess){
-			return getUser(userName);
+			try {
+				return getUser(userName);
+			} catch (InvalidUserException e) {
+				return null;
+			}
 		} else {
 			return null;
 		}

@@ -60,7 +60,12 @@ public class UserQueryTest {
 	 */
 	@Test
 	public void testGetUser() {
-		User user = userQuery.getUser(name);
+		User user = null;
+		try {
+			user = userQuery.getUser(name);
+		} catch (InvalidUserException e) {
+			fail("User was not found");
+		}
 		assertTrue(user != null);
 		assertTrue(user.isBanned() == false);
 		assertTrue(user.getUserType() == UserType.USER);
@@ -131,7 +136,45 @@ public class UserQueryTest {
 	
 	@Test
 	public void testInvalidAddNewUser(){
-		User user =userQuery.addNewUser("naveenTest1", "dasdsada", UserType.USER);
+		User user = userQuery.addNewUser("naveenTest1", "dasdsada", UserType.USER);
 		assertNull(user);
+	}
+	
+	@Test
+	public void testVerifyLoginValidUserValidPassword(){
+		boolean isPresent = userQuery.verifyUserLogin(name, "blahblah");
+		assertTrue(isPresent);
+	}
+	
+	@Test
+	public void testVerifyLoginInvalidUser(){
+		boolean isPresent = userQuery.verifyUserLogin(invalidName, "blahblah");
+		assertFalse(isPresent);
+	}
+	
+	@Test
+	public void testVerifyLoginValidUserInvalidPassword(){
+		boolean isPresent = userQuery.verifyUserLogin(name, "invalidPassword");
+		assertFalse(isPresent);
+	}
+	
+	@Test
+	public void testAddNewValidUser(){
+		User addedUser = userQuery.addNewUser("naveenTest3", "password", UserType.MOD);
+		User receivedUser = null;
+		try {
+			receivedUser = userQuery.getUser("naveenTest3");
+		} catch (InvalidUserException e) {
+			fail();
+		}
+		assertEquals(receivedUser.getUserType(), addedUser.getUserType());
+		assertEquals(receivedUser.isBanned(), addedUser.isBanned());
+		assertEquals(receivedUser.getUsername(), addedUser.getUsername());
+	}
+	
+	@Test
+	public void testAddNewInvalidUser(){
+		User addedUser = userQuery.addNewUser("naveenTest1", "password", UserType.MOD);
+		assertNull(addedUser);
 	}
 }
