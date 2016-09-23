@@ -51,8 +51,11 @@ public class UserTest {
 	 */
 	@Test
 	public void testUser() {
-		User v = new User("testuser");
-		assertTrue(v != null);
+		User u = new User("testuser");
+		assertTrue(u != null);
+		
+		//User v = new User("testuserNOT");
+		//assertTrue(v != null);
 	}
 	
 	@Test
