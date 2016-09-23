@@ -19,6 +19,7 @@ import java.util.Arrays;
 public class DFDatabase
 {
 	public static final DFDatabase defaultDatabase = new DFDatabase();
+	public static Thread mainThread;
 	
 	private final String website			= "http://debateforum.michaelschlosstech.com";
 	private final String readFile			= "ReadFile.php";
@@ -32,12 +33,11 @@ public class DFDatabase
 	private final DFDataUploader   dataUploader		= new DFDataUploader(website, writeFile, websiteUserName, databaseUserPass);
 	
 	public final DFDataSizePrinter dataSizePrinter = DFDataSizePrinter.current;
+
+	public int debug = 0;
 	
 	private Cipher encryptor, decryptor;
 
-	/*
-	 * @deprecated Use `defaultDatabase` instead to return the singleton instance of DFDatabase
-	 */
 	private DFDatabase()
 	{ 
 		try 
@@ -47,7 +47,7 @@ public class DFDatabase
 			encryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
 			decryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
-			String encryptionKey = "";
+			String encryptionKey = "A97525E2C26F8B2DDFDF8212F1D62";
 			byte[] key = encryptionKey.getBytes();
 			MessageDigest sha = MessageDigest.getInstance("SHA-1");
 			key = sha.digest(key);

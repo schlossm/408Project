@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.sun.istack.internal.Nullable;
-
+ 
 
 public class Debate implements Serializable {
 	boolean isOpen;
@@ -34,7 +34,12 @@ public class Debate implements Serializable {
 	}
 	public void post(Post post){
 		list.add(post);
+<<<<<<< HEAD
 	}	
+=======
+	}
+	
+>>>>>>> refs/remotes/origin/master
 	public String getTitle() 
 	{
 		 return this.title;

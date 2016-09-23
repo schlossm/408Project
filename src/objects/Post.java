@@ -1,16 +1,21 @@
 package objects;
-import JSON_translation.*;
-
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Post implements Serializable {
+public class Post implements Serializable
+{
 	private String username;
 	private String timeStamp;
 	private String message;
+<<<<<<< HEAD
 	private Boolean  isHidden;
 	private int numReports;
+=======
+ 	private Boolean  isHidden;
+ 	private int numReports;
+
+>>>>>>> refs/remotes/origin/master
 	public  Post(String username, String text){
 		this.username = username;
 		this.message = text;
@@ -18,22 +23,28 @@ public class Post implements Serializable {
 		this.isHidden =  false;
 		this.numReports = 0;
 	}
+
 	public Post createPost(User user, String text){
 		Post newPost = new Post(user.getUsername(), text);
-		
+
 		return newPost;
 	}
+
 	public String getPoster(){
 		return this.username;
 	}
+
 	public String getText(){
 		return this.message;
 	}
+
 	public String getTimestamp(){
 		return this.timeStamp;
 	}
+
 	public String makeTimestamp(){
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+<<<<<<< HEAD
 		 this.timeStamp = dateFormat.format(new Date());
 		 return timeStamp;
 	}
@@ -63,3 +74,34 @@ public class Post implements Serializable {
 	}
 	
 }
+=======
+		this.timeStamp = dateFormat.format(new Date());
+		return timeStamp;
+	}
+
+ 	public Boolean hidePost() {
+ 		this.isHidden = true;
+ 		return this.isHidden;
+ 		/*
+ 		 * TODO: Update the UI on if post was hidden
+  		 */
+	}
+
+ 	public Boolean showPost() {
+ 		this.isHidden  = false;
+ 		return this.isHidden;
+ 		/*
+ 		 * TODO: Update the UI on if post was shown
+  		 */
+	}
+
+	public int report() {
+		this.numReports++;
+		return this.numReports;
+		/*
+ 		 * TODO: Message admin/moderators
+ 		 */
+	}
+
+}
+>>>>>>> refs/remotes/origin/master

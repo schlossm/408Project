@@ -24,14 +24,15 @@ public class User implements Serializable {
 	 * Constructor for existing user
 	 */
 	public User(String username) {
-		/*
-		 * TODO: Get values from database
-		 */
-		jsonQuery = new UserQuery();
+		try {
+			User.jsonQuery = new UserQuery();
 		
-		this.username = username;
-		this.userType = UserType.USER; //this.jsonQuery.getUserPriv(username);
-		this.isBanned = false; //this.jsonQuery.getUserBanStatus(username);
+			this.username = username;
+			this.userType = User.jsonQuery.getUserPriv(username);
+			this.isBanned = User.jsonQuery.getUserBanStatus(username);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/*
@@ -40,7 +41,7 @@ public class User implements Serializable {
 	 * pass back to the UI layer
 	 */
 	public User(String username, UserType userType, boolean isBanned) {
-		jsonQuery = new UserQuery();
+		User.jsonQuery = new UserQuery();
 		
 		this.username = username;
 		this.userType = userType;
@@ -55,27 +56,30 @@ public class User implements Serializable {
 	 * Demote to normal user status
 	 */
 	public void makeUser() {
-		/*
-		 * TODO: Set value in database
-		 */
-		//if (this.jsonQuery.modifyUserPriv(this.username, UserType.USER))
-			this.userType = UserType.USER;
+		try {
+			if (User.jsonQuery.modifyUserPriv(this.username, UserType.USER))
+				this.userType = UserType.USER;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void makeMod() {
-		/*
-		 * TODO: Set value in database
-		 */
-		//if (this.jsonQuery.modifyUserPriv(this.username, UserType.MOD))
-			this.userType = UserType.MOD;
+		try {
+			if (User.jsonQuery.modifyUserPriv(this.username, UserType.MOD))
+				this.userType = UserType.MOD;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void makeAdmin() {
-		/*
-		 * TODO: Set value in database
-		 */
-		//if (this.jsonQuery.modifyUserPriv(this.username, UserType.ADMIN))
-			this.userType = UserType.ADMIN;
+		try {
+			if (User.jsonQuery.modifyUserPriv(this.username, UserType.ADMIN))
+				this.userType = UserType.ADMIN;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public UserType getUserType() {
@@ -83,23 +87,38 @@ public class User implements Serializable {
 	}
 	
 	public void ban() {
-		/*
-		 * TODO: set value in database
-		 */
-		//if (this.jsonQuery.setBanStatus(this.username, true))
-			this.isBanned = true;
+		try {
+			if (User.jsonQuery.updateBanStatus(this.username, true))
+				this.isBanned = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void unban() {
-		/*
-		 * TODO: set value in database
-		 */
-		//if (this.jsonQuery.setBanStatus(this.username, false))
-			this.isBanned = false;
+		try {
+			if (User.jsonQuery.updateBanStatus(this.username, false))
+				this.isBanned = false;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public boolean isBanned() {
 		return this.isBanned;
+	}
+	
+	public boolean equals(Object o) {
+		if (o != null) {
+			if (o instanceof User && this.toString() == o.toString())
+				return true;
+		}
+		
+		return false;
+	}
+	
+	public int hashCode() {
+		return (this.username + this.userType + this.isBanned).hashCode();
 	}
 	
 	public String toString() {
