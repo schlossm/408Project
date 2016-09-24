@@ -2,7 +2,6 @@ package tests;
 
 import static org.junit.Assert.*;
 
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -12,8 +11,8 @@ import org.junit.Test;
 import objects.*;
 
 /*
- * UserTest.java
- * Alex Rosenberg
+ * PostTest.java
+ * Cody Tyson
  * 
  * Test the User class
  */
@@ -45,5 +44,31 @@ public class PostTest {
 	@After
 	public void tearDown() throws Exception {
 
+	}
+	@Test
+	public void testPost() {
+		Debate d = new Debate("This is a test");
+		assertTrue(d != null);
+	}
+	@Test
+	public void testCreatePost() {
+		User u = new User("Cody");
+		Post p = new Post("Null", "Null");
+		p = p.createPost(u, "This is my message");
+		assertTrue(p.getPoster() == "Cody");
+	}
+	@Test
+	public void testGetText() {
+		User u = new User("Cody");
+		Post p = new Post("Null", "Null");
+		p = p.createPost(u, "This is my message");
+		assertTrue(p.getText() == "This is my message");
+	}
+	@Test
+	public void testTimestamp() {
+		User u = new User("Cody");
+		Post p = new Post("Null", "Null");
+		p = p.createPost(u, "This is my message");
+		assertTrue(p.getTimestamp() != null);
 	}
 }

@@ -42,7 +42,7 @@ public class Debate implements Serializable {
 		 	
 	public boolean isOpen() 
 	{
-		 return this.isOpen();
+		 return this.isOpen;
 
 	}
 }

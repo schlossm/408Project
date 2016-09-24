@@ -20,7 +20,7 @@ import objects.*;
 public class LocalStorageTest {
 	static User u;
 	static String file;
-
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		u = new User("savedUser", User.UserType.USER, false);
@@ -49,6 +49,8 @@ public class LocalStorageTest {
 		Object obj = LocalStorage.loadObjectFromFile(file);
 		User v = (User) obj;
 		assertEquals(u.toString(), v.toString());
+		
+		
 	}
 
 }
