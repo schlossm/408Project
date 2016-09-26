@@ -19,6 +19,7 @@ import java.util.Arrays;
 public class DFDatabase
 {
 	public static final DFDatabase defaultDatabase = new DFDatabase();
+	public static Thread mainThread;
 	
 	private final String website			= "http://debateforum.michaelschlosstech.com";
 	private final String readFile			= "ReadFile.php";
@@ -32,6 +33,8 @@ public class DFDatabase
 	private final DFDataUploader   dataUploader		= new DFDataUploader(website, writeFile, websiteUserName, databaseUserPass);
 	
 	public final DFDataSizePrinter dataSizePrinter = DFDataSizePrinter.current;
+
+	public int debug = 0;
 	
 	private Cipher encryptor, decryptor;
 

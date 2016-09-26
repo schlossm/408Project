@@ -1,6 +1,7 @@
 package UI;
 
 import objects.*;
+import java.awt.Point;
 import objects.User.UserType;
 import JSON_translation.*;
 import database.*;
@@ -11,7 +12,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-import java.awt.Dimension;
 import java.awt.event.*;
 import java.awt.*;
 
@@ -30,7 +30,9 @@ public class Login extends JPanel implements ActionListener{
 		c.fill = GridBagConstraints.HORIZONTAL;
 		
 		JLabel label1 = new JLabel("Username:");
+		label1.setName("label1");
 		username = new JFormattedTextField();
+		username.setName("username");
 		c.gridx = 0;
 		c.gridy = 0;
 		this.add(label1, c);
@@ -39,7 +41,9 @@ public class Login extends JPanel implements ActionListener{
 		this.add(username, c);
 		
 		JLabel label2 = new JLabel("Password:");
+		label2.setName("label2");
 		password = new JPasswordField(30);
+		password.setName("password");
 		c.gridx = 0;
 		c.gridy = 1;
 		this.add(label2, c);
@@ -48,11 +52,13 @@ public class Login extends JPanel implements ActionListener{
 		this.add(password, c);
 				
 		logIn = new JButton("Submit");
+		logIn.setName("login");
 		c.gridx = 1;
 		c.gridy = 2;
 		this.add(logIn, c);
 		logIn.setActionCommand("logIn");
 		logIn.addActionListener(this);
+
 		this.setVisible(true);
 	}
 	

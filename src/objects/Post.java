@@ -8,8 +8,9 @@ public class Post implements Serializable
 	private String username;
 	private String timeStamp;
 	private String message;
- 	private Boolean  isHidden;
- 	private int numReports;
+	private Boolean  isHidden;
+	private int numReports;
+
 
 	public  Post(String username, String text){
 		this.username = username;
@@ -39,25 +40,27 @@ public class Post implements Serializable
 
 	public String makeTimestamp(){
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-		this.timeStamp = dateFormat.format(new Date());
-		return timeStamp;
+		 this.timeStamp = dateFormat.format(new Date());
+		 return timeStamp;
+	}
+	
+	public Boolean hidePost() {
+		this.isHidden = true;
+		return this.isHidden;
+		/*
+		 * TODO: Update the UI on if post was hidden
+		 */
+	}
+	
+	public Boolean showPost() {
+		this.isHidden  = false;
+		return this.isHidden;
+		/*
+		 * TODO: Update the UI on if post was shown
+		 */
 	}
 
- 	public Boolean hidePost() {
- 		this.isHidden = true;
- 		return this.isHidden;
- 		/*
- 		 * TODO: Update the UI on if post was hidden
-  		 */
-	}
 
- 	public Boolean showPost() {
- 		this.isHidden  = false;
- 		return this.isHidden;
- 		/*
- 		 * TODO: Update the UI on if post was shown
-  		 */
-	}
 
 	public int report() {
 		this.numReports++;
