@@ -46,11 +46,11 @@ public class RobotTest implements MouseListener, KeyListener{
 			Point a = frame.login.getComponent(1).getLocationOnScreen(); // Username Field Location
 			Point b = frame.login.getComponent(3).getLocationOnScreen(); // Password Field Location
 			Point c = frame.login.getComponent(4).getLocationOnScreen(); // Submit Button Location
-			
+/*			
 			System.out.println(a.getX() + " " + a.getY());
 			System.out.println(b.getX() + " " + b.getY());
 			System.out.println(c.getX() + " " + c.getY());
-			
+*/			
 //			moveAndClickOnPoint(a);
 			moveAndClickOnPoint(new Point(463, 445));
 			typeInEntireString(username);
@@ -81,7 +81,7 @@ public class RobotTest implements MouseListener, KeyListener{
 		for (int i = 0; i < string.length(); i++) {
 			robot.keyPress(string.charAt(i));
 			robot.keyRelease(string.charAt(i));
-			System.out.print((int) string.charAt(i));
+//			System.out.print((int) string.charAt(i));
 		}
 	}
 	
