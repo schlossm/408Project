@@ -65,7 +65,7 @@ public class UserQueryTest {
 		user = userQuery.getUser(name);
 
 		assertTrue(user != null);
-		assertTrue(user.isBanned() == false);
+		assertTrue(!user.isBanned());
 		assertTrue(user.getUserType() == UserType.USER);
 		assertTrue(user.getUsername().equals("testuser"));
 	}

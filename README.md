@@ -1,7 +1,7 @@
 ﻿#Debate Forum
 **CS 408 Team 7**: Debate Forum
 
-Alex Rosenberg • Cody Tyson • Naveen Ganessin • Michael Schloss • Roy
+Alex Rosenberg • Cody Tyson • Naveen Ganessin • Michael Schloss • Roy Ramstad
 
 **The private repository for Debate Forum**
 

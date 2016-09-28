@@ -67,13 +67,13 @@ public class DebateTest {
 	@Test
 	public void testDebateOpen() {
 		Debate d = new Debate("This is a test");
-		assertTrue(d.isOpen() == true);
+		assertTrue(d.isOpen());
 	}
 	@Test
 	public void testDebateClosed() {
 		Debate d = new Debate("This is a test");
 		d.closeDebate(d);
-		assertTrue(d.isOpen() == false);
+		assertTrue(!d.isOpen());
 	}
 }
 
