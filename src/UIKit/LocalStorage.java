@@ -31,7 +31,7 @@ public class LocalStorage {
 	/*
 	 * Save an individual object to a file (*.ser)
 	 */
-	public static void saveObjectToFile(Object object, String filename) {
+	private static void saveObjectToFile(Object object, String filename) {
 		try {
 			FileOutputStream fileOut = new FileOutputStream(filename);
 			ObjectOutputStream objOut = new ObjectOutputStream(fileOut);
@@ -47,12 +47,12 @@ public class LocalStorage {
 	/*
 	 * Load an individual object from a file (*.ser)
 	 * 
-	 * Remember to case the result of this method to
+	 * Remember to cast the result of this method to
 	 * the type you are loading its value into
 	 * 
 	 * Returns null on failure
 	 */
-	public static Object loadObjectFromFile(String filename) {
+	private static Object loadObjectFromFile(String filename) {
 		try {
 			Object object;
 			
