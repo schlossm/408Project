@@ -15,7 +15,7 @@ public class Frame extends JFrame {
 	
 	public Frame(String title) {
 		
-		DFNotificationCenter.addObserver((DFNotificationCenterDelegate) login, "login");
+		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) login, "login");
 		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) debate, "debate");
 		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) admin, "admin");
 		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) rules, "rules");
