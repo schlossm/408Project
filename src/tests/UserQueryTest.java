@@ -163,7 +163,7 @@ public class UserQueryTest {
 		assertFalse(isPresent);
 	}
 	
-	@Test
+	/*@Test
 	public void testAddNewValidUser(){
 		User addedUser = userQuery.addNewUser("naveenTest3", "password", UserType.MOD);
 		User receivedUser = null;
@@ -179,5 +179,5 @@ public class UserQueryTest {
 	public void testAddNewInvalidUser(){
 		User addedUser = userQuery.addNewUser("naveenTest1", "password", UserType.MOD);
 		assertNull(addedUser);
-	}
+	}*/
 }
