@@ -1,6 +1,7 @@
 package UIKit;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 class DFNotificationCenterObject
 {
@@ -21,7 +22,7 @@ public class DFNotificationCenter
 {
 	public static final DFNotificationCenter defaultCenter = new DFNotificationCenter();
 	
-	private ArrayList<DFNotificationCenterObject> observers = new ArrayList<DFNotificationCenterObject>();
+	private ArrayList<DFNotificationCenterObject> observers = new ArrayList<>();
 	private DFNotificationCenter() { }
 	
 	void addObserver(DFNotificationCenterDelegate object, String notificationName)
@@ -29,13 +30,13 @@ public class DFNotificationCenter
 		observers.add(new DFNotificationCenterObject(object, notificationName));
 	}
 	
-	void postNotification(String notificationName)
+	void postNotification(String notificationName, Object userData)
 	{
 		for (DFNotificationCenterObject observer : observers)
 		{
-			if (observer.notificationName == notificationName)
+			if (Objects.equals(observer.notificationName, notificationName))
 			{
-				observer.observer.performActionFor(notificationName);
+				observer.observer.performActionFor(notificationName, userData);
 			}
 		}
 	}
