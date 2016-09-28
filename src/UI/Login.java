@@ -72,27 +72,16 @@ public class Login extends JPanel implements ActionListener, DFNotificationCente
 			//DebateQuery dq = new DebateQuery();
 			//RulesQuery rq = new RulesQuery();
 			//Debate d = dq.getDebateObject();
-			
+
 			System.out.println("password is " + password.getText());
 			System.out.println("encrypted is " + DFDatabase.defaultDatabase.encryptString(password.getText()));
 			User user = null;
 			uq.verifyUserLogin(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()));
 		}
 	}
-	
-	public void successVerifyLogin(boolean verified) {
-		if (verified) {
-
-		}
-		else {
-			
-		}
-	}
 
 	@Override
-	public void performActionFor(String notificationName) {
-		// public void perforActionFor(String notificationName, Object obj) {
-		// TODO Auto-generated method stub
+	public void performActionFor(String notificationName, Object obj) {
 		if (notificationName.equals("success")) {
 			System.out.println("Success login");
 			user = uq.getUser(username.getText());
@@ -119,7 +108,7 @@ public class Login extends JPanel implements ActionListener, DFNotificationCente
 		else if (notificationName.equals("returned")) {
 			// user = (User) obj;
 		}
-			
+		
 	}
 	
 }
