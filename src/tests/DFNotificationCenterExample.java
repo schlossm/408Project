@@ -1,3 +1,5 @@
+package tests;
+
 import UIKit.DFNotificationCenter;
 import UIKit.DFNotificationCenterDelegate;
 
