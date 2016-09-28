@@ -25,12 +25,12 @@ public class DFNotificationCenter
 	private ArrayList<DFNotificationCenterObject> observers = new ArrayList<>();
 	private DFNotificationCenter() { }
 	
-	void addObserver(DFNotificationCenterDelegate object, String notificationName)
+	public void addObserver(DFNotificationCenterDelegate object, String notificationName)
 	{
 		observers.add(new DFNotificationCenterObject(object, notificationName));
 	}
 	
-	void postNotification(String notificationName, Object userData)
+	public void postNotification(String notificationName, Object userData)
 	{
 		for (DFNotificationCenterObject observer : observers)
 		{
