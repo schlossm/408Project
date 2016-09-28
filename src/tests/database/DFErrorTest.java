@@ -1,4 +1,4 @@
-package database;
+package tests.database;
 
 /**
  * Created by michaelschloss on 9/22/16.

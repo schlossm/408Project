@@ -3,9 +3,6 @@ package tests;
 import UIKit.DFNotificationCenter;
 import UIKit.DFNotificationCenterDelegate;
 
-/**
- * Created by michaelschloss on 9/28/16.
- */
 public class DFNotificationCenterExample
 {
     static public final String TestNotificationString = "Test Notification String";
@@ -17,7 +14,6 @@ public class DFNotificationCenterExample
         DFNotificationCenter.defaultCenter.postNotification(TestNotificationString, null);
         DFNotificationCenter.defaultCenter.postNotification(TestNotificationString, "I'm test data!");
     }
-
 }
 
 class DFNotificationCenterListener implements DFNotificationCenterDelegate

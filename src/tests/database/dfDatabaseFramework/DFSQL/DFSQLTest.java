@@ -1,15 +1,17 @@
-package database.dfDatabaseFramework.DFSQL;
+package tests.database.dfDatabaseFramework.DFSQL;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import database.dfDatabaseFramework.DFSQL.*;
 
 import static junit.framework.TestCase.assertEquals;
 
 /**
  * Created by michaelschloss on 9/22/16.
  */
-public class DFSQLTest {
+public class DFSQLTest
+{
     @Before
     public void setUp() throws Exception {
 
