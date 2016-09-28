@@ -6,7 +6,7 @@ import UIKit.DFNotificationCenterDelegate;
  */
 public class DFNotificationCenterExample
 {
-    static final String TestNotificationString = "Test Notification String";
+    static public final String TestNotificationString = "Test Notification String";
 
     public static void main(String[] args)
     {
