@@ -1,6 +1,7 @@
 package UI;
 
 import objects.*;
+import UIKit.*;
 import java.awt.Point;
 import objects.User.UserType;
 import JSON_translation.*;
@@ -15,13 +16,15 @@ import javax.swing.JOptionPane;
 import java.awt.event.*;
 import java.awt.*;
 
-public class Login extends JPanel implements ActionListener{
+public class Login extends JPanel implements ActionListener, DFNotificationCenterDelegate {
 
 	public JFormattedTextField username;
 	public JPasswordField password;
 	public JButton logIn;
 	public Frame frame;
 	public UserQuery uq = new UserQuery();
+	public User user;
+	public Debate debate;
 	
 	public Login(Frame frame) {
 		this.frame = frame;
@@ -69,34 +72,54 @@ public class Login extends JPanel implements ActionListener{
 			//DebateQuery dq = new DebateQuery();
 			//RulesQuery rq = new RulesQuery();
 			//Debate d = dq.getDebateObject();
-			Debate d = null;
 			
 			System.out.println("password is " + password.getText());
 			System.out.println("encrypted is " + DFDatabase.defaultDatabase.encryptString(password.getText()));
-			User u = null;
-			if (uq.verifyUserLogin(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()))){
-				u = uq.getUser(username.getText());
-				if (u != null) {
-					JOptionPane.showMessageDialog(this, "Login was successful.");
-					
-					frame.tabs.removeAll();
-					frame.remove(frame.tabs);
-					
-					frame.debate = new DebateThread(u, d);
-					frame.tabs.addTab("Debate", frame.debate);
-					
-					if (u.getUserType().equals(UserType.MOD) || u.getUserType().equals(UserType.ADMIN)) {
-						frame.admin = new Admin(u);
-						frame.tabs.addTab("Administration", frame.admin);
-					}
-					//frame.rules = rq.getRules();
-					//frame.tabs.addTab("Rules", frame.rules);
+			User user = null;
+			uq.verifyUserLogin(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()));
+		}
+	}
+	
+	public void successVerifyLogin(boolean verified) {
+		if (verified) {
+
+		}
+		else {
+			
+		}
+	}
+
+	@Override
+	public void performActionFor(String notificationName) {
+		// public void perforActionFor(String notificationName, Object obj) {
+		// TODO Auto-generated method stub
+		if (notificationName.equals("success")) {
+			System.out.println("Success login");
+			user = uq.getUser(username.getText());
+			if (user != null) {
+				JOptionPane.showMessageDialog(this, "Login was successful.");
+				
+				frame.tabs.removeAll();
+				
+				frame.debate = new DebateThread(user, debate);
+				frame.tabs.addTab("Debate", frame.debate);
+				
+				if (user.getUserType().equals(UserType.MOD) || user.getUserType().equals(UserType.ADMIN)) {
+					frame.admin = new Admin(user);
+					frame.tabs.addTab("Administration", frame.admin);
 				}
 			}
-			else {
-				JOptionPane.showMessageDialog(this, "The username or password is invalid.", "Error", JOptionPane.ERROR_MESSAGE);
-			}
+			
+			//frame.rules = rq.getRules();
+			//frame.tabs.addTab("Rules", frame.rules);	
 		}
+		else if (notificationName.equals("failed")) {
+			JOptionPane.showMessageDialog(this, "The username or password is invalid.", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		else if (notificationName.equals("returned")) {
+			// user = (User) obj;
+		}
+			
 	}
 	
 }
