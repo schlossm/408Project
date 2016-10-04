@@ -31,13 +31,16 @@ public class Account extends JPanel implements ActionListener{
 		Dimension size = new Dimension(40, 40);
 		
 		username = new JFormattedTextField();
-		username.setMinimumSize(size);
 		username.setSize(size);
-		password = new JPasswordField();
+		username.setMinimumSize(size);
+		username.setMaximumSize(size);
+		password = new JPasswordField(32);
 		password.setMinimumSize(size);
 		password.setSize(size);
+		password.setMaximumSize(size);
 		email = new JFormattedTextField();
 		email.setMinimumSize(size);
+		email.setMaximumSize(size);
 		email.setSize(size);
 		label1 = new JLabel("Username:");
 		label2 = new JLabel("Password:");
