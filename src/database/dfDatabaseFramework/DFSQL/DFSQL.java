@@ -3,6 +3,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 
+/**
+ * The main SQL class.  DFDatabase uses a custom built SQL wrapper to add a layer of security and overload safety
+ */
 @SuppressWarnings("unused")
 public class DFSQL
 {	
@@ -16,20 +19,28 @@ public class DFSQL
     
     private DFSQLClauseStruct[] updateStatements;
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private ArrayList<DFSQL> appendedDFSQL;
+    private final ArrayList<DFSQL> appendedDFSQL;
     
     public DFSQL()
     {
         appendedDFSQL = new ArrayList<>();
     }
-    
+
+    /**
+     * Appends an already built DFSQL object to the callee
+     * @param object a DFSQL object.  This object is immutable after this function is called
+     * @return self
+     */
     public DFSQL append(DFSQL object)
     {
     	appendedDFSQL.add(object);
         
         return this;
     }
-    
+
+    /**
+     * @return A human readable formatted SQL statement
+     */
     public final String formattedSQLStatement()
     {
     	String returnString;
@@ -278,7 +289,13 @@ public class DFSQL
     }
     
     //MARK: - SELECT Constructors
-    
+
+    /**
+     * SELECT statement with 1 row
+     * @param row the attribute to request
+     * @return self
+     * @throws DFSQLError If no row specified, `*` is used, is empty, or is greater than 64 in length
+     */
     public DFSQL select(String row) throws DFSQLError
     {
         if (selectRows != null)         { throw DFSQLError.conditionAlreadyExists; }
@@ -290,7 +307,13 @@ public class DFSQL
         
         return this;
     }
-    
+
+    /**
+     * SELECT statement with multiple row
+     * @param rows the attributes to request
+     * @return self
+     * @throws DFSQLError If no rows specified, `*` is used, is empty, or is greater than 64 in length
+     */
     public DFSQL select(String[] rows) throws DFSQLError
     {
         if (selectRows != null)	{ throw DFSQLError.conditionAlreadyExists; }
@@ -308,7 +331,13 @@ public class DFSQL
     }
     
     //MARK: - FROM Constructors
-    
+
+    /**
+     * FROM statement with one table
+     * @param table the table to request
+     * @return self
+     * @throws DFSQLError If no table specified, `*` is used, is empty, or is greater than 64 in length
+     */
     public DFSQL from(String table) throws DFSQLError
     {
         if (fromTables != null)         { throw DFSQLError.conditionAlreadyExists; }
@@ -320,7 +349,13 @@ public class DFSQL
         
         return this;
     }
-    
+
+    /**
+     * FROM statement with multiple tables
+     * @param tables the tables to request
+     * @return self
+     * @throws DFSQLError If no tables specified, `*` is used, is empty, or is greater than 64 in length
+     */
     public DFSQL from(String[] tables) throws DFSQLError
     {
         if (fromTables != null) { throw DFSQLError.conditionAlreadyExists; }
@@ -338,7 +373,15 @@ public class DFSQL
     }
     
     //MARK: - UPDATE SET Constructor
-    
+
+    /**
+     * UPDATE statement with one clause
+     * @param table the table to request
+     * @param leftHandSide the left hand side of the clause
+     * @param rightHandSide the right hand side of the clause
+     * @return self
+     * @throws DFSQLError If a parameter is null, already exists, `*` is used, is empty, or is greater than 64 in length
+     */
     public DFSQL update(String table, String leftHandSide, String rightHandSide) throws DFSQLError
     {
         if (fromTables != null)         { throw DFSQLError.conditionAlreadyExists; }
@@ -359,7 +402,14 @@ public class DFSQL
         
         return this;
     }
-    
+
+    /**
+     * UPDATE statement with multiple clauses
+     * @param table the table to request
+     * @param statements the clause(s)
+     * @return self
+     * @throws DFSQLError If a parameter is null, already exists, `*` is used, is empty, or is greater than 64 in length
+     */
     public DFSQL update(String table, DFSQLClauseStruct[] statements) throws DFSQLError
     {
         if (fromTables != null)         { throw DFSQLError.conditionAlreadyExists; }
@@ -386,13 +436,22 @@ public class DFSQL
     }
     
     //MARK: - INSERT INTO Constructor
-    
+
+    /**
+     * INSERT INTO statement
+     * @param table the table to insert into
+     * @param values the values for the entry
+     * @param rows the attributes to insert into
+     * @return self
+     * @throws DFSQLError If a parameter is null, already exists, values and rows do not match, `*` is used, is empty, or is greater than 64 in length
+     */
     public DFSQL insert(String table, String[] values, String[] rows) throws DFSQLError
     {
-        if (fromTables != null) { throw DFSQLError.conditionAlreadyExists; } else
-        if (insertData != null) { throw DFSQLError.conditionAlreadyExists; } else
-        if (insertRows != null) { throw DFSQLError.conditionAlreadyExists; } else
+        if (fromTables != null) { throw DFSQLError.conditionAlreadyExists; }
+        if (insertData != null) { throw DFSQLError.conditionAlreadyExists; }
+        if (insertRows != null) { throw DFSQLError.conditionAlreadyExists; }
 
+        if (values.length != rows.length) { throw DFSQLError.conditionsMustBeEqual; }
         if (table.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(table, "")) { throw DFSQLError.cannotUseEmptyValue; }
         if (table.length() > 64) { throw DFSQLError.lengthTooLong; }

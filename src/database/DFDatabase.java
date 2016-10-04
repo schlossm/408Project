@@ -16,10 +16,15 @@ import java.net.PasswordAuthentication;
 import java.security.*;
 import java.util.Arrays;
 
+/**
+ * The main database communicator class.  All communication with the database will run through this class
+ */
 public class DFDatabase
 {
+	/**
+	 * The singleton instance of DFDatabase
+	 */
 	public static final DFDatabase defaultDatabase = new DFDatabase();
-	public static Thread mainThread;
 	
 	private final String website			= "http://debateforum.michaelschlosstech.com";
 	private final String readFile			= "ReadFile.php";
@@ -31,9 +36,15 @@ public class DFDatabase
     
     private final DFDataDownloader dataDownloader	= new DFDataDownloader(website, readFile, websiteUserName, databaseUserPass);
 	private final DFDataUploader   dataUploader		= new DFDataUploader(website, writeFile, websiteUserName, databaseUserPass);
-	
+
+	/**
+	 * A reference to the data size printer object
+	 */
 	public final DFDataSizePrinter dataSizePrinter = DFDataSizePrinter.current;
 
+	/**
+	 * Wanna debug DFDatabase? Set this flag to 1.
+	 */
 	public int debug = 0;
 	
 	private Cipher encryptor, decryptor;
@@ -73,8 +84,13 @@ public class DFDatabase
 			e.printStackTrace();
 		}
 	}
-    
-    public void executeSQLStatement(DFSQL statement, DFDatabaseCallbackDelegate delegate)
+
+	/**
+	 * @deprecated use `execute(_:, _:)` instead
+	 * @param statement the SQL statement to execute backend side
+	 * @param delegate the delegate object that will respond to data changes.  This object must conform to the DFDatabaseCallbackDelegate interface
+	 */
+    @Deprecated public void executeSQLStatement(DFSQL statement, DFDatabaseCallbackDelegate delegate)
     {
     	if (statement.formattedSQLStatement().contains("UPDATE") || statement.formattedSQLStatement().contains("INSERT"))
     	{
@@ -87,6 +103,24 @@ public class DFDatabase
     		dataDownloader.downloadDataWith(statement);
     	}
     }
+
+	/**
+	 * @param SQLStatement the SQL statement to execute backend side
+	 * @param delegate the delegate object that will respond to data changes.  This object must conform to the DFDatabaseCallbackDelegate interface
+	 */
+	public void execute(DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
+	{
+		if (SQLStatement.formattedSQLStatement().contains("UPDATE") || SQLStatement.formattedSQLStatement().contains("INSERT"))
+		{
+			dataUploader.delegate = delegate;
+			dataUploader.uploadDataWith(SQLStatement);
+		}
+		else
+		{
+			dataDownloader.delegate = delegate;
+			dataDownloader.downloadDataWith(SQLStatement);
+		}
+	}
     
     public String encryptString(String decryptedString)
     {
