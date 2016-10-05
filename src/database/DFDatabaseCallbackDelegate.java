@@ -1,6 +1,7 @@
 package database;
 
 import com.google.gson.JsonObject;
+import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploaderReturnStatus;
 
@@ -18,5 +19,5 @@ public interface DFDatabaseCallbackDelegate
 	 * @param success will contain either .success, .failure, or .error depending on data status
 	 * @param error error will be null if call was successful, else it'll contain relevant info.
 	 */
-	void uploadStatus(DFDataUploaderReturnStatus success, @Nullable DFError error);
+	void uploadStatus(@NotNull DFDataUploaderReturnStatus success, @Nullable DFError error);
 }

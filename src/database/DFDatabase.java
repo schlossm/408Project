@@ -1,4 +1,6 @@
 package database;
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import database.dfDatabaseFramework.DFSQL.DFSQL;
 import database.dfDatabaseFramework.Utilities.DFDataSizePrinter;
 import database.dfDatabaseFramework.WebServerCommunicator.DFDataDownloader;
@@ -101,8 +103,14 @@ public class DFDatabase
 	 * @param SQLStatement the SQL statement to execute backend side
 	 * @param delegate the delegate object that will respond to data changes.  This object must conform to the DFDatabaseCallbackDelegate interface
 	 */
-	public void execute(DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
+	public void execute(@NotNull DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
 	{
+		if (SQLStatement == null)
+		{
+			delegate.returnedData(null, new DFError(-3, "Null DFSQL object delivered"));
+			return;
+		}
+
 		if (SQLStatement.formattedSQLStatement().contains("UPDATE") || SQLStatement.formattedSQLStatement().contains("INSERT"))
 		{
 			dataUploader.delegate = delegate;
