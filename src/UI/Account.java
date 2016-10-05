@@ -26,9 +26,12 @@ public class Account extends JPanel implements ActionListener, DFNotificationCen
 	public JPasswordField password;
 	public JButton createAccount;
 	private User user;
+	public UserQuery uq;
 	
 	public Account() {
 		user = null;
+		uq = new UserQuery();
+		DFNotificationCenter.defaultCenter.addObserver(this, "returned");
 		
 		this.setLayout(new GridBagLayout());
 		Dimension size = new Dimension(40, 40);
@@ -77,11 +80,10 @@ public class Account extends JPanel implements ActionListener, DFNotificationCen
 			if (username.getText().equals("") && password.getText().equals("")) {
 				JOptionPane.showMessageDialog(this, "Please fill in all of the fields.", "Error", JOptionPane.ERROR_MESSAGE);	
 			}
-			else {
-				UserQuery uq = new UserQuery();
-				
+			else {				
 				uq.getUser(username.getText());
 				
+				/*
 				if (user == null) {
 					//uq.addNewUser(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()), UserType.USER);
 					uq.addNewUser(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()), UserType.USER);
@@ -91,6 +93,7 @@ public class Account extends JPanel implements ActionListener, DFNotificationCen
 					JOptionPane.showMessageDialog(this, "This username already exists, please use another.", "Error", JOptionPane.ERROR_MESSAGE);
 					user = null;
 				}
+				*/
 				
 			}
 		}
@@ -99,8 +102,18 @@ public class Account extends JPanel implements ActionListener, DFNotificationCen
 	@Override
 	public void performActionFor(String notificationName, Object userData) {
 		// TODO Auto-generated method stub
+		System.out.println("Account performActionFor: " + notificationName);
 		if (notificationName.equals(UIStrings.returned)) {
 			user = (User) userData;
+			if (user == null) {
+				//uq.addNewUser(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()), UserType.USER);
+				uq.addNewUser(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()), UserType.USER);
+				JOptionPane.showMessageDialog(this, "Your account was created.");
+			}
+			else {
+				JOptionPane.showMessageDialog(this, "This username already exists, please use another.", "Error", JOptionPane.ERROR_MESSAGE);
+				user = null;
+			}
 		}
 	}
 	

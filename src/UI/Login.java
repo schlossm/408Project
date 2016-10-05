@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.BoxLayout;
+import javax.swing.JTabbedPane;
 
 import java.awt.event.*;
 import java.awt.*;
@@ -26,6 +27,7 @@ public class Login extends JPanel implements ActionListener, DFNotificationCente
 	public UserQuery uq = new UserQuery();
 	public User user;
 	public Debate debate;
+	public boolean verified;
 	
 	public Login(Frame frame) {
 		this.frame = frame;
@@ -34,6 +36,9 @@ public class Login extends JPanel implements ActionListener, DFNotificationCente
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		
+		DFNotificationCenter.defaultCenter.addObserver(this, "success");
+		DFNotificationCenter.defaultCenter.addObserver(this, "failure");
+		DFNotificationCenter.defaultCenter.addObserver(this, "returned");
 		
 		//this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		
@@ -98,9 +103,10 @@ public class Login extends JPanel implements ActionListener, DFNotificationCente
 			System.out.println("password is " + password.getText());
 			System.out.println("encrypted is " + DFDatabase.defaultDatabase.encryptString(password.getText()));
 			
-			uq.getUser(username.getText());
+			//uq.getUser(username.getText());
 			
 			uq.verifyUserLogin(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()));
+
 		}
 	}
 
@@ -110,8 +116,15 @@ public class Login extends JPanel implements ActionListener, DFNotificationCente
 		if (notificationName.equals(UIStrings.success)) {
 			System.out.println("Success login");
 			JOptionPane.showMessageDialog(this, "Login was successful.");
-				
+			
+			uq.getUser(username.getText());
+			
 			frame.tabs.removeAll();
+			
+			frame.remove(frame.tabs);
+			
+			frame.tabs = new JTabbedPane();
+			frame.add(frame.tabs);
 			
 			frame.debate = new DebateThread(user, debate);
 			frame.tabs.addTab("Debate", frame.debate);
@@ -124,11 +137,9 @@ public class Login extends JPanel implements ActionListener, DFNotificationCente
 			//frame.tabs.addTab("Rules", frame.rules);	
 		}
 		else if (notificationName.equals(UIStrings.failure)) {
-			System.out.println("Failure login");
 			JOptionPane.showMessageDialog(this, "The username or password is invalid.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		else if (notificationName.equals(UIStrings.returned)) {
-			System.out.println("User returned");
 			user = (User) obj;
 		}
 		
