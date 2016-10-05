@@ -5,7 +5,8 @@ import java.util.Dictionary;
 /**
  * The error class for DFDatabase.  More powerful than implementing the Exception class
  */
-public class DFError 
+@SuppressWarnings("unused")
+public class DFError
 {
 	/**
 	 * The error code
