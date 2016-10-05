@@ -1,4 +1,6 @@
 package database;
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import database.dfDatabaseFramework.DFSQL.DFSQL;
 import database.dfDatabaseFramework.Utilities.DFDataSizePrinter;
 import database.dfDatabaseFramework.WebServerCommunicator.DFDataDownloader;
@@ -19,6 +21,7 @@ import java.util.Arrays;
 /**
  * The main database communicator class.  All communication with the database will run through this class
  */
+@SuppressWarnings("unused")
 public class DFDatabase
 {
 	/**
@@ -92,24 +95,22 @@ public class DFDatabase
 	 */
     @Deprecated public void executeSQLStatement(DFSQL statement, DFDatabaseCallbackDelegate delegate)
     {
-    	if (statement.formattedSQLStatement().contains("UPDATE") || statement.formattedSQLStatement().contains("INSERT"))
-    	{
-    		dataUploader.delegate = delegate;
-    		dataUploader.uploadDataWith(statement);
-    	}
-    	else
-    	{
-    		dataDownloader.delegate = delegate;
-    		dataDownloader.downloadDataWith(statement);
-    	}
+		System.out.println(getMethodName(2) + " is now deprecated.  Use `execute(_:, _:)` instead.  Will call new method for you this time");
+		execute(statement, delegate);
     }
 
 	/**
 	 * @param SQLStatement the SQL statement to execute backend side
 	 * @param delegate the delegate object that will respond to data changes.  This object must conform to the DFDatabaseCallbackDelegate interface
 	 */
-	public void execute(DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
+	public void execute(@NotNull DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
 	{
+		if (SQLStatement == null)
+		{
+			delegate.returnedData(null, new DFError(-3, "Null DFSQL object delivered"));
+			return;
+		}
+
 		if (SQLStatement.formattedSQLStatement().contains("UPDATE") || SQLStatement.formattedSQLStatement().contains("INSERT"))
 		{
 			dataUploader.delegate = delegate;
@@ -121,20 +122,8 @@ public class DFDatabase
 			dataDownloader.downloadDataWith(SQLStatement);
 		}
 	}
-    
-    public String encryptString(String decryptedString)
-    {
-    	return decryptedString;
-    }
-    
-    @SuppressWarnings("unused")
-	public String decryptString(String encryptedString)
-    {
-    	return encryptedString;
-    }
-    
-    @SuppressWarnings("unused")
-	String _encryptString(String decryptedString)
+
+	public String encryptString(String decryptedString)
     {
     	byte[] byteText = decryptedString.getBytes();
 		try
@@ -148,9 +137,8 @@ public class DFDatabase
 			return "";
 		}
     }
-    
-    @SuppressWarnings("unused")
-	String _decryptString(String encryptedString)
+
+	public String decryptString(String encryptedString)
     {
     	byte[] byteText = hexToBytes(encryptedString);
 		try
@@ -187,4 +175,24 @@ public class DFDatabase
         }
         return data;
     }
+
+	public static String getMethodName(final int numberOfParameters)
+	{
+		final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("`");
+		stringBuilder.append(ste[Integer.min(ste.length - 1, Integer.max(2, 0))].getMethodName());
+		if (numberOfParameters > 0)
+		{
+			stringBuilder.append("(_:");
+			for (int i = 0; i < numberOfParameters - 1; i++)
+			{
+				stringBuilder.append(", _:");
+			}
+			stringBuilder.append(")`");
+		}
+
+		return stringBuilder.toString();
+	}
 }

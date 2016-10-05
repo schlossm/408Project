@@ -2,6 +2,7 @@ package UI;
 
 import objects.*;
 import objects.User.UserType;
+import UIKit.*;
 
 import javax.swing.JPanel;
 import javax.swing.JFormattedTextField;
@@ -18,15 +19,17 @@ import java.awt.Dimension;
 import java.awt.event.*;
 import java.awt.*;
 
-public class Account extends JPanel implements ActionListener{
+public class Account extends JPanel implements ActionListener, DFNotificationCenterDelegate {
 
 	public JLabel label1, label2, label3;
 	public JFormattedTextField username, email;
 	public JPasswordField password;
 	public JButton createAccount;
-	private User u;
+	private User user;
 	
 	public Account() {
+		user = null;
+		
 		this.setLayout(new GridBagLayout());
 		Dimension size = new Dimension(40, 40);
 		
@@ -69,8 +72,8 @@ public class Account extends JPanel implements ActionListener{
 		c.gridx = 1;
 		c.gridy = 2;
 		this.add(email, c);
-		c.gridx = 2;
-		c.gridy = 2;
+		c.gridx = 1;
+		c.gridy = 3;
 		this.add(createAccount, c);
 		
 		
@@ -89,15 +92,28 @@ public class Account extends JPanel implements ActionListener{
 			}
 			else {
 				UserQuery uq = new UserQuery();
-				User u = null;
-				if ((u = uq.getUser(username.getText())) == null) {
+				
+				uq.getUser(username.getText());
+				
+				if (user == null) {
+					//uq.addNewUser(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()), UserType.USER);
 					uq.addNewUser(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()), UserType.USER);
 					JOptionPane.showMessageDialog(this, "Your account was created.");
 				}
 				else {
 					JOptionPane.showMessageDialog(this, "This username already exists, please use another.", "Error", JOptionPane.ERROR_MESSAGE);
+					user = null;
 				}
+				
 			}
+		}
+	}
+
+	@Override
+	public void performActionFor(String notificationName, Object userData) {
+		// TODO Auto-generated method stub
+		if (notificationName.equals(UIStrings.returned)) {
+			user = (User) userData;
 		}
 	}
 	
