@@ -125,10 +125,24 @@ public class DFDatabase
 		}
 	}
 
-	public String encryptString(String decryptedString) { return decryptedString; }
-	public String decryptString(String encryptedString) { return encryptedString; }
+	public String _encryptString(String decryptedString) { return decryptedString; }
+	public String _decryptString(String encryptedString) { return encryptedString; }
 
-	public String _encryptString(String decryptedString)
+	public String hashString(String decryptedString)
+	{
+		byte[] key = decryptedString.getBytes();
+		MessageDigest sha = null;
+		try {
+			sha = MessageDigest.getInstance("SHA-1");
+			key = sha.digest(key);
+			return bytesToHex(key);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	public String encryptString(String decryptedString)
     {
     	byte[] byteText = decryptedString.getBytes();
 		try
@@ -143,14 +157,13 @@ public class DFDatabase
 		}
     }
 
-	public String _decryptString(String encryptedString)
+	public String decryptString(String encryptedString)
     {
     	byte[] byteText = hexToBytes(encryptedString);
 		byte[] iv = new byte[16];
 		int length = byteText.length - 16;
 
 		byte[] encryptedBytes = new byte[length];
-		System.out.println((byteText.length - iv.length));
 		System.arraycopy(byteText, 0, iv, 0, iv.length);
 		System.arraycopy(byteText, iv.length, encryptedBytes, 0, (byteText.length - iv.length));
 		IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
@@ -163,7 +176,6 @@ public class DFDatabase
 		catch (IllegalBlockSizeException | BadPaddingException e) 
 		{
 			e.printStackTrace();
-			System.exit(0);
 			return "";
 		}
 		catch (InvalidAlgorithmParameterException e)
