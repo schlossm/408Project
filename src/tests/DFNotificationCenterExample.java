@@ -10,7 +10,7 @@ public class DFNotificationCenterExample
 
     public static void main(String[] args)
     {
-        System.out.print(DFDatabase.defaultDatabase.decryptString("84C0F380C2162077C8B3CFD162335ED5CEA3ABB096FA1298BA916B03E7C985DA"));
+        System.out.print(DFDatabase.defaultDatabase._decryptString("84C0F380C2162077C8B3CFD162335ED5CEA3ABB096FA1298BA916B03E7C985DA"));
 
 
         DFNotificationCenterListener listener = new DFNotificationCenterListener();
