@@ -57,7 +57,7 @@ public class DFDatabase
 		try 
 		{
 			Security.addProvider(new BouncyCastleProvider());
-			
+
 			encryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
 			decryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
@@ -66,18 +66,17 @@ public class DFDatabase
 			MessageDigest sha = MessageDigest.getInstance("SHA-1");
 			key = sha.digest(key);
 			key = Arrays.copyOf(key, 16); // use only first 128 bit
-			System.out.print(bytesToHex(key));
 
 			SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
-			
+
 			byte[] iv = new byte[16];
 			SecureRandom random = new SecureRandom();
 			random.nextBytes(iv);
 			IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
-			System.out.println(bytesToHex(ivParameterSpec.getIV()));
+			System.out.print(bytesToHex(ivParameterSpec.getIV()));
 			encryptor.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
 			decryptor.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
-			
+
 			Authenticator.setDefault (new Authenticator() {
 			    protected PasswordAuthentication getPasswordAuthentication() {
 			        return new PasswordAuthentication (websiteUserName, websiteUserPass.toCharArray());
@@ -125,7 +124,10 @@ public class DFDatabase
 		}
 	}
 
-	public String encryptString(String decryptedString)
+	public String encryptString(String decryptedString) { return decryptedString; }
+	public String decryptString(String encryptedString) { return encryptedString; }
+
+	public String _encryptString(String decryptedString)
     {
     	byte[] byteText = decryptedString.getBytes();
 		try
@@ -140,7 +142,7 @@ public class DFDatabase
 		}
     }
 
-	public String decryptString(String encryptedString)
+	public String _decryptString(String encryptedString)
     {
     	byte[] byteText = hexToBytes(encryptedString);
 		try
