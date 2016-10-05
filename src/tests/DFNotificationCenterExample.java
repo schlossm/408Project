@@ -2,6 +2,7 @@ package tests;
 
 import UIKit.DFNotificationCenter;
 import UIKit.DFNotificationCenterDelegate;
+import database.DFDatabase;
 
 public class DFNotificationCenterExample
 {
@@ -9,11 +10,14 @@ public class DFNotificationCenterExample
 
     public static void main(String[] args)
     {
-        DFNotificationCenterListener listener = new DFNotificationCenterListener();
-        DFNotificationCenter.defaultCenter.register(listener, TestNotificationString);
+        System.out.print(DFDatabase.defaultDatabase.decryptString("84C0F380C2162077C8B3CFD162335ED5CEA3ABB096FA1298BA916B03E7C985DA"));
 
-        DFNotificationCenter.defaultCenter.post(TestNotificationString, null);
-        DFNotificationCenter.defaultCenter.post(TestNotificationString, "I'm test data!");
+
+        DFNotificationCenterListener listener = new DFNotificationCenterListener();
+        DFNotificationCenter.defaultCenter.addObserver(listener, TestNotificationString);
+
+        DFNotificationCenter.defaultCenter.postNotification(TestNotificationString, null);
+        DFNotificationCenter.defaultCenter.postNotification(TestNotificationString, "I'm test data!");
 
         DFNotificationCenter.defaultCenter.remove(listener);
     }
