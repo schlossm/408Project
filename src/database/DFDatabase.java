@@ -38,7 +38,7 @@ public class DFDatabase
 	private final char[] hexArray			= "0123456789ABCDEF".toCharArray();
 
 	private SecretKeySpec secretKeySpec;
-	byte[] iv;
+	private byte[] iv;
 
 	private final DFDataDownloader dataDownloader	= new DFDataDownloader(website, readFile, websiteUserName, databaseUserPass);
 	private final DFDataUploader   dataUploader		= new DFDataUploader(website, writeFile, websiteUserName, databaseUserPass);
@@ -132,11 +132,14 @@ public class DFDatabase
 	{
 		byte[] key = decryptedString.getBytes();
 		MessageDigest sha = null;
-		try {
+		try
+		{
 			sha = MessageDigest.getInstance("SHA-1");
 			key = sha.digest(key);
 			return bytesToHex(key);
-		} catch (NoSuchAlgorithmException e) {
+		}
+		catch (NoSuchAlgorithmException e)
+		{
 			e.printStackTrace();
 			return "";
 		}
