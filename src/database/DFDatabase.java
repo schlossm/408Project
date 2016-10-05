@@ -38,8 +38,9 @@ public class DFDatabase
 	private final char[] hexArray			= "0123456789ABCDEF".toCharArray();
 
 	private SecretKeySpec secretKeySpec;
-    
-    private final DFDataDownloader dataDownloader	= new DFDataDownloader(website, readFile, websiteUserName, databaseUserPass);
+	byte[] iv;
+
+	private final DFDataDownloader dataDownloader	= new DFDataDownloader(website, readFile, websiteUserName, databaseUserPass);
 	private final DFDataUploader   dataUploader		= new DFDataUploader(website, writeFile, websiteUserName, databaseUserPass);
 
 	/**
@@ -71,7 +72,7 @@ public class DFDatabase
 
 			secretKeySpec = new SecretKeySpec(key, "AES");
 
-			byte[] iv = new byte[16];
+			iv = new byte[16];
 			SecureRandom random = new SecureRandom();
 			random.nextBytes(iv);
 			IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
@@ -133,7 +134,7 @@ public class DFDatabase
 		try
 		{
 			byte[] byteCipherText = encryptor.doFinal(byteText);
-			return bytesToHex(byteCipherText);
+			return bytesToHex(iv) + bytesToHex(byteCipherText);
 		} 
 		catch (IllegalBlockSizeException | BadPaddingException e) 
 		{
