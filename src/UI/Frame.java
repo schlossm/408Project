@@ -1,9 +1,11 @@
 package UI;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
+
 import javax.swing.JPanel;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.Window;
 
 import UIKit.*;
@@ -40,7 +42,8 @@ public class Frame extends JFrame {
 		add(tabs);
 		setVisible(true);
 		
-		this.setSize(new Dimension(1200, 900));
+		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+		this.setMinimumSize(new Dimension(600, 400));
 		this.setTitle(title);
 	}
 }
