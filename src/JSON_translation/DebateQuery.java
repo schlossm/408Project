@@ -20,6 +20,18 @@ import objects.User.UserType;
 import objects.Debate.*;
 import objects.Post.*;
 
-public class DebateQuery {
+public class DebateQuery implements DFDatabaseCallbackDelegate {
+
+	@Override
+	public void returnedData(JsonObject jsonObject, DFError error) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void uploadStatus(DFDataUploaderReturnStatus success, DFError error) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
