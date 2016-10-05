@@ -74,7 +74,15 @@ public class DFNotificationCenter
 	 */
 	public void remove(DFNotificationCenterDelegate observer)
 	{
-		observers.stream().filter(object -> object.observer == observer).forEach(object -> observers.remove(object));
+		for (DFNotificationCenterObject object : observers)
+		{
+			if (object.observer == observer)
+			{
+				observers.remove(object);
+				remove(observer);
+				break;
+			}
+		}
 	}
 
 	/**
