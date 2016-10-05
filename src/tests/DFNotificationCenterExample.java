@@ -14,10 +14,10 @@ public class DFNotificationCenterExample
 
 
         DFNotificationCenterListener listener = new DFNotificationCenterListener();
-        DFNotificationCenter.defaultCenter.addObserver(listener, TestNotificationString);
+        DFNotificationCenter.defaultCenter.register(listener, TestNotificationString);
 
-        DFNotificationCenter.defaultCenter.postNotification(TestNotificationString, null);
-        DFNotificationCenter.defaultCenter.postNotification(TestNotificationString, "I'm test data!");
+        DFNotificationCenter.defaultCenter.post(TestNotificationString, null);
+        DFNotificationCenter.defaultCenter.post(TestNotificationString, "I'm test data!");
 
         DFNotificationCenter.defaultCenter.remove(listener);
     }

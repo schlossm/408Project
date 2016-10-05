@@ -135,8 +135,8 @@ public class DFDatabase
 		{
 			byte[] byteCipherText = encryptor.doFinal(byteText);
 			return bytesToHex(iv) + bytesToHex(byteCipherText);
-		} 
-		catch (IllegalBlockSizeException | BadPaddingException e) 
+		}
+		catch (IllegalBlockSizeException | BadPaddingException e)
 		{
 			e.printStackTrace();
 			return "";
@@ -159,16 +159,20 @@ public class DFDatabase
 			decryptor.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
 			byte[] byteCipherText = decryptor.doFinal(encryptedBytes);
 			return new String(byteCipherText);
-		} 
+		}
 		catch (IllegalBlockSizeException | BadPaddingException e) 
 		{
 			e.printStackTrace();
 			System.exit(0);
 			return "";
-		} catch (InvalidAlgorithmParameterException e) {
+		}
+		catch (InvalidAlgorithmParameterException e)
+		{
 			e.printStackTrace();
 			return "";
-		} catch (InvalidKeyException e) {
+		}
+		catch (InvalidKeyException e)
+		{
 			e.printStackTrace();
 			return "";
 		}
