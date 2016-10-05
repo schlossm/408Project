@@ -106,6 +106,7 @@ public class Login extends JPanel implements ActionListener, DFNotificationCente
 
 	@Override
 	public void performActionFor(String notificationName, Object obj) {
+		System.out.println("performActionString: " + notificationName);
 		if (notificationName.equals(UIStrings.success)) {
 			System.out.println("Success login");
 			JOptionPane.showMessageDialog(this, "Login was successful.");
@@ -123,9 +124,11 @@ public class Login extends JPanel implements ActionListener, DFNotificationCente
 			//frame.tabs.addTab("Rules", frame.rules);	
 		}
 		else if (notificationName.equals(UIStrings.failure)) {
+			System.out.println("Failure login");
 			JOptionPane.showMessageDialog(this, "The username or password is invalid.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		else if (notificationName.equals(UIStrings.returned)) {
+			System.out.println("User returned");
 			user = (User) obj;
 		}
 		
