@@ -66,6 +66,7 @@ public class DFDatabase
 			MessageDigest sha = MessageDigest.getInstance("SHA-1");
 			key = sha.digest(key);
 			key = Arrays.copyOf(key, 16); // use only first 128 bit
+			System.out.print(bytesToHex(key));
 
 			SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
 			
@@ -73,6 +74,7 @@ public class DFDatabase
 			SecureRandom random = new SecureRandom();
 			random.nextBytes(iv);
 			IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
+			System.out.println(bytesToHex(ivParameterSpec.getIV()));
 			encryptor.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
 			decryptor.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
 			
