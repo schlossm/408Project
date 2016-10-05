@@ -92,7 +92,7 @@ public class DFDatabase
 	 */
     @Deprecated public void executeSQLStatement(DFSQL statement, DFDatabaseCallbackDelegate delegate)
     {
-		System.out.println(getMethodName(0) + " is now deprecated.  Use `execute(_:, _:)` instead");
+		System.out.println(getMethodName() + " is now deprecated.  Use `execute(_:, _:)` instead.  Will call new method for you this time");
 		execute(statement, delegate);
     }
 
@@ -180,12 +180,10 @@ public class DFDatabase
         return data;
     }
 
-	public static String getMethodName(final int depth)
+	public static String getMethodName()
 	{
 		final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
 
-		//System. out.println(ste[ste.length-depth].getClassName()+"#"+ste[ste.length-depth].getMethodName());
-		// return ste[ste.length - depth].getMethodName();  //Wrong, fails for depth = 0
-		return ste[ste.length - 1 - depth].getMethodName(); //Thank you Tom Tresansky
+		return ste[Integer.min(ste.length - 1, Integer.max(2, 0))].getMethodName();
 	}
 }

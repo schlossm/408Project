@@ -39,7 +39,7 @@ public class DFNotificationCenter
 	 */
 	@Deprecated public void addObserver(DFNotificationCenterDelegate object, String notificationName)
 	{
-		System.out.println(DFDatabase.getMethodName(0) + " is now deprecated.  Use `register(_:, _:)` instead.  Will call new method for you this time");
+		System.out.println(DFDatabase.getMethodName() + " is now deprecated.  Use `register(_:, _:)` instead.  Will call new method for you this time");
 		register(object, notificationName);
 	}
 
@@ -84,7 +84,7 @@ public class DFNotificationCenter
 	 */
 	@Deprecated public void postNotification(String notificationName, Object userData)
 	{
-		System.out.println(DFDatabase.getMethodName(0) + " is now deprecated.  Use `post(_:, _:)` instead.  Will call new method for you this time");
+		System.out.println(DFDatabase.getMethodName() + " is now deprecated.  Use `post(_:, _:)` instead.  Will call new method for you this time");
 		post(notificationName, userData);
 	}
 
