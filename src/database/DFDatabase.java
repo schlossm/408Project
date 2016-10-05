@@ -92,16 +92,8 @@ public class DFDatabase
 	 */
     @Deprecated public void executeSQLStatement(DFSQL statement, DFDatabaseCallbackDelegate delegate)
     {
-    	if (statement.formattedSQLStatement().contains("UPDATE") || statement.formattedSQLStatement().contains("INSERT"))
-    	{
-    		dataUploader.delegate = delegate;
-    		dataUploader.uploadDataWith(statement);
-    	}
-    	else
-    	{
-    		dataDownloader.delegate = delegate;
-    		dataDownloader.downloadDataWith(statement);
-    	}
+		System.out.println(getMethodName(0) + " is now deprecated.  Use `execute(_:, _:)` instead");
+		execute(statement, delegate);
     }
 
 	/**
@@ -187,4 +179,13 @@ public class DFDatabase
         }
         return data;
     }
+
+	public static String getMethodName(final int depth)
+	{
+		final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+
+		//System. out.println(ste[ste.length-depth].getClassName()+"#"+ste[ste.length-depth].getMethodName());
+		// return ste[ste.length - depth].getMethodName();  //Wrong, fails for depth = 0
+		return ste[ste.length - 1 - depth].getMethodName(); //Thank you Tom Tresansky
+	}
 }

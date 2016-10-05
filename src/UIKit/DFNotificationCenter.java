@@ -1,5 +1,7 @@
 package UIKit;
 
+import database.DFDatabase;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -22,6 +24,7 @@ class DFNotificationCenterObject
 *
 *	This class is meant to be used for passing information among different packages(modules)
 */
+@SuppressWarnings("unused")
 public class DFNotificationCenter
 {
 	public static final DFNotificationCenter defaultCenter = new DFNotificationCenter();
@@ -36,7 +39,8 @@ public class DFNotificationCenter
 	 */
 	@Deprecated public void addObserver(DFNotificationCenterDelegate object, String notificationName)
 	{
-		observers.add(new DFNotificationCenterObject(object, notificationName));
+		System.out.println(DFDatabase.getMethodName(0) + " is now deprecated.  Use `register(_:, _:)` instead.  Will call new method for you this time");
+		register(object, notificationName);
 	}
 
 	/**
@@ -80,7 +84,8 @@ public class DFNotificationCenter
 	 */
 	@Deprecated public void postNotification(String notificationName, Object userData)
 	{
-		observers.stream().filter(observer -> Objects.equals(observer.notificationName, notificationName)).forEach(observer -> observer.observer.performActionFor(notificationName, userData));
+		System.out.println(DFDatabase.getMethodName(0) + " is now deprecated.  Use `post(_:, _:)` instead.  Will call new method for you this time");
+		post(notificationName, userData);
 	}
 
 	/**
