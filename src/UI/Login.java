@@ -81,32 +81,35 @@ public class Login extends JPanel implements ActionListener, DFNotificationCente
 	}
 
 	@Override
-	public void performActionFor(String notificationName, Object obj) {
-		if (notificationName.equals(UIStrings.success)) {
+	public void performActionFor(String notificationName, Object obj)
+	{
+		if (notificationName.equals(UIStrings.success))
+		{
 			System.out.println("Success login");
-			user = uq.getUser(username.getText());
-			if (user != null) {
+			uq.getUser(username.getText());
+		}
+		else if (notificationName.equals(UIStrings.failure))
+		{
+			JOptionPane.showMessageDialog(this, "The username or password is invalid.", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		else if (notificationName.equals(UIStrings.returned))
+		{
+			user = (User) obj;
+			if (user != null)
+			{
 				JOptionPane.showMessageDialog(this, "Login was successful.");
-				
+
 				frame.tabs.removeAll();
-				
+
 				frame.debate = new DebateThread(user, debate);
 				frame.tabs.addTab("Debate", frame.debate);
-				
-				if (user.getUserType().equals(UserType.MOD) || user.getUserType().equals(UserType.ADMIN)) {
+
+				if (user.getUserType().equals(UserType.MOD) || user.getUserType().equals(UserType.ADMIN))
+				{
 					frame.admin = new Admin(user);
 					frame.tabs.addTab("Administration", frame.admin);
 				}
 			}
-			
-			//frame.rules = rq.getRules();
-			//frame.tabs.addTab("Rules", frame.rules);	
-		}
-		else if (notificationName.equals(UIStrings.failure)) {
-			JOptionPane.showMessageDialog(this, "The username or password is invalid.", "Error", JOptionPane.ERROR_MESSAGE);
-		}
-		else if (notificationName.equals(UIStrings.returned)) {
-			// user = (User) obj;
 		}
 		
 	}

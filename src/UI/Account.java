@@ -1,5 +1,12 @@
 package UI;
 
+import UIKit.DFNotificationCenter;
+import UIKit.DFNotificationCenterDelegate;
+import com.google.gson.JsonObject;
+import com.sun.istack.internal.Nullable;
+import database.DFDatabaseCallbackDelegate;
+import database.DFError;
+import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploaderReturnStatus;
 import objects.*;
 import objects.User.UserType;
 
@@ -18,13 +25,14 @@ import java.awt.Dimension;
 import java.awt.event.*;
 import java.awt.*;
 
-public class Account extends JPanel implements ActionListener{
+public class Account extends JPanel implements ActionListener, DFNotificationCenterDelegate{
 
 	public JLabel label1, label2, label3;
 	public JFormattedTextField username, email;
 	public JPasswordField password;
 	public JButton createAccount;
 	private User u;
+	UserQuery uq = new UserQuery();
 	
 	public Account() {
 		this.setLayout(new GridBagLayout());
@@ -84,21 +92,30 @@ public class Account extends JPanel implements ActionListener{
 		System.out.println(password.getText());
 		System.out.println(email.getText());
 		if (e.getActionCommand().equals("account")) {
-			if (username.getText().equals("") && password.getText().equals("") && email.getText().equals("")) {
+			if (username.getText().equals("") || password.getText().equals("") || email.getText().equals("")) {
 				JOptionPane.showMessageDialog(this, "Please fill in all of the fields.", "Error", JOptionPane.ERROR_MESSAGE);	
 			}
 			else {
-				UserQuery uq = new UserQuery();
 				User u = null;
-				if ((u = uq.getUser(username.getText())) == null) {
-					uq.addNewUser(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()), UserType.USER);
-					JOptionPane.showMessageDialog(this, "Your account was created.");
-				}
-				else {
-					JOptionPane.showMessageDialog(this, "This username already exists, please use another.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
+				DFNotificationCenter.defaultCenter.register(this, UIStrings.returned);
+				uq.getUser(username.getText());
 			}
 		}
 	}
-	
+
+
+	@Override
+	public void performActionFor(String notificationName, Object userData)
+	{
+		User u = (User)userData;
+		if (u!= null)
+		{
+			uq.addNewUser(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()), UserType.USER);
+			JOptionPane.showMessageDialog(this, "Your account was created.");
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(this, "This username already exists, please use another.", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 }
