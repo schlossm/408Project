@@ -18,6 +18,7 @@ import javax.swing.JTabbedPane;
 import java.awt.event.*;
 import java.awt.*;
 
+@SuppressWarnings("deprecation")
 public class Login extends JPanel implements ActionListener, DFNotificationCenterDelegate {
 
 	public JFormattedTextField username;
@@ -99,13 +100,15 @@ public class Login extends JPanel implements ActionListener, DFNotificationCente
 			//DebateQuery dq = new DebateQuery();
 			//RulesQuery rq = new RulesQuery();
 			//Debate d = dq.getDebateObject();
-
-			System.out.println("password is " + password.getText());
-			System.out.println("encrypted is " + DFDatabase.defaultDatabase.encryptString(password.getText()));
 			
 			//uq.getUser(username.getText());
 			
-			uq.verifyUserLogin(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()));
+			String actualPassword = "";
+			for (int i = 0; i < password.getPassword().length; i++) {
+				actualPassword += password.getPassword()[i];
+			}
+			
+			uq.verifyUserLogin(username.getText(), DFDatabase.defaultDatabase.hashString(actualPassword));
 
 		}
 	}
@@ -119,13 +122,8 @@ public class Login extends JPanel implements ActionListener, DFNotificationCente
 			
 			uq.getUser(username.getText());
 			
-			frame.tabs.removeAll();
-			
-			frame.remove(frame.tabs);
-			
-			frame.tabs = new JTabbedPane();
-			frame.add(frame.tabs);
-			
+			//frame.tabs.removeAll();
+			System.out.println("Here");
 			frame.debate = new DebateThread(user, debate);
 			frame.tabs.addTab("Debate", frame.debate);
 			
@@ -133,6 +131,8 @@ public class Login extends JPanel implements ActionListener, DFNotificationCente
 				frame.admin = new Admin(user);
 				frame.tabs.addTab("Administration", frame.admin);
 			}
+			System.out.println("Here again");
+			
 			//frame.rules = rq.getRules();
 			//frame.tabs.addTab("Rules", frame.rules);	
 		}
