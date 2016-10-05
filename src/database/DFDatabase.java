@@ -1,14 +1,9 @@
 package database;
-import java.lang.reflect.Field;
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.Security;
-import java.util.Arrays;
+import database.dfDatabaseFramework.DFSQL.DFSQL;
+import database.dfDatabaseFramework.Utilities.DFDataSizePrinter;
+import database.dfDatabaseFramework.WebServerCommunicator.DFDataDownloader;
+import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploader;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -16,38 +11,45 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+import java.security.*;
+import java.util.Arrays;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-
-import database.dfDatabaseFramework.DFSQL.DFSQL;
-import database.dfDatabaseFramework.Utilities.DFDataSizePrinter;
-import database.dfDatabaseFramework.WebServerCommunicator.DFDataDownloader;
-import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploader;
-
+/**
+ * The main database communicator class.  All communication with the database will run through this class
+ */
 public class DFDatabase
 {
+	/**
+	 * The singleton instance of DFDatabase
+	 */
 	public static final DFDatabase defaultDatabase = new DFDatabase();
 	
-	private final String website			= "debateforum.michaelschlosstech.com";
+	private final String website			= "http://debateforum.michaelschlosstech.com";
 	private final String readFile			= "ReadFile.php";
 	private final String writeFile			= "WriteFile.php";
 	private final String websiteUserName	= "DFJavaApp";
 	private final String websiteUserPass	= "3xT-MA8-HEm-sTd";
     private final String databaseUserPass	= "3xT-MA8-HEm-sTd";
-    private final String encryptionKey		= "";
-    private final char[] hexArray			= "0123456789ABCDEF".toCharArray();
+	private final char[] hexArray			= "0123456789ABCDEF".toCharArray();
     
     private final DFDataDownloader dataDownloader	= new DFDataDownloader(website, readFile, websiteUserName, databaseUserPass);
 	private final DFDataUploader   dataUploader		= new DFDataUploader(website, writeFile, websiteUserName, databaseUserPass);
-	
-	public final DFDataSizePrinter dataSizePrinter = DFDataSizePrinter.current;
-	
-	Cipher encryptor, decryptor;
-	
-	/*
-	 * @deprecated Use `defaultDatabase` instead to return the singleton instance of DFDatabase
+
+	/**
+	 * A reference to the data size printer object
 	 */
-	private DFDatabase() 
+	public final DFDataSizePrinter dataSizePrinter = DFDataSizePrinter.current;
+
+	/**
+	 * Wanna debug DFDatabase? Set this flag to 1.
+	 */
+	public int debug = 0;
+	
+	private Cipher encryptor, decryptor;
+
+	private DFDatabase()
 	{ 
 		try 
 		{
@@ -55,7 +57,8 @@ public class DFDatabase
 			
 			encryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
 			decryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
-			
+
+			String encryptionKey = "A97525E2C26F8B2DDFDF8212F1D62";
 			byte[] key = encryptionKey.getBytes();
 			MessageDigest sha = MessageDigest.getInstance("SHA-1");
 			key = sha.digest(key);
@@ -81,57 +84,49 @@ public class DFDatabase
 			e.printStackTrace();
 		}
 	}
-    
-    public void executeSQLStatement(DFSQL statement, DFDatabaseCallbackDelegate delegate)
+
+	/**
+	 * @deprecated use `execute(_:, _:)` instead
+	 * @param statement the SQL statement to execute backend side
+	 * @param delegate the delegate object that will respond to data changes.  This object must conform to the DFDatabaseCallbackDelegate interface
+	 */
+    @Deprecated public void executeSQLStatement(DFSQL statement, DFDatabaseCallbackDelegate delegate)
     {
-    	try
-    	{
-    		Field field = DFSQL.class.getDeclaredField("updateStatements");
-    		field.setAccessible(true);
-    		field.get(statement);
-    		
-    		dataUploader.delegate = delegate;
-    		dataUploader.uploadDataWith(statement);
-    	}
-    	catch (Exception e)
-    	{
-    		if (e.getClass() == NullPointerException.class)
-    		{
-    			try
-    	    	{
-    	    		Field field = DFSQL.class.getDeclaredField("insertRows");
-    	    		Field field2 = DFSQL.class.getDeclaredField("insertData");
-    	    		field.setAccessible(true);
-    	    		field2.setAccessible(true);
-    	    		field.get(statement);
-    	    		field2.get(statement);
-    	    		
-    	    		dataUploader.delegate = delegate;
-    	    		dataUploader.uploadDataWith(statement);
-    	    	}
-    	    	catch (Exception e2)
-    	    	{
-    	    		dataDownloader.delegate = delegate;
-    	    		dataDownloader.downloadDataWith(statement);
-    	    		return;
-    	    	}
-    		}
-    		return;
-    	}
-    	return;
+		System.out.println(getMethodName(0) + " is now deprecated.  Use `execute(_:, _:)` instead");
+		execute(statement, delegate);
     }
+
+	/**
+	 * @param SQLStatement the SQL statement to execute backend side
+	 * @param delegate the delegate object that will respond to data changes.  This object must conform to the DFDatabaseCallbackDelegate interface
+	 */
+	public void execute(DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
+	{
+		if (SQLStatement.formattedSQLStatement().contains("UPDATE") || SQLStatement.formattedSQLStatement().contains("INSERT"))
+		{
+			dataUploader.delegate = delegate;
+			dataUploader.uploadDataWith(SQLStatement);
+		}
+		else
+		{
+			dataDownloader.delegate = delegate;
+			dataDownloader.downloadDataWith(SQLStatement);
+		}
+	}
     
     public String encryptString(String decryptedString)
     {
     	return decryptedString;
     }
     
-    public String decryptString(String encryptedString)
+    @SuppressWarnings("unused")
+	public String decryptString(String encryptedString)
     {
     	return encryptedString;
     }
     
-    String _encryptString(String decryptedString)
+    @SuppressWarnings("unused")
+	String _encryptString(String decryptedString)
     {
     	byte[] byteText = decryptedString.getBytes();
 		try
@@ -146,7 +141,8 @@ public class DFDatabase
 		}
     }
     
-    String _decryptString(String encryptedString)
+    @SuppressWarnings("unused")
+	String _decryptString(String encryptedString)
     {
     	byte[] byteText = hexToBytes(encryptedString);
 		try
@@ -183,4 +179,13 @@ public class DFDatabase
         }
         return data;
     }
+
+	public static String getMethodName(final int depth)
+	{
+		final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+
+		//System. out.println(ste[ste.length-depth].getClassName()+"#"+ste[ste.length-depth].getMethodName());
+		// return ste[ste.length - depth].getMethodName();  //Wrong, fails for depth = 0
+		return ste[ste.length - 1 - depth].getMethodName(); //Thank you Tom Tresansky
+	}
 }

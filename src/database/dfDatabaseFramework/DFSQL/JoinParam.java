@@ -1,11 +1,15 @@
 package database.dfDatabaseFramework.DFSQL;
 
+/**
+ * A class defining a JOIN single clause
+ */
 public class JoinParam
 {
-	String table;
-	String leftHandSide;
-	String rightHandSide;
+	final String table;
+	final String leftHandSide;
+	final String rightHandSide;
 	
+	@SuppressWarnings("unused")
 	public JoinParam(String table, String leftHandSide, String rightHandSide)
 	{
 		this.table = table;

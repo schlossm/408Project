@@ -1,8 +1,23 @@
 package database.dfDatabaseFramework.DFSQL;
 
-///The various clauses to perform Joins and Where Statements
+/**
+ * The various clauses to perform Joins and Where Statements
+ */
+
 public enum DFSQLConjunctionClause
 {
-	and, or, none, equals, notEquals, greaterThan, lessThan, greaterThanOrEqualTo, lessThanOrEqualTo,
-	leftOuter, rightOuter, fullOuter, cross, inner, natural;
+	/**
+	 * Used for JOIN and WHERE
+	 */
+	and, or, none,
+
+	/**
+	 * Used for WHERE
+	 */
+	equals, notEquals, greaterThan, lessThan, greaterThanOrEqualTo, lessThanOrEqualTo,
+
+	/**
+	 * Used for WHERE
+	 */
+	leftOuter, rightOuter, fullOuter, cross, inner, natural
 }
