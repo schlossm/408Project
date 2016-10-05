@@ -1,7 +1,9 @@
 package database.dfDatabaseFramework.DFSQL;
 
-@SuppressWarnings("WeakerAccess")
-public class WhereStruct
+/**
+ * The struct that defines a WHERE statement clause
+ */
+@SuppressWarnings("WeakerAccess") public class WhereStruct
 {
 	final DFSQLConjunctionClause conjunction;
 	final DFSQLConjunctionClause joiner;

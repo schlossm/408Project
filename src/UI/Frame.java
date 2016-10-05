@@ -37,7 +37,6 @@ public class Frame extends JFrame {
 		//tabs.add("Administration", admin);
 		//tabs.add("Rules", rules);
 		tabs.setVisible(true);
-		
 		add(tabs);
 		setVisible(true);
 		

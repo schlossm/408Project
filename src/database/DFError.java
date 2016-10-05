@@ -2,10 +2,22 @@ package database;
 
 import java.util.Dictionary;
 
+/**
+ * The error class for DFDatabase.  More powerful than implementing the Exception class
+ */
 public class DFError 
 {
+	/**
+	 * The error code
+	 */
 	final public int code;
+	/**
+	 * A human readable description of the error
+	 */
 	final public String description;
+	/**
+	 * Optional user information.  Strings only
+	 */
 	final public Dictionary<String, String> userInfo;
 	
 	public DFError(int code, String description)

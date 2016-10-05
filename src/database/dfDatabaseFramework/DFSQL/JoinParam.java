@@ -1,5 +1,8 @@
 package database.dfDatabaseFramework.DFSQL;
 
+/**
+ * A class defining a JOIN single clause
+ */
 public class JoinParam
 {
 	final String table;
