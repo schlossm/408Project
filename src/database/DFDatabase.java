@@ -125,13 +125,10 @@ public class DFDatabase
 		}
 	}
 
-	public String _encryptString(String decryptedString) { return decryptedString; }
-	public String _decryptString(String encryptedString) { return encryptedString; }
-
-	public String hashString(String decryptedString)
+	public @NotNull String hashString(String decryptedString)
 	{
 		byte[] key = decryptedString.getBytes();
-		MessageDigest sha = null;
+		MessageDigest sha;
 		try
 		{
 			sha = MessageDigest.getInstance("SHA-1");
@@ -145,7 +142,7 @@ public class DFDatabase
 		}
 	}
 
-	public String encryptString(String decryptedString)
+	public @NotNull String encryptString(String decryptedString)
     {
     	byte[] byteText = decryptedString.getBytes();
 		try
@@ -160,7 +157,7 @@ public class DFDatabase
 		}
     }
 
-	public String decryptString(String encryptedString)
+	public @NotNull String decryptString(String encryptedString)
     {
     	byte[] byteText = hexToBytes(encryptedString);
 		byte[] iv = new byte[16];
@@ -176,24 +173,14 @@ public class DFDatabase
 			byte[] byteCipherText = decryptor.doFinal(encryptedBytes);
 			return new String(byteCipherText);
 		}
-		catch (IllegalBlockSizeException | BadPaddingException e) 
-		{
-			e.printStackTrace();
-			return "";
-		}
-		catch (InvalidAlgorithmParameterException e)
-		{
-			e.printStackTrace();
-			return "";
-		}
-		catch (InvalidKeyException e)
+		catch (IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | InvalidKeyException e)
 		{
 			e.printStackTrace();
 			return "";
 		}
 	}
     
-    private String bytesToHex(byte[] bytes) 
+    private @NotNull String bytesToHex(byte[] bytes)
     {
         char[] hexChars = new char[bytes.length * 2];
         for ( int j = 0; j < bytes.length; j++ )
@@ -205,7 +192,7 @@ public class DFDatabase
         return new String(hexChars);
     }
     
-    private byte[] hexToBytes(String s) 
+    private @NotNull byte[] hexToBytes(String s)
     {
         int len = s.length();
         byte[] data = new byte[len / 2];
@@ -216,7 +203,7 @@ public class DFDatabase
         return data;
     }
 
-	public static String getMethodName(final int numberOfParameters)
+	public @NotNull static String getMethodName(final int numberOfParameters)
 	{
 		final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
 

@@ -24,7 +24,7 @@ class DFNotificationCenterObject
 *
 *	This class is meant to be used for passing information among different packages(modules)
 */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "unchecked"})
 public class DFNotificationCenter
 {
 	public static final DFNotificationCenter defaultCenter = new DFNotificationCenter();
@@ -65,7 +65,7 @@ public class DFNotificationCenter
 	 */
 	public void remove(DFNotificationCenterDelegate observer, String notificationName)
 	{
-		observers.stream().filter(object -> object.observer == observer && Objects.equals(notificationName, object.notificationName)).forEach(object -> observers.remove(object));
+		((ArrayList<DFNotificationCenterObject>) observers.clone()).stream().filter(object -> object.observer == observer).forEach(object -> observers.remove(object));
 	}
 
 	/**
@@ -74,15 +74,7 @@ public class DFNotificationCenter
 	 */
 	public void remove(DFNotificationCenterDelegate observer)
 	{
-		for (DFNotificationCenterObject object : observers)
-		{
-			if (object.observer == observer)
-			{
-				observers.remove(object);
-				remove(observer);
-				break;
-			}
-		}
+		((ArrayList<DFNotificationCenterObject>) observers.clone()).stream().filter(object -> object.observer == observer).forEach(object -> observers.remove(object));
 	}
 
 	/**
