@@ -101,7 +101,7 @@ public class DFDataDownloader
                 {
                     e.printStackTrace();
                 }
-                DFError error = new DFError(0, "There was an unknown error.  Please try again.");
+                DFError error = new DFError(0, "There was an unknown error.  Please try again.  SQL statement delivered: " + SQLStatement.formattedSQLStatement());
                 delegate.returnedData(null, error);
             }
         }).start();

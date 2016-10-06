@@ -10,14 +10,11 @@ public class DFNotificationCenterExample
 
     public static void main(String[] args)
     {
-        System.out.print(DFDatabase.defaultDatabase.decryptString("84C0F380C2162077C8B3CFD162335ED5CEA3ABB096FA1298BA916B03E7C985DA"));
-
-
         DFNotificationCenterListener listener = new DFNotificationCenterListener();
-        DFNotificationCenter.defaultCenter.addObserver(listener, TestNotificationString);
+        DFNotificationCenter.defaultCenter.register(listener, TestNotificationString);
 
-        DFNotificationCenter.defaultCenter.postNotification(TestNotificationString, null);
-        DFNotificationCenter.defaultCenter.postNotification(TestNotificationString, "I'm test data!");
+        DFNotificationCenter.defaultCenter.post(TestNotificationString, null);
+        DFNotificationCenter.defaultCenter.post(TestNotificationString, "I'm test data!");
 
         DFNotificationCenter.defaultCenter.remove(listener);
     }

@@ -36,8 +36,11 @@ public class DFDatabase
 	private final String websiteUserPass	= "3xT-MA8-HEm-sTd";
     private final String databaseUserPass	= "3xT-MA8-HEm-sTd";
 	private final char[] hexArray			= "0123456789ABCDEF".toCharArray();
-    
-    private final DFDataDownloader dataDownloader	= new DFDataDownloader(website, readFile, websiteUserName, databaseUserPass);
+
+	private SecretKeySpec secretKeySpec;
+	private byte[] iv;
+
+	private final DFDataDownloader dataDownloader	= new DFDataDownloader(website, readFile, websiteUserName, databaseUserPass);
 	private final DFDataUploader   dataUploader		= new DFDataUploader(website, writeFile, websiteUserName, databaseUserPass);
 
 	/**
@@ -67,15 +70,13 @@ public class DFDatabase
 			key = sha.digest(key);
 			key = Arrays.copyOf(key, 16); // use only first 128 bit
 
-			SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
+			secretKeySpec = new SecretKeySpec(key, "AES");
 
-			byte[] iv = new byte[16];
+			iv = new byte[16];
 			SecureRandom random = new SecureRandom();
 			random.nextBytes(iv);
 			IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
-			System.out.print(bytesToHex(ivParameterSpec.getIV()));
 			encryptor.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
-			decryptor.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
 
 			Authenticator.setDefault (new Authenticator() {
 			    protected PasswordAuthentication getPasswordAuthentication() {
@@ -124,38 +125,73 @@ public class DFDatabase
 		}
 	}
 
-	public String encryptString(String decryptedString) { return decryptedString; }
-	public String decryptString(String encryptedString) { return encryptedString; }
+	public String _encryptString(String decryptedString) { return decryptedString; }
+	public String _decryptString(String encryptedString) { return encryptedString; }
 
-	public String _encryptString(String decryptedString)
+	public String hashString(String decryptedString)
+	{
+		byte[] key = decryptedString.getBytes();
+		MessageDigest sha = null;
+		try
+		{
+			sha = MessageDigest.getInstance("SHA-1");
+			key = sha.digest(key);
+			return bytesToHex(key);
+		}
+		catch (NoSuchAlgorithmException e)
+		{
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	public String encryptString(String decryptedString)
     {
     	byte[] byteText = decryptedString.getBytes();
 		try
 		{
 			byte[] byteCipherText = encryptor.doFinal(byteText);
-			return bytesToHex(byteCipherText);
-		} 
-		catch (IllegalBlockSizeException | BadPaddingException e) 
+			return bytesToHex(iv) + bytesToHex(byteCipherText);
+		}
+		catch (IllegalBlockSizeException | BadPaddingException e)
 		{
 			e.printStackTrace();
 			return "";
 		}
     }
 
-	public String _decryptString(String encryptedString)
+	public String decryptString(String encryptedString)
     {
     	byte[] byteText = hexToBytes(encryptedString);
+		byte[] iv = new byte[16];
+		int length = byteText.length - 16;
+
+		byte[] encryptedBytes = new byte[length];
+		System.arraycopy(byteText, 0, iv, 0, iv.length);
+		System.arraycopy(byteText, iv.length, encryptedBytes, 0, (byteText.length - iv.length));
+		IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
 		try
 		{
-			byte[] byteCipherText = decryptor.doFinal(byteText);
+			decryptor.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
+			byte[] byteCipherText = decryptor.doFinal(encryptedBytes);
 			return new String(byteCipherText);
-		} 
+		}
 		catch (IllegalBlockSizeException | BadPaddingException e) 
 		{
 			e.printStackTrace();
 			return "";
 		}
-    }
+		catch (InvalidAlgorithmParameterException e)
+		{
+			e.printStackTrace();
+			return "";
+		}
+		catch (InvalidKeyException e)
+		{
+			e.printStackTrace();
+			return "";
+		}
+	}
     
     private String bytesToHex(byte[] bytes) 
     {
