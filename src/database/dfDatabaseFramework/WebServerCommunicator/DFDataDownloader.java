@@ -15,6 +15,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+/**
+ * The downloader class.  Connects securely to the website, and uploads a POST statement containing the data required to download from the database
+ */
 public class DFDataDownloader
 {
 	private final String website;
