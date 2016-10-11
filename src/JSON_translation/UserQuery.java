@@ -25,7 +25,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 	private boolean verifyUserLoginReturn;
 	private String bufferString;
 	
-	public void getUser(String username) {		
+	public void getUser(String username) {
 		DFSQL dfsql = new DFSQL();
 		String[] selectedRows = {"userID", "privilegeLevel", "banned"};
 		getUserReturn = true;

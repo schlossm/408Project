@@ -21,7 +21,7 @@ public class DFDataDownloaderTest  implements DFDatabaseCallbackDelegate
     public void downloadDataWith() throws Exception
     {
         DFSQL statement = new DFSQL().select("userID").from("Users");
-        DFDatabase.defaultDatabase.executeSQLStatement(statement, this);
+        DFDatabase.defaultDatabase.execute(statement, this);
     }
 
     @Override

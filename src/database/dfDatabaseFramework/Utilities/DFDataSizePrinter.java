@@ -3,12 +3,22 @@ package database.dfDatabaseFramework.Utilities;
 import java.util.Formatter;
 import java.util.Locale;
 
+/**
+ * Prints human readable data sizes nicely formatted by byte size
+ */
 public class DFDataSizePrinter
 {
+    /**
+     * The singleton instance of the printer
+     */
 	public static final DFDataSizePrinter current = new DFDataSizePrinter();
 	
 	private DFDataSizePrinter() { }
-	
+
+    /**
+     * Prints the data size
+     * @param dataSize An integer equaling the number of bytes desired to print
+     */
 	public void printDataSize(Integer dataSize)
     {
         Integer startSize = 0;

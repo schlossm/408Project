@@ -2,6 +2,7 @@ package UI;
 
 import objects.*;
 import objects.User.UserType;
+import UIKit.*;
 
 import javax.swing.JPanel;
 import javax.swing.JFormattedTextField;
@@ -18,30 +19,34 @@ import java.awt.Dimension;
 import java.awt.event.*;
 import java.awt.*;
 
-public class Account extends JPanel implements ActionListener{
+@SuppressWarnings("deprecation")
+public class Account extends JPanel implements ActionListener, DFNotificationCenterDelegate {
 
-	public JLabel label1, label2, label3;
-	public JFormattedTextField username, email;
+	public JLabel label1, label2;
+	public JFormattedTextField username;
 	public JPasswordField password;
 	public JButton createAccount;
-	private User u;
+	private User user;
+	public UserQuery uq;
 	
 	public Account() {
+		user = null;
+		uq = new UserQuery();
+		DFNotificationCenter.defaultCenter.addObserver(this, "exists");
+		
 		this.setLayout(new GridBagLayout());
 		Dimension size = new Dimension(40, 40);
 		
 		username = new JFormattedTextField();
-		username.setMinimumSize(size);
 		username.setSize(size);
-		password = new JPasswordField();
+		username.setMinimumSize(size);
+		username.setMaximumSize(size);
+		password = new JPasswordField(32);
 		password.setMinimumSize(size);
 		password.setSize(size);
-		email = new JFormattedTextField();
-		email.setMinimumSize(size);
-		email.setSize(size);
+		password.setMaximumSize(size);
 		label1 = new JLabel("Username:");
 		label2 = new JLabel("Password:");
-		label3 = new JLabel("Email:");
 		createAccount = new JButton("Submit");
 		createAccount.setActionCommand("account");
 		createAccount.addActionListener(this);
@@ -60,16 +65,9 @@ public class Account extends JPanel implements ActionListener{
 		c.gridx = 1;
 		c.gridy = 1;
 		this.add(password, c);
-		c.gridx = 0;
-		c.gridy = 2;
-		this.add(label3, c);
 		c.gridx = 1;
 		c.gridy = 2;
-		this.add(email, c);
-		c.gridx = 2;
-		c.gridy = 2;
 		this.add(createAccount, c);
-		
 		
 		this.setVisible(true);
 	}
@@ -77,23 +75,37 @@ public class Account extends JPanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println(username.getText());
-		System.out.println(password.getText());
-		System.out.println(email.getText());
 		if (e.getActionCommand().equals("account")) {
-			if (username.getText().equals("") && password.getText().equals("") && email.getText().equals("")) {
+			if (username.getText().equals("") && password.getPassword() == null) {
 				JOptionPane.showMessageDialog(this, "Please fill in all of the fields.", "Error", JOptionPane.ERROR_MESSAGE);	
 			}
+			else {				
+				uq.getUser(username.getText());
+				// replace line above
+				// uq.usernameExists(username.getText());
+			}
+		}
+	}
+
+	@Override
+	public void performActionFor(String notificationName, Object userData) {
+		// TODO Auto-generated method stub
+		System.out.println("Account performActionFor: " + notificationName);
+		if (notificationName.equals(UIStrings.exists)) {
+			boolean exists = (Boolean) userData;
+			if (!exists) {
+				//uq.addNewUser(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()), UserType.USER);
+				
+				String actualPassword = "";
+				for (int i = 0; i < password.getPassword().length; i++) {
+					actualPassword += password.getPassword()[i];
+				}
+				
+				uq.addNewUser(username.getText(), DFDatabase.defaultDatabase.hashString(actualPassword), UserType.USER);
+				JOptionPane.showMessageDialog(this, "Your account was created.");
+			}
 			else {
-				UserQuery uq = new UserQuery();
-				User u = null;
-				if ((u = uq.getUser(username.getText())) == null) {
-					uq.addNewUser(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()), UserType.USER);
-					JOptionPane.showMessageDialog(this, "Your account was created.");
-				}
-				else {
-					JOptionPane.showMessageDialog(this, "This username already exists, please use another.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
+				JOptionPane.showMessageDialog(this, "This username already exists, please use another.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}

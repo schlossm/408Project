@@ -2,17 +2,21 @@ package tests;
 
 import UIKit.DFNotificationCenter;
 import UIKit.DFNotificationCenterDelegate;
+import database.DFDatabase;
 
 public class DFNotificationCenterExample
 {
-    static public final String TestNotificationString = "Test Notification String";
+    private static final String TestNotificationString = "Test Notification String";
 
     public static void main(String[] args)
     {
-        DFNotificationCenter.defaultCenter.addObserver(new DFNotificationCenterListener(), TestNotificationString);
+        DFNotificationCenterListener listener = new DFNotificationCenterListener();
+        DFNotificationCenter.defaultCenter.register(listener, TestNotificationString);
 
-        DFNotificationCenter.defaultCenter.postNotification(TestNotificationString, null);
-        DFNotificationCenter.defaultCenter.postNotification(TestNotificationString, "I'm test data!");
+        DFNotificationCenter.defaultCenter.post(TestNotificationString, null);
+        DFNotificationCenter.defaultCenter.post(TestNotificationString, "I'm test data!");
+
+        DFNotificationCenter.defaultCenter.remove(listener);
     }
 }
 

@@ -22,6 +22,9 @@ public class DFDataDownloader
 	private final String databaseUserName;
     private final String databaseUserPass;
 
+    /**
+     * The callback delegate that conforms to DFDatabaseCallbackDelegate
+     */
     public DFDatabaseCallbackDelegate delegate;
 	
     public DFDataDownloader(String website, String readFile, String databaseUserName, String databaseUserPass)
@@ -31,7 +34,11 @@ public class DFDataDownloader
     	this.databaseUserName = databaseUserName;
     	this.databaseUserPass = databaseUserPass;
     }
-    
+
+    /**
+     * Downloads data from the database
+     * @param SQLStatement the SQL statement to execute on the web server
+     */
 	public void downloadDataWith(DFSQL SQLStatement)
 	{
 		if (DFDatabase.defaultDatabase.debug == 1)
@@ -94,7 +101,7 @@ public class DFDataDownloader
                 {
                     e.printStackTrace();
                 }
-                DFError error = new DFError(0, "There was an unknown error.  Please try again.");
+                DFError error = new DFError(0, "There was an unknown error.  Please try again.  SQL statement delivered: " + SQLStatement.formattedSQLStatement());
                 delegate.returnedData(null, error);
             }
         }).start();
