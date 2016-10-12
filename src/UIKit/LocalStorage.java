@@ -1,12 +1,8 @@
 package UIKit;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
-import java.io.File;
+import objects.Debate;
+import objects.User;
 
-import objects.*;
+import java.io.*;
 
 /*
  * LocalStorage.java
@@ -31,6 +27,7 @@ import objects.*;
  * typically stored using the file
  * extension .ser
  */
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class LocalStorage {
 	/*
 	 * Save the current session
