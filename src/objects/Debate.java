@@ -15,6 +15,14 @@ public class Debate implements Serializable {
 		this.list = new ArrayList<Post>();
 		this.isOpen = true;
 	}
+	
+	//Needed for DebateQuery
+	public Debate(String title, ArrayList<Post> list, Boolean isOpen){
+		this.title = title;
+		this.list = list;
+		this.isOpen = isOpen;
+	}
+	
 	public Debate createDebate(String title){
 		Debate newDebate = new Debate(title);
 		return newDebate;
