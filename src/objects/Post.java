@@ -10,8 +10,20 @@ public class Post implements Serializable
 	private String message;
 	private Boolean  isHidden;
 	private int numReports;
-
-
+	private Boolean isFlagged; //
+	private int postID; //
+	
+	// Utilized by PostQuery class
+	public  Post(int postID, String message, String username, String timeStamp, boolean isFlagged){
+		this.username = username;
+		this.message = message;
+		this.timeStamp = timeStamp;
+		this.isHidden =  false;
+		this.postID = postID;
+		this.isFlagged = isFlagged;
+		this.numReports = 0;
+	}
+	
 	public  Post(String username, String text){
 		this.username = username;
 		this.message = text;
