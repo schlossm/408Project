@@ -180,11 +180,10 @@ import java.util.Objects;
     			{
     				right = "'" + right + "'";
     			}
-    			
-    			//leftOuter, rightOuter, fullOuter, cross, inner, natural
+
     			if (joinStatement.joinType == DFSQLConjunctionClause.natural)
     			{
-    				returnString += " NATURAL JOIN `" + joinStatement.table + "` ON `" + left + "`=" + right;
+    				returnString += " NATURAL JOIN `" + joinStatement.table + "`";
     			}
     			else if (joinStatement.joinType == DFSQLConjunctionClause.leftOuter)
     			{
@@ -249,7 +248,7 @@ import java.util.Objects;
 				
     			if (whereStatement.conjunction == DFSQLConjunctionClause.none)
     			{
-    				returnString += " `" + left + "`" + joiner + right;
+    				returnString += " " + left + joiner + right;
     			}
     			else
     			{
@@ -263,7 +262,7 @@ import java.util.Objects;
     					conjunction = " OR";
     				}
     				
-    				returnString += " `" + left + "`" + joiner + right + conjunction;
+    				returnString += " " + left + joiner + right + conjunction;
     			}
     		}
     	}

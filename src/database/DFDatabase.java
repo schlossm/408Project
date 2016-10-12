@@ -35,6 +35,7 @@ public class DFDatabase
 	private final String websiteUserPass	= "3xT-MA8-HEm-sTd";
     private final String databaseUserPass	= "3xT-MA8-HEm-sTd";
 	private final char[] hexArray			= "0123456789ABCDEF".toCharArray();
+	private boolean useEncryption           = true;
 
 	private SecretKeySpec secretKeySpec;
 	private byte[] iv;
@@ -86,7 +87,8 @@ public class DFDatabase
 		catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e)
 		{
 			e.printStackTrace();
-			System.exit(-1);
+			System.out.println("Encryption failed to initialize.  Falling back to NO encryption.");
+			useEncryption = false;
 		}
 	}
 
@@ -144,40 +146,54 @@ public class DFDatabase
 
 	public @NotNull String encryptString(String decryptedString)
     {
-    	byte[] byteText = decryptedString.getBytes();
-		try
-		{
-			byte[] byteCipherText = encryptor.doFinal(byteText);
-			return bytesToHex(iv) + bytesToHex(byteCipherText);
-		}
-		catch (IllegalBlockSizeException | BadPaddingException e)
-		{
-			e.printStackTrace();
-			return "";
-		}
+	    if (useEncryption)
+	    {
+		    byte[] byteText = decryptedString.getBytes();
+		    try
+		    {
+			    byte[] byteCipherText = encryptor.doFinal(byteText);
+			    return bytesToHex(iv) + bytesToHex(byteCipherText);
+		    }
+		    catch (IllegalBlockSizeException | BadPaddingException e)
+		    {
+			    e.printStackTrace();
+			    return "";
+		    }
+	    }
+	    else
+	    {
+		    return decryptedString;
+	    }
     }
 
 	public @NotNull String decryptString(String encryptedString)
     {
-    	byte[] byteText = hexToBytes(encryptedString);
-		byte[] iv = new byte[16];
-		int length = byteText.length - 16;
+	    if (useEncryption)
+	    {
+		    byte[] byteText = hexToBytes(encryptedString);
+		    byte[] iv = new byte[16];
+		    int length = byteText.length - 16;
 
-		byte[] encryptedBytes = new byte[length];
-		System.arraycopy(byteText, 0, iv, 0, iv.length);
-		System.arraycopy(byteText, iv.length, encryptedBytes, 0, (byteText.length - iv.length));
-		IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
-		try
-		{
-			decryptor.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
-			byte[] byteCipherText = decryptor.doFinal(encryptedBytes);
-			return new String(byteCipherText);
-		}
-		catch (IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | InvalidKeyException e)
-		{
-			e.printStackTrace();
-			return "";
-		}
+		    byte[] encryptedBytes = new byte[length];
+		    System.arraycopy(byteText, 0, iv, 0, iv.length);
+		    System.arraycopy(byteText, iv.length, encryptedBytes, 0, (byteText.length - iv.length));
+		    IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
+		    try
+		    {
+			    decryptor.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
+			    byte[] byteCipherText = decryptor.doFinal(encryptedBytes);
+			    return new String(byteCipherText);
+		    }
+		    catch (IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | InvalidKeyException e)
+		    {
+			    e.printStackTrace();
+			    return "";
+		    }
+	    }
+	    else
+	    {
+		    return encryptedString;
+	    }
 	}
     
     private @NotNull String bytesToHex(byte[] bytes)
