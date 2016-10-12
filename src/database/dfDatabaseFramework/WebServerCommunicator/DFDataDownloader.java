@@ -86,6 +86,8 @@ public class DFDataDownloader
                     System.out.println(response);
                 }
 
+                conn.disconnect();
+
                 if (Objects.equals(response, "") || response.contains("No Data"))
                 {
                     DFError error = new DFError(1, "No data was returned.  Please try again if this is in error");
