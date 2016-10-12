@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.print.attribute.standard.RequestingUserName;
 
+import org.omg.CORBA.PUBLIC_MEMBER;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.sun.org.apache.bcel.internal.generic.NEW;
@@ -19,8 +21,9 @@ import database.dfDatabaseFramework.DFSQL.DFSQLError;
 import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploaderReturnStatus;
 import objects.User;
 import objects.User.UserType;
-
+import objects.Debate;
 import objects.Debate.*;
+import objects.Post;
 import objects.Post.*;
 
 public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCenterDelegate{
@@ -95,14 +98,23 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 
 	@Override
 	public void performActionFor(String notificationName, Object userData) {
-		// TODO Auto-generated method stub
 		if(notificationName.equals(UIStrings.postsReturned)){
 			if(userData == null){
 				debatePosts = null;
 			} else{
-				debatePosts = userData;
+				debatePosts = (ArrayList<Post>)userData;
 			}
+			constructDebateAndPost(debatePosts);
 		}
 	}
 
+	private void constructDebateAndPost(ArrayList<Post> debatePosts){
+		 Debate debateToBeReturned = new Debate(debateTitle, debatePosts, true);
+		 DFNotificationCenter.defaultCenter.post(UIStrings.debateReturned, debateToBeReturned);
+	}
+	
+	public static void main(String[] args){
+		DebateQuery debateQuery = new DebateQuery();
+		debateQuery.getDebatebyTitle("testDebate");
+	}
 }
