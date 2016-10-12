@@ -1,6 +1,5 @@
 package database;
 import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import database.dfDatabaseFramework.DFSQL.DFSQL;
 import database.dfDatabaseFramework.Utilities.DFDataSizePrinter;
 import database.dfDatabaseFramework.WebServerCommunicator.DFDataDownloader;

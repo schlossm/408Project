@@ -65,7 +65,7 @@ public class DFNotificationCenter
 	 */
 	public void remove(DFNotificationCenterDelegate observer, String notificationName)
 	{
-		((ArrayList<DFNotificationCenterObject>) observers.clone()).stream().filter(object -> object.observer == observer).forEach(object -> observers.remove(object));
+		((ArrayList<DFNotificationCenterObject>) observers.clone()).stream().filter(object -> object.observer == observer && Objects.equals(object.notificationName, notificationName)).forEach(object -> observers.remove(object));
 	}
 
 	/**
