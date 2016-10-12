@@ -9,4 +9,5 @@ public class UIStrings {
 	// use to send User object from getUser()
 	public static final String exists = "exists";
 	// use to check if a username already existing in database (true if exists).
+	public static final String postsReturned = "postsReturned";
 }
