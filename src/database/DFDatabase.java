@@ -86,6 +86,7 @@ public class DFDatabase
 		catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e)
 		{
 			e.printStackTrace();
+			System.exit(-1);
 		}
 	}
 
