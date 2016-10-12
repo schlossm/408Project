@@ -24,6 +24,7 @@ public class DFDataDownloader
 	private final String readFile;
 	private final String databaseUserName;
     private final String databaseUserPass;
+    private static Thread downloadThread;
 
     /**
      * The callback delegate that conforms to DFDatabaseCallbackDelegate
@@ -49,64 +50,71 @@ public class DFDataDownloader
 			System.out.println(SQLStatement.formattedSQLStatement());
 		}
 
-		new Thread(() -> {
-            try
-            {
-                if (DFDatabase.defaultDatabase.debug == 1)
-                {
-                    System.out.println("Downloading Data...");
-                }
-                String urlParameters 	= "Password="+ databaseUserPass + "&Username="+ databaseUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement();
-                byte[] postData       	= urlParameters.getBytes(StandardCharsets.UTF_8);
-                int    postDataLength 	= postData.length;
-                String request        	= website + "/" + readFile;
-                URL    url            	= new URL(request);
-                HttpURLConnection conn	= (HttpURLConnection)url.openConnection();
-                conn.setDoOutput(true);
-                conn.setInstanceFollowRedirects(false);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                conn.setRequestProperty("charset", "utf-8");
-                conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
-                conn.setUseCaches(false);
-                try(DataOutputStream wr = new DataOutputStream(conn.getOutputStream()))
-                {
-                    wr.write(postData);
-                }
+		if (downloadThread == null)
+        {
+            downloadThread = new Thread(() ->
+                                        {
+                                            try
+                                            {
+                                                if (DFDatabase.defaultDatabase.debug == 1)
+                                                {
+                                                    System.out.println("Downloading Data...");
+                                                }
+                                                String urlParameters = "Password=" + databaseUserPass + "&Username=" + databaseUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement();
+                                                byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
+                                                int postDataLength = postData.length;
+                                                String request = website + "/" + readFile;
+                                                URL url = new URL(request);
+                                                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                                                conn.setDoOutput(true);
+                                                conn.setInstanceFollowRedirects(false);
+                                                conn.setRequestMethod("POST");
+                                                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                                                conn.setRequestProperty("charset", "utf-8");
+                                                conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
+                                                conn.setUseCaches(false);
+                                                try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream()))
+                                                {
+                                                    wr.write(postData);
+                                                }
 
-                Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-                StringBuilder sb = new StringBuilder();
-                for (int c; (c = in.read()) >= 0;)
-                    sb.append((char)c);
-                String response = sb.toString();
-                DFDatabase.defaultDatabase.dataSizePrinter.printDataSize(response.length());
-                if (DFDatabase.defaultDatabase.debug == 1)
-                {
-                    System.out.println("Data Downloaded!");
-                    System.out.println(response);
-                }
+                                                Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                                                StringBuilder sb = new StringBuilder();
+                                                for (int c; (c = in.read()) >= 0; )
+                                                    sb.append((char) c);
+                                                String response = sb.toString();
+                                                DFDatabase.defaultDatabase.dataSizePrinter.printDataSize(response.length());
+                                                if (DFDatabase.defaultDatabase.debug == 1)
+                                                {
+                                                    System.out.println("Data Downloaded!");
+                                                    System.out.println(response);
+                                                }
 
-                if (Objects.equals(response, "") || response.contains("No Data"))
-                {
-                    DFError error = new DFError(1, "No data was returned.  Please try again if this is in error");
-                    delegate.returnedData(null, error);
-                }
-                else
-                {
-                    Gson gsonConverter = new Gson();
-                    JsonObject object = gsonConverter.fromJson(response, JsonObject.class);
-                    delegate.returnedData(object, null);
-                }
-            }
-            catch(Exception e)
-            {
-                if (DFDatabase.defaultDatabase.debug == 1)
-                {
-                    e.printStackTrace();
-                }
-                DFError error = new DFError(0, "There was an unknown error.  Please try again.  SQL statement delivered: " + SQLStatement.formattedSQLStatement());
-                delegate.returnedData(null, error);
-            }
-        }).start();
+                                                conn.disconnect();
+
+                                                if (Objects.equals(response, "") || response.contains("No Data"))
+                                                {
+                                                    DFError error = new DFError(1, "No data was returned.  Please try again if this is in error");
+                                                    delegate.returnedData(null, error);
+                                                }
+                                                else
+                                                {
+                                                    Gson gsonConverter = new Gson();
+                                                    JsonObject object = gsonConverter.fromJson(response, JsonObject.class);
+                                                    delegate.returnedData(object, null);
+                                                }
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                if (DFDatabase.defaultDatabase.debug == 1)
+                                                {
+                                                    e.printStackTrace();
+                                                }
+                                                DFError error = new DFError(0, "There was an unknown error.  Please try again.  SQL statement delivered: " + SQLStatement.formattedSQLStatement());
+                                                delegate.returnedData(null, error);
+                                            }
+                                        });
+        }
+        downloadThread.start();
 	}
 }
