@@ -31,7 +31,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		getUserReturn = true;
 		try {
 			dfsql.select(selectedRows).from("User").whereEquals("userID", username);
-			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		}
@@ -47,23 +47,23 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 				 isBannedInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsInt();
 				 userPrivInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel").getAsInt();
 			}catch (NullPointerException e2){
-				DFNotificationCenter.defaultCenter.postNotification(UIStrings.returned, null);				
+				DFNotificationCenter.defaultCenter.post(UIStrings.returned, null);				
 			}
 			 if(isBannedInt == 0){isBanned = false;}
 			 else {isBanned = true;}
 			 UserType userType = userPriviligeIntToEnumConverter(userPrivInt);
 			 User user = new User(usernameRecieved, userType, isBanned);
-			 DFNotificationCenter.defaultCenter.postNotification(UIStrings.returned, user);
+			 DFNotificationCenter.defaultCenter.post(UIStrings.returned, user);
 		} else if (verifyUserLoginReturn) {
 			String databasePassword = "";
 			try {
 				databasePassword = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("password").getAsString();
 			} catch (NullPointerException e2){
-				DFNotificationCenter.defaultCenter.postNotification(UIStrings.failure, Boolean.FALSE);
+				DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);
 				System.out.println("verifylogin returned nothing");
 			}
-			if(databasePassword.equals(bufferString)){DFNotificationCenter.defaultCenter.postNotification(UIStrings.success, Boolean.TRUE);System.out.println("verifylogin returned success");}
-			else {DFNotificationCenter.defaultCenter.postNotification(UIStrings.failure, Boolean.FALSE);System.out.println("verifylogin returned fail cos paswords dont match");}
+			if(databasePassword.equals(bufferString)){DFNotificationCenter.defaultCenter.post(UIStrings.success, Boolean.TRUE);System.out.println("verifylogin returned success");}
+			else {DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);System.out.println("verifylogin returned fail cos paswords dont match");}
 		}
 		
 		getUserReturn = false;
@@ -76,7 +76,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		int isBannedInt = 0;
 		try {
 			DFSQL dfsql = new DFSQL().select("banned").from("User").whereEquals("userID", username);
-			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 			isBannedInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsInt();
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
@@ -93,7 +93,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		int userTypeInt = 0;
 		try {
 			DFSQL dfsql = new DFSQL().select("privilegeLevel").from("User").whereEquals("userID", username);
-			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 			userTypeInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel").getAsInt();
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
@@ -118,7 +118,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		try {
 			dfsql.insert("User", values, rows);
 			System.out.println(dfsql.formattedSQLStatement());
-			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 			isaddSuccess = false;
@@ -157,7 +157,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		DFSQL dfsql = new DFSQL();
 		try {
 			dfsql.update("User", "privilegeLevel", String.valueOf(convertedUserType)).whereEquals("userID", userName);
-			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 			return false;
@@ -171,7 +171,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		System.out.println(newbanStatusInt);
 		try {
 			dfsql.update("User", "banned", String.valueOf(newbanStatusInt)).whereEquals("userID", userName);
-			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this); 
+			DFDatabase.defaultDatabase.execute(dfsql, this); 
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 			return false;
@@ -186,7 +186,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		verifyUserLoginReturn = true;
 		try {
 			dfsql.select(selectedRows).from("User").whereEquals("userID", userName);
-			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		}
