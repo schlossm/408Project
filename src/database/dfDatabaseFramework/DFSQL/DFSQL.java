@@ -6,8 +6,7 @@ import java.util.Objects;
 /**
  * The main SQL class.  DFDatabase uses a custom built SQL wrapper to add a layer of security and overload safety
  */
-@SuppressWarnings("unused")
-public class DFSQL
+@SuppressWarnings("unused") public class DFSQL
 {	
     private String[] selectRows;
     private String[] fromTables;
@@ -18,8 +17,7 @@ public class DFSQL
     private String[] insertData;
     
     private DFSQLClauseStruct[] updateStatements;
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private final ArrayList<DFSQL> appendedDFSQL;
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection") private final ArrayList<DFSQL> appendedDFSQL;
     
     public DFSQL()
     {
@@ -182,11 +180,10 @@ public class DFSQL
     			{
     				right = "'" + right + "'";
     			}
-    			
-    			//leftOuter, rightOuter, fullOuter, cross, inner, natural
+
     			if (joinStatement.joinType == DFSQLConjunctionClause.natural)
     			{
-    				returnString += " NATURAL JOIN `" + joinStatement.table + "` ON `" + left + "`=" + right;
+    				returnString += " NATURAL JOIN `" + joinStatement.table + "`";
     			}
     			else if (joinStatement.joinType == DFSQLConjunctionClause.leftOuter)
     			{
@@ -251,7 +248,7 @@ public class DFSQL
 				
     			if (whereStatement.conjunction == DFSQLConjunctionClause.none)
     			{
-    				returnString += " `" + left + "`" + joiner + right;
+    				returnString += " " + left + joiner + right;
     			}
     			else
     			{
@@ -265,7 +262,7 @@ public class DFSQL
     					conjunction = " OR";
     				}
     				
-    				returnString += " `" + left + "`" + joiner + right + conjunction;
+    				returnString += " " + left + joiner + right + conjunction;
     			}
     		}
     	}
