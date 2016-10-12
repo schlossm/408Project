@@ -18,7 +18,10 @@ import objects.User;
 import objects.User.UserType;
 
 import objects.Debate.*;
+import objects.Post;
 import objects.Post.*;
+
+import java.util.ArrayList;
 
 public class PostQuery implements DFDatabaseCallbackDelegate {
 	private JsonObject jsonObject;
@@ -28,7 +31,7 @@ public class PostQuery implements DFDatabaseCallbackDelegate {
 	
 	public void getDebatePosts(int debateID) {
 		DFSQL dfsql = new DFSQL();
-		String[] selectedRows = {"postID", "message", "username", "timeStamp", "flagged"};
+		String[] selectedRows = {"postID", "message", "username", "timeStamp", "flagged", "isHidden"};
 		getDebatePostsReturn = true;
 		try {
 			dfsql.select(selectedRows).from("Comment").joinOn("DebateComment", "`DebateComment`.postID", "`Comment`.postID").whereEquals("`DebateComment`.debateID", Integer.toString(debateID));
@@ -39,29 +42,37 @@ public class PostQuery implements DFDatabaseCallbackDelegate {
 	}
 	
 	private void returnHandler(){
-		/*if(getDebatePostsReturn){
-			String postIDRecieved = null;
+		if(getDebatePostsReturn){
+			int postIDReceived = null;
 			String messageReceived = null;
 			String usernameReceived = null;
-			String timeStampReceived = null
+			String timeStampReceived = null;
 			int flaggedReceived = 0;
+			int isHiddenReceived = 0;
+			
+			ArrayList<Post> posts = new ArrayList<Post>();
 			
 			try {
-				 postIDReceived = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("userID").getAsString();
-				 isBannedInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsInt();
-				 userPrivInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel").getAsInt();
+				for (int i = 0; i < jsonObject.get("Data").getAsJsonArray().size(); ++i) {
+					postIDReceived = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("postID").getAsInt();
+					messageReceived = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("message").getAsString();
+					usernameReceived = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("username").getAsString();
+					timeStampReceived = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("timeStamp").getAsString();
+					flaggedReceived = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("flagged").getAsInt();
+					isHiddenReceived = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("isHidden").getAsInt();
+					
+					Post p = new Post(postIDReceived, messageReceived, usernameReceived, timeStampReceived, flaggedReceived, isHiddenReceived);
+					posts.add(p);
+				}
 			}catch (NullPointerException e2){
 				DFNotificationCenter.defaultCenter.postNotification(UIStrings.returned, null);				
 			}
-			 if(isBannedInt == 0){isBanned = false;}
-			 else {isBanned = true;}
-			 UserType userType = userPriviligeIntToEnumConverter(userPrivInt);
-			 User user = new User(usernameRecieved, userType, isBanned);
-			 DFNotificationCenter.defaultCenter.postNotification(UIStrings.returned, user);
+			
+			 DFNotificationCenter.defaultCenter.postNotification(UIStrings.postsReturned, posts);
 		}
 		
 		getDebatePostsReturn = false;
-		bufferString = null;*/
+		bufferString = null;
 	}
 	
 	@Override

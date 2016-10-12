@@ -14,13 +14,13 @@ public class Post implements Serializable
 	private int postID; //
 	
 	// Utilized by PostQuery class
-	public  Post(int postID, String message, String username, String timeStamp, boolean isFlagged){
+	public  Post(int postID, String message, String username, String timeStamp, int isFlagged, int isHidden){
 		this.username = username;
 		this.message = message;
 		this.timeStamp = timeStamp;
-		this.isHidden =  false;
+		this.isHidden =  isHidden == 1 ? true : false;
 		this.postID = postID;
-		this.isFlagged = isFlagged;
+		this.isFlagged = isFlagged == 1 ? true : false;
 		this.numReports = 0;
 	}
 	
