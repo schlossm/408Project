@@ -43,7 +43,7 @@ public class PostQuery implements DFDatabaseCallbackDelegate {
 	
 	private void returnHandler(){
 		if(getDebatePostsReturn){
-			int postIDReceived = null;
+			int postIDReceived = 0;
 			String messageReceived = null;
 			String usernameReceived = null;
 			String timeStampReceived = null;
