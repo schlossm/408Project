@@ -1,8 +1,9 @@
 
+JSON_translation
+UI
 UIKit
 database
-dfDatabaseFramework.DFSQL
-dfDatabaseFramework.Utilities
-dfDatabaseFramework.WebServerCommunicator
+database.dfDatabaseFramework.DFSQL
+database.dfDatabaseFramework.Utilities
+database.dfDatabaseFramework.WebServerCommunicator
 objects
-tests

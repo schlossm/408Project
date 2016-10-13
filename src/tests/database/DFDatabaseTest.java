@@ -1,7 +1,10 @@
-package database;
+package tests.database;
 
 import com.google.gson.JsonObject;
 import com.sun.istack.internal.Nullable;
+import database.DFDatabase;
+import database.DFDatabaseCallbackDelegate;
+import database.DFError;
 import database.dfDatabaseFramework.DFSQL.DFSQL;
 import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploaderReturnStatus;
 import org.junit.After;
@@ -34,7 +37,7 @@ public class DFDatabaseTest implements DFDatabaseCallbackDelegate
     public void executeSQLStatement() throws Exception
     {
         DFSQL statement = new DFSQL().select("userID").from("Users");
-        DFDatabase.defaultDatabase.executeSQLStatement(statement, this);
+        DFDatabase.defaultDatabase.execute(statement, this);
     }
 
     @Test

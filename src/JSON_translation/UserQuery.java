@@ -6,6 +6,9 @@ import javax.print.attribute.standard.RequestingUserName;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.sun.org.apache.bcel.internal.generic.NEW;
+
+import UI.UIStrings;
+import UIKit.DFNotificationCenter;
 import database.DFDatabase;
 import database.DFDatabaseCallbackDelegate;
 import database.DFError;
@@ -18,29 +21,54 @@ import objects.User.UserType;
 public class UserQuery implements DFDatabaseCallbackDelegate{
 	private JsonObject jsonObject;
 	private DFDataUploaderReturnStatus uploadSuccess;
+	private boolean getUserReturn;
+	private boolean verifyUserLoginReturn;
+	private String bufferString;
 	
-	public User getUser(String username) {		
+	public void getUser(String username) {
 		DFSQL dfsql = new DFSQL();
 		String[] selectedRows = {"userID", "privilegeLevel", "banned"};
-		String usernameRecieved = null;
-		boolean isBanned;
-		int isBannedInt = 0, userPrivInt = 0;
+		getUserReturn = true;
 		try {
 			dfsql.select(selectedRows).from("User").whereEquals("userID", username);
-			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
-			 usernameRecieved = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("userID").getAsString();
-			 isBannedInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsInt();
-			 userPrivInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel").getAsInt();
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
-		} catch (NullPointerException e2){
-			return null;
 		}
-		if(isBannedInt == 0){isBanned = false;}
-		else {isBanned = true;}
-		UserType userType = userPriviligeIntToEnumConverter(userPrivInt);
-		User user = new User(usernameRecieved, userType, isBanned);
-		return user;
+	}
+	
+	private void returnHandler(){
+		if(getUserReturn){
+			String usernameRecieved = null;
+			boolean isBanned;
+			int isBannedInt = 0, userPrivInt = 0;
+			try {
+				 usernameRecieved = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("userID").getAsString();
+				 isBannedInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsInt();
+				 userPrivInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel").getAsInt();
+			}catch (NullPointerException e2){
+				DFNotificationCenter.defaultCenter.post(UIStrings.returned, null);				
+			}
+			 if(isBannedInt == 0){isBanned = false;}
+			 else {isBanned = true;}
+			 UserType userType = userPriviligeIntToEnumConverter(userPrivInt);
+			 User user = new User(usernameRecieved, userType, isBanned);
+			 DFNotificationCenter.defaultCenter.post(UIStrings.returned, user);
+		} else if (verifyUserLoginReturn) {
+			String databasePassword = "";
+			try {
+				databasePassword = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("password").getAsString();
+			} catch (NullPointerException e2){
+				DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);
+				System.out.println("verifylogin returned nothing");
+			}
+			if(databasePassword.equals(bufferString)){DFNotificationCenter.defaultCenter.post(UIStrings.success, Boolean.TRUE);System.out.println("verifylogin returned success");}
+			else {DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);System.out.println("verifylogin returned fail cos paswords dont match");}
+		}
+		
+		getUserReturn = false;
+		verifyUserLoginReturn = false;
+		bufferString = null;
 	}
 	
 	public boolean getUserBanStatus(String username) throws InvalidUserException{
@@ -48,7 +76,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		int isBannedInt = 0;
 		try {
 			DFSQL dfsql = new DFSQL().select("banned").from("User").whereEquals("userID", username);
-			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 			isBannedInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsInt();
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
@@ -65,7 +93,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		int userTypeInt = 0;
 		try {
 			DFSQL dfsql = new DFSQL().select("privilegeLevel").from("User").whereEquals("userID", username);
-			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 			userTypeInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel").getAsInt();
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
@@ -81,7 +109,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 	}
 	
 	
-	public User addNewUser(String userName, String pw, UserType userType){
+	public boolean addNewUser(String userName, String pw, UserType userType){
 		int convertedUserType = userPriviligeEnumToIntConverter(userType);
 		boolean isaddSuccess;
 		String[] rows = {"userID", "password", "privilegeLevel", "banned"};
@@ -90,19 +118,20 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		try {
 			dfsql.insert("User", values, rows);
 			System.out.println(dfsql.formattedSQLStatement());
-			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 			isaddSuccess = false;
 		}
 		if(uploadSuccess == DFDataUploaderReturnStatus.success){ isaddSuccess = true; }
 		else{isaddSuccess = false;}
-
+		/*
 		if(isaddSuccess){
 			return getUser(userName);
 		} else {
 			return null;
-		}
+		}*/
+		return isaddSuccess;
 	}
 	
 	private int userPriviligeEnumToIntConverter(UserType userType){
@@ -128,7 +157,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		DFSQL dfsql = new DFSQL();
 		try {
 			dfsql.update("User", "privilegeLevel", String.valueOf(convertedUserType)).whereEquals("userID", userName);
-			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 			return false;
@@ -142,7 +171,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		System.out.println(newbanStatusInt);
 		try {
 			dfsql.update("User", "banned", String.valueOf(newbanStatusInt)).whereEquals("userID", userName);
-			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this); 
+			DFDatabase.defaultDatabase.execute(dfsql, this); 
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 			return false;
@@ -150,21 +179,17 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		return true;
 	}
 	
-	public boolean verifyUserLogin(String userName, String password){
+	public void verifyUserLogin(String userName, String password){
 		DFSQL dfsql = new DFSQL();
 		String[] selectedRows = {"userID", "password"};
-		String databasePassword = "";
+		bufferString = password;
+		verifyUserLoginReturn = true;
 		try {
 			dfsql.select(selectedRows).from("User").whereEquals("userID", userName);
-			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
-			databasePassword = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("password").getAsString();
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
-		} catch (NullPointerException e2){
-			return false;
 		}
-		if(databasePassword.equals(password)){return true;}
-		else {return false;}
 	}
 
 	@Override
@@ -178,6 +203,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		} else {
 			this.jsonObject = jsonObject;
 		}
+		returnHandler();
 	}
 
 	@Override
@@ -210,7 +236,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		} catch (InvalidUserException e){
 			System.out.println("Exception caught");
 		}
-		System.out.println(userQuery.verifyUserLogin("naveenTest", "dasdsada"));
+		//System.out.println(userQuery.verifyUserLogin("naveenTest", "dasdsada"));
 		//System.out.println(userQuery.getUserPriv("testUser1212"));
 		//userQuery.getUser("testuser");
 		System.out.println("end reached");

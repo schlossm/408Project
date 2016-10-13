@@ -13,15 +13,21 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+/**
+ * Uploads an SQL statement to a remote SQL database
+ */
 public class DFDataUploader
 {
 	private final String website;
 	private final String writeFile;
 	private final String databaseUserName;
     private final String databaseUserPass;
-    
+
+    /**
+     * The callback delegate that conforms to DFDatabaseCallbackDelegate
+     */
     public DFDatabaseCallbackDelegate delegate;
-	
+
     public DFDataUploader(String website, String writeFile, String databaseUserName, String databaseUserPass)
     {
     	this.website = website;
@@ -29,7 +35,11 @@ public class DFDataUploader
     	this.databaseUserName = databaseUserName;
     	this.databaseUserPass = databaseUserPass;
     }
-    
+
+    /**
+     * Uploads data to the database
+     * @param SQLStatement the SQL statement to execute on the web server
+     */
 	public void uploadDataWith(DFSQL SQLStatement)
 	{
 		if (DFDatabase.defaultDatabase.debug == 1)

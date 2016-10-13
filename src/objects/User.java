@@ -27,9 +27,11 @@ public class User implements Serializable {
 		try {
 			User.jsonQuery = new UserQuery();
 		
-			this.username = username;
-			this.userType = User.jsonQuery.getUserPriv(username);
-			this.isBanned = User.jsonQuery.getUserBanStatus(username);
+			if (User.jsonQuery != null) {
+				this.username = username;
+				this.userType = User.jsonQuery.getUserPriv(username);
+				this.isBanned = User.jsonQuery.getUserBanStatus(username);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -43,9 +45,11 @@ public class User implements Serializable {
 	public User(String username, UserType userType, boolean isBanned) {
 		User.jsonQuery = new UserQuery();
 		
-		this.username = username;
-		this.userType = userType;
-		this.isBanned = isBanned;
+		if (User.jsonQuery != null) {
+			this.username = username;
+			this.userType = userType;
+			this.isBanned = isBanned;
+		}
 	}	
 	
 	public String getUsername() {

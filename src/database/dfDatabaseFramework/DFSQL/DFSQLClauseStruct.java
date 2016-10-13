@@ -1,5 +1,8 @@
 package database.dfDatabaseFramework.DFSQL;
 
+/**
+ * A class for holding a generic clause
+ */
 @SuppressWarnings("WeakerAccess")
 public class DFSQLClauseStruct
 {

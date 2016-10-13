@@ -1,10 +1,14 @@
 package UI;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
+
 import javax.swing.JPanel;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.Window;
+
+import UIKit.*;
 
 public class Frame extends JFrame {
 	
@@ -12,6 +16,13 @@ public class Frame extends JFrame {
 	public JTabbedPane tabs;
 	
 	public Frame(String title) {
+		
+		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) login, "login");
+		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) debate, "debate");
+		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) admin, "admin");
+		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) rules, "rules");
+		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) account, "account");
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		login = new Login(this);
@@ -28,11 +39,11 @@ public class Frame extends JFrame {
 		//tabs.add("Administration", admin);
 		//tabs.add("Rules", rules);
 		tabs.setVisible(true);
-		
 		add(tabs);
 		setVisible(true);
 		
-		this.setSize(new Dimension(1200, 900));
+		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+		this.setMinimumSize(new Dimension(600, 400));
 		this.setTitle(title);
 	}
 }

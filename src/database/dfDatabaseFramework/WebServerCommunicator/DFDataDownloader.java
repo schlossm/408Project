@@ -15,6 +15,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+/**
+ * The downloader class.  Connects securely to the website, and uploads a POST statement containing the data required to download from the database
+ */
 public class DFDataDownloader
 {
 	private final String website;
@@ -22,6 +25,9 @@ public class DFDataDownloader
 	private final String databaseUserName;
     private final String databaseUserPass;
 
+    /**
+     * The callback delegate that conforms to DFDatabaseCallbackDelegate
+     */
     public DFDatabaseCallbackDelegate delegate;
 	
     public DFDataDownloader(String website, String readFile, String databaseUserName, String databaseUserPass)
@@ -31,27 +37,31 @@ public class DFDataDownloader
     	this.databaseUserName = databaseUserName;
     	this.databaseUserPass = databaseUserPass;
     }
-    
+
+    /**
+     * Downloads data from the database
+     * @param SQLStatement the SQL statement to execute on the web server
+     */
 	public void downloadDataWith(DFSQL SQLStatement)
 	{
 		if (DFDatabase.defaultDatabase.debug == 1)
 		{
 			System.out.println(SQLStatement.formattedSQLStatement());
 		}
-
-		new Thread(() -> {
+		new Thread(() ->
+        {
             try
             {
                 if (DFDatabase.defaultDatabase.debug == 1)
                 {
                     System.out.println("Downloading Data...");
                 }
-                String urlParameters 	= "Password="+ databaseUserPass + "&Username="+ databaseUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement();
-                byte[] postData       	= urlParameters.getBytes(StandardCharsets.UTF_8);
-                int    postDataLength 	= postData.length;
-                String request        	= website + "/" + readFile;
-                URL    url            	= new URL(request);
-                HttpURLConnection conn	= (HttpURLConnection)url.openConnection();
+                String urlParameters = "Password=" + databaseUserPass + "&Username=" + databaseUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement();
+                byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
+                int postDataLength = postData.length;
+                String request = website + "/" + readFile;
+                URL url = new URL(request);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoOutput(true);
                 conn.setInstanceFollowRedirects(false);
                 conn.setRequestMethod("POST");
@@ -59,15 +69,15 @@ public class DFDataDownloader
                 conn.setRequestProperty("charset", "utf-8");
                 conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
                 conn.setUseCaches(false);
-                try(DataOutputStream wr = new DataOutputStream(conn.getOutputStream()))
+                try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream()))
                 {
                     wr.write(postData);
                 }
 
                 Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
                 StringBuilder sb = new StringBuilder();
-                for (int c; (c = in.read()) >= 0;)
-                    sb.append((char)c);
+                for (int c; (c = in.read()) >= 0; )
+                    sb.append((char) c);
                 String response = sb.toString();
                 DFDatabase.defaultDatabase.dataSizePrinter.printDataSize(response.length());
                 if (DFDatabase.defaultDatabase.debug == 1)
@@ -75,6 +85,8 @@ public class DFDataDownloader
                     System.out.println("Data Downloaded!");
                     System.out.println(response);
                 }
+
+                conn.disconnect();
 
                 if (Objects.equals(response, "") || response.contains("No Data"))
                 {
@@ -88,15 +100,15 @@ public class DFDataDownloader
                     delegate.returnedData(object, null);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 if (DFDatabase.defaultDatabase.debug == 1)
                 {
                     e.printStackTrace();
                 }
-                DFError error = new DFError(0, "There was an unknown error.  Please try again.");
+                DFError error = new DFError(0, "There was an unknown error.  Please try again.  SQL statement delivered: " + SQLStatement.formattedSQLStatement());
                 delegate.returnedData(null, error);
             }
         }).start();
-	}
+    }
 }

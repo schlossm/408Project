@@ -1,8 +1,8 @@
 package UIKit;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
+import objects.Debate;
+import objects.User;
+
+import java.io.*;
 
 /*
  * LocalStorage.java
@@ -27,11 +27,49 @@ import java.io.ObjectInputStream;
  * typically stored using the file
  * extension .ser
  */
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class LocalStorage {
+	/*
+	 * Save the current session
+	 */
+	public static void saveSession(User currentUser, Debate currentDebate) {
+		// Create cache directory in current location
+		File dir = new File("cache");
+		dir.mkdir();
+		
+		// Clear the files
+		try {
+			PrintWriter upw = new PrintWriter("cache/user.ser");
+			upw.close();
+			PrintWriter dpw = new PrintWriter("cache/debate.ser");
+			dpw.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// Save the individual objects
+		saveObjectToFile(currentUser, "cache/user.ser");
+		saveObjectToFile(currentDebate, "cache/debate.ser");
+	}
+	
+	/*
+	 * Load the User
+	 */
+	public static User loadUser() {
+		return (User) loadObjectFromFile("cache/user.ser");
+	}
+	
+	/*
+	 * Load the Debate
+	 */
+	public static Debate loadDebate() {
+		return (Debate) loadObjectFromFile("cache/debate.ser");
+	}
+	
 	/*
 	 * Save an individual object to a file (*.ser)
 	 */
-	public static void saveObjectToFile(Object object, String filename) {
+	private static void saveObjectToFile(Object object, String filename) {
 		try {
 			FileOutputStream fileOut = new FileOutputStream(filename);
 			ObjectOutputStream objOut = new ObjectOutputStream(fileOut);
@@ -47,12 +85,12 @@ public class LocalStorage {
 	/*
 	 * Load an individual object from a file (*.ser)
 	 * 
-	 * Remember to case the result of this method to
+	 * Remember to cast the result of this method to
 	 * the type you are loading its value into
 	 * 
 	 * Returns null on failure
 	 */
-	public static Object loadObjectFromFile(String filename) {
+	private static Object loadObjectFromFile(String filename) {
 		try {
 			Object object;
 			
