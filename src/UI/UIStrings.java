@@ -10,4 +10,7 @@ public class UIStrings {
 	public static final String exists = "exists";
 	// use to check if a username already existing in database (true if exists).
 	public static final String postsReturned = "postsReturned";
+	
+	// used to listen for debate object to be returned.
+	public static final String debateReturned = "debateReturned";
 }

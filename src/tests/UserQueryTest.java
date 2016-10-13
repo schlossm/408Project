@@ -71,9 +71,8 @@ public class UserQueryTest implements DFNotificationCenterDelegate{
 	@Test
 	public void testGetUser() {
 		user = null;
-		
+		DFNotificationCenter.defaultCenter.register(this, UIStrings.returned);
 		userQuery.getUser(name);
-		DFNotificationCenter.defaultCenter.addObserver(this, UIStrings.returned);
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
@@ -89,7 +88,7 @@ public class UserQueryTest implements DFNotificationCenterDelegate{
 	public void testGetInvalidUser() {
 		User user = null;		
 		userQuery.getUser(invalidName);
-		DFNotificationCenter.defaultCenter.addObserver(this, UIStrings.returned);
+		DFNotificationCenter.defaultCenter.register(this, UIStrings.returned);
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
@@ -169,8 +168,8 @@ public class UserQueryTest implements DFNotificationCenterDelegate{
 	*/ 
 	@Test
 	public void testVerifyLoginValidUserValidPassword(){
-		DFNotificationCenter.defaultCenter.addObserver(this, UIStrings.success);
-		DFNotificationCenter.defaultCenter.addObserver(this, UIStrings.failure);
+		DFNotificationCenter.defaultCenter.register(this, UIStrings.success);
+		DFNotificationCenter.defaultCenter.register(this, UIStrings.failure);
 		userQuery.verifyUserLogin(name, "blahblah");
 		try {
 			Thread.sleep(2000);
@@ -183,8 +182,8 @@ public class UserQueryTest implements DFNotificationCenterDelegate{
 	
 	@Test
 	public void testVerifyLoginInvalidUser(){
-		DFNotificationCenter.defaultCenter.addObserver(this, UIStrings.success);
-		DFNotificationCenter.defaultCenter.addObserver(this, UIStrings.failure);
+		DFNotificationCenter.defaultCenter.register(this, UIStrings.success);
+		DFNotificationCenter.defaultCenter.register(this, UIStrings.failure);
 		userQuery.verifyUserLogin(invalidName, "blahblah");
 		try {
 			Thread.sleep(2000);
@@ -196,8 +195,8 @@ public class UserQueryTest implements DFNotificationCenterDelegate{
 	
 	@Test
 	public void testVerifyLoginValidUserInvalidPassword(){
-		DFNotificationCenter.defaultCenter.addObserver(this, UIStrings.success);
-		DFNotificationCenter.defaultCenter.addObserver(this, UIStrings.failure);
+		DFNotificationCenter.defaultCenter.register(this, UIStrings.success);
+		DFNotificationCenter.defaultCenter.register(this, UIStrings.failure);
 		userQuery.verifyUserLogin(name, "invalidPassword");
 		try {
 			Thread.sleep(2000);
