@@ -15,6 +15,7 @@ import JSON_translation.UserQuery.InvalidUserException;
 import UI.UIStrings;
 import UIKit.DFNotificationCenter;
 import UIKit.DFNotificationCenterDelegate;
+import database.DFDatabase;
 import objects.User;
 import objects.User.UserType;
 
@@ -73,24 +74,25 @@ public class UserQueryTest implements DFNotificationCenterDelegate{
 		user = null;
 		DFNotificationCenter.defaultCenter.register(this, UIStrings.returned);
 		userQuery.getUser(name);
+
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		assertTrue(user != null);
+		
 		assertTrue(!user.isBanned());
 		assertTrue(user.getUserType() == UserType.USER);
-		assertTrue(user.getUsername().equals("testuser"));
+		assertTrue(user.getUsername().equals(name));
 	}
 	
 	@Test
 	public void testGetInvalidUser() {
 		User user = null;		
-		userQuery.getUser(invalidName);
 		DFNotificationCenter.defaultCenter.register(this, UIStrings.returned);
+		userQuery.getUser(invalidName);		
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -170,7 +172,10 @@ public class UserQueryTest implements DFNotificationCenterDelegate{
 	public void testVerifyLoginValidUserValidPassword(){
 		DFNotificationCenter.defaultCenter.register(this, UIStrings.success);
 		DFNotificationCenter.defaultCenter.register(this, UIStrings.failure);
-		userQuery.verifyUserLogin(name, "blahblah");
+		
+		String encryptedPassword = DFDatabase.defaultDatabase.encryptString("blahblah");
+		System.out.println(encryptedPassword);
+		userQuery.verifyUserLogin(invalidName, encryptedPassword);
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
@@ -184,7 +189,8 @@ public class UserQueryTest implements DFNotificationCenterDelegate{
 	public void testVerifyLoginInvalidUser(){
 		DFNotificationCenter.defaultCenter.register(this, UIStrings.success);
 		DFNotificationCenter.defaultCenter.register(this, UIStrings.failure);
-		userQuery.verifyUserLogin(invalidName, "blahblah");
+		String encryptedPassword = DFDatabase.defaultDatabase.encryptString("blahblah");
+		userQuery.verifyUserLogin(invalidName, encryptedPassword);
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
@@ -197,7 +203,8 @@ public class UserQueryTest implements DFNotificationCenterDelegate{
 	public void testVerifyLoginValidUserInvalidPassword(){
 		DFNotificationCenter.defaultCenter.register(this, UIStrings.success);
 		DFNotificationCenter.defaultCenter.register(this, UIStrings.failure);
-		userQuery.verifyUserLogin(name, "invalidPassword");
+		String encryptedPassword = DFDatabase.defaultDatabase.encryptString("invalidPassword");
+		userQuery.verifyUserLogin(invalidName, encryptedPassword);
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
