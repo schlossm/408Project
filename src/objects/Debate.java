@@ -11,6 +11,7 @@ public class Debate implements Serializable {
 	ArrayList<Post> list;
 	String title;
 	
+	
 	static DebateQuery jsonQuery;
 	static PostQuery jsonQuery2;
 	
