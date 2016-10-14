@@ -65,7 +65,7 @@ public class PostQuery implements DFDatabaseCallbackDelegate {
 					posts.add(p);
 				}
 			}catch (NullPointerException e2){
-				DFNotificationCenter.defaultCenter.postNotification(UIStrings.returned, null);				
+				DFNotificationCenter.defaultCenter.postNotification(UIStrings.postsReturned, null);				
 			}
 			
 			 DFNotificationCenter.defaultCenter.postNotification(UIStrings.postsReturned, posts);

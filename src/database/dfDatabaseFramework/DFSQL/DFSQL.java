@@ -160,7 +160,7 @@ import java.util.Objects;
     	returnString = "SELECT ";
     	for (String row : selectRows)
     	{
-    		returnString += "`" + row + "`,";
+    		returnString += row + ",";
     	}
     	returnString = returnString.substring(0, returnString.length() - 1) + " FROM ";
     	for (String table : fromTables)
