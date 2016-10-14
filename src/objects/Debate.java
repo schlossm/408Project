@@ -38,13 +38,13 @@ public class Debate implements Serializable {
 		}
 	}
 	
-	public boolean createDebate(String title){
+	public boolean createDebate(String title, String debateText, String start, String end){
 		boolean debateMade = false;
 		try {
-			if(Debate.jsonQuery.createNewDebate(title)){
-				debateMade = true;
+			Debate.jsonQuery.createNewDebate(title, debateText, start, end);
+			debateMade = true;
 			}
-		} catch (Exception e){
+		 catch (Exception e){
 			e.printStackTrace();
 		}
 		return debateMade;
@@ -52,14 +52,12 @@ public class Debate implements Serializable {
 	public void closeDebate(Debate toBeClosed){
 		toBeClosed.isOpen = false;
 	}
-	@Nullable public Debate getDebateWithTitle(String title){
-		Debate oldDebate = null;
+	public void getDebateWithTitle(String title){
 		try{
-			oldDebate = Debate.jsonQuery.getDebatebyTitle(title));
+			Debate.jsonQuery.getDebateByTitle(title);
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		return oldDebate;
 	}
 	public ArrayList<Post> getPosts(){
 		return this.list;
