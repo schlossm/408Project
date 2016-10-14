@@ -13,4 +13,6 @@ public class UIStrings {
 	
 	// used to listen for debate object to be returned.
 	public static final String debateReturned = "debateReturned";
+	// used to listen for debate object to be returned.
+	public static final String debateCreated = "debateCreated";
 }
