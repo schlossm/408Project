@@ -33,13 +33,12 @@ public class DFNotificationCenter
 	private DFNotificationCenter() { }
 
 	/**
-	 * 	@deprecated use `register(_:, _:)` instead
 	 *	@param object The object that will be receiving the notification.  This object must conform to the DFNotificationCenterDelegate interface
 	 *  @param notificationName The notification name the object wishes to listen for.  All other notifications will be ignored
 	 */
-	@Deprecated public void addObserver(DFNotificationCenterDelegate object, String notificationName)
+	public void addObserver(DFNotificationCenterDelegate object, String notificationName)
 	{
-		System.out.println(DFDatabase.getMethodName(2) + " is now deprecated.  Use `register(_:, _:)` instead.  Will call new method for you this time");
+		System.out.println(DFDatabase.getMethodName(2) + " is now deprecated.  Use `register(_:, _:)` instead");
 		register(object, notificationName);
 	}
 
@@ -78,13 +77,12 @@ public class DFNotificationCenter
 	}
 
 	/**
-	 * 	@deprecated use `post(_:, _:)` instead
 	 * 	@param notificationName The notification name the object wishes to post for
 	 * 	@param userData Optional data the object calling this function wishes to pass on to any observers
 	 */
-	@Deprecated public void postNotification(String notificationName, Object userData)
+	public void postNotification(String notificationName, Object userData)
 	{
-		System.out.println(DFDatabase.getMethodName(2) + " is now deprecated.  Use `post(_:, _:)` instead.  Will call new method for you this time");
+		System.out.println(DFDatabase.getMethodName(2) + " is now deprecated.  Use `post(_:, _:)` instead");
 		post(notificationName, userData);
 	}
 

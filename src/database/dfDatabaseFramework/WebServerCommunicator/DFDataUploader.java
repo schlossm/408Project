@@ -1,13 +1,11 @@
 package database.dfDatabaseFramework.WebServerCommunicator;
+
 import database.DFDatabase;
 import database.DFDatabaseCallbackDelegate;
 import database.DFError;
 import database.dfDatabaseFramework.DFSQL.DFSQL;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -22,11 +20,6 @@ public class DFDataUploader
 	private final String writeFile;
 	private final String databaseUserName;
     private final String databaseUserPass;
-
-    /**
-     * The callback delegate that conforms to DFDatabaseCallbackDelegate
-     */
-    public DFDatabaseCallbackDelegate delegate;
 
     public DFDataUploader(String website, String writeFile, String databaseUserName, String databaseUserPass)
     {
@@ -47,7 +40,9 @@ public class DFDataUploader
 			System.out.println(SQLStatement.formattedSQLStatement());
 		}
 
-		new Thread(() -> {
+		new Thread(() ->
+        {
+            DFDatabaseCallbackDelegate delegate = DFDatabase.defaultDatabase.delegate;
             try
             {
                 if (DFDatabase.defaultDatabase.debug == 1)
@@ -87,26 +82,36 @@ public class DFDataUploader
                 {
                     DFError error = new DFError(1, "No data was returned.   Please try again if this is in error.");
                     delegate.uploadStatus(DFDataUploaderReturnStatus.error, error);
+                    DFDatabase.defaultDatabase.delegate = null;
                     return;
                 }
 
                 if (response.contains("Success"))
                 {
                     delegate.uploadStatus(DFDataUploaderReturnStatus.success, null);
+                    DFDatabase.defaultDatabase.delegate = null;
                 }
                 else
                 {
                     delegate.uploadStatus(DFDataUploaderReturnStatus.failure, null);
+                    DFDatabase.defaultDatabase.delegate = null;
                 }
             }
-            catch(Exception e)
+            catch(NullPointerException | IOException e)
             {
-                if (DFDatabase.defaultDatabase.debug == 1)
-                {
+                if (DFDatabase.defaultDatabase.debug == 1) {
                     e.printStackTrace();
                 }
-                DFError error = new DFError(0, "There was an unknown error.  Please try again.");
+
+                if (delegate == null)
+                {
+                    System.out.println("Callback delegate got set to NULL before arriving at end of thread.  Please make sure you're not calling multiple");
+                    return;
+                }
+
+                DFError error = new DFError(0, "There was a(n) " + e.getCause() + " error.  It's recommended you set DFDatabase -debug to 1.  Please try again.");
                 delegate.uploadStatus(DFDataUploaderReturnStatus.error, error);
+                DFDatabase.defaultDatabase.delegate = null;
             }
         }).start();
 	}
