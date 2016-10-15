@@ -1,6 +1,8 @@
 package UI;
 
 import objects.*;
+import objects.User.UserType;
+
 import javax.swing.JPanel;
 import javax.swing.JFormattedTextField;
 import javax.swing.ButtonGroup;
@@ -16,10 +18,12 @@ public class Admin extends JPanel implements ActionListener{
 	public JFormattedTextField searchUser, searchComment;
 	public JButton searchUserButton, banUserButton, unbanUserButton, searchCommentButton, hideCommentButton, showCommentButton;
 	public JRadioButton user, mod, admin;
-	private User u;
+	public User u;
+	public Frame frame;
 	
-	public Admin(User u) {
-		this.u = u;
+	public Admin(Frame frame) {
+		this.frame = frame;
+		u = frame.user;
 		
 		label1 = new JLabel("Enter a Username");
 		searchUser = new JFormattedTextField();
@@ -43,11 +47,6 @@ public class Admin extends JPanel implements ActionListener{
 		admin.setActionCommand("setAdmin");
 		admin.addActionListener(this);
 		
-		ButtonGroup group = new ButtonGroup();
-		group.add(user);
-		group.add(mod);
-		group.add(admin);
-		
 		label2 = new JLabel("Enter a Comment ID");
 		searchComment = new JFormattedTextField();
 		searchCommentButton = new JButton("Search");
@@ -60,20 +59,6 @@ public class Admin extends JPanel implements ActionListener{
 		showCommentButton.setActionCommand("showComment");
 		showCommentButton.addActionListener(this);
 		
-		this.add(label1);
-		this.add(searchUser);
-		this.add(searchUserButton);
-		this.add(banUserButton);
-		this.add(unbanUserButton);
-		this.add(user);
-		this.add(mod);
-		this.add(admin);
-		
-		this.add(label2);
-		this.add(searchComment);
-		this.add(searchCommentButton);
-		this.add(hideCommentButton);
-		this.add(showCommentButton);
 		this.setVisible(true);
 	}
 	
@@ -107,6 +92,28 @@ public class Admin extends JPanel implements ActionListener{
 		else if (e.getActionCommand().equals("showComment")) {
 			
 		}
+	}
+	
+	public void setUserType(UserType ut) {
+		this.add(label1);
+		this.add(searchUser);
+		this.add(searchUserButton);
+		this.add(banUserButton);
+		this.add(unbanUserButton);
+		if (ut.equals(UserType.ADMIN)) {
+			ButtonGroup group = new ButtonGroup();
+			group.add(user);
+			group.add(mod);
+			group.add(admin);
+			this.add(user);
+			this.add(mod);
+			this.add(admin);
+		}
+		this.add(label2);
+		this.add(searchComment);
+		this.add(searchCommentButton);
+		this.add(hideCommentButton);
+		this.add(showCommentButton);
 	}
 	
 }

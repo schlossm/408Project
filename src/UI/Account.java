@@ -19,20 +19,17 @@ import java.awt.Dimension;
 import java.awt.event.*;
 import java.awt.*;
 
-@SuppressWarnings("deprecation")
-public class Account extends JPanel implements ActionListener, DFNotificationCenterDelegate {
+public class Account extends JPanel implements ActionListener {
 
 	public JLabel label1, label2;
 	public JFormattedTextField username;
 	public JPasswordField password;
 	public JButton createAccount;
-	private User user;
-	public UserQuery uq;
+	public Frame frame;
 	
-	public Account() {
-		user = null;
-		uq = new UserQuery();
-		DFNotificationCenter.defaultCenter.addObserver(this, "exists");
+	public Account(Frame frame) {
+		this.frame = frame;
+		//DFNotificationCenter.defaultCenter.addObserver(this, "exists");
 		
 		this.setLayout(new GridBagLayout());
 		Dimension size = new Dimension(40, 40);
@@ -80,32 +77,9 @@ public class Account extends JPanel implements ActionListener, DFNotificationCen
 				JOptionPane.showMessageDialog(this, "Please fill in all of the fields.", "Error", JOptionPane.ERROR_MESSAGE);	
 			}
 			else {				
-				uq.getUser(username.getText());
+				frame.uq.getUser(username.getText());
 				// replace line above
-				// uq.usernameExists(username.getText());
-			}
-		}
-	}
-
-	@Override
-	public void performActionFor(String notificationName, Object userData) {
-		// TODO Auto-generated method stub
-		System.out.println("Account performActionFor: " + notificationName);
-		if (notificationName.equals(UIStrings.exists)) {
-			boolean exists = (Boolean) userData;
-			if (!exists) {
-				//uq.addNewUser(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()), UserType.USER);
-				
-				String actualPassword = "";
-				for (int i = 0; i < password.getPassword().length; i++) {
-					actualPassword += password.getPassword()[i];
-				}
-				
-				uq.addNewUser(username.getText(), DFDatabase.defaultDatabase.hashString(actualPassword), UserType.USER);
-				JOptionPane.showMessageDialog(this, "Your account was created.");
-			}
-			else {
-				JOptionPane.showMessageDialog(this, "This username already exists, please use another.", "Error", JOptionPane.ERROR_MESSAGE);
+				//frame.uq.usernameExists(username.getText());
 			}
 		}
 	}
