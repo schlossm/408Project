@@ -2,6 +2,7 @@ package objects;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import JSON_translation.*;
 
 public class Post implements Serializable
 {
@@ -12,7 +13,7 @@ public class Post implements Serializable
 	private int numReports;
 	private Boolean isFlagged; //
 	private int postID; //
-	
+	static PostQuery jsonQuery;
 	// Utilized by PostQuery class
 	public  Post(int postID, String message, String username, String timeStamp, int isFlagged, int isHidden){
 		this.username = username;
@@ -25,11 +26,19 @@ public class Post implements Serializable
 	}
 	
 	public  Post(String username, String text){
-		this.username = username;
-		this.message = text;
-		this.timeStamp = makeTimestamp();
-		this.isHidden =  false;
-		this.numReports = 0;
+		try {
+			Post.jsonQuery = new PostQuery();
+		
+			if(User.jsonQuery != null){
+				this.username = username;
+				this.message = text;
+				this.timeStamp = makeTimestamp();
+				this.isHidden =  false;
+				this.numReports = 0;
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Post createPost(User user, String text){
@@ -49,7 +58,6 @@ public class Post implements Serializable
 	public String getTimestamp(){
 		return this.timeStamp;
 	}
-
 	public String makeTimestamp(){
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		 this.timeStamp = dateFormat.format(new Date());
