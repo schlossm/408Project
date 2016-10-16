@@ -24,11 +24,6 @@ public class DFDataDownloader
 	private final String readFile;
 	private final String databaseUserName;
     private final String databaseUserPass;
-
-    /**
-     * The callback delegate that conforms to DFDatabaseCallbackDelegate
-     */
-    public DFDatabaseCallbackDelegate delegate;
 	
     public DFDataDownloader(String website, String readFile, String databaseUserName, String databaseUserPass)
     {
@@ -50,6 +45,7 @@ public class DFDataDownloader
 		}
 		new Thread(() ->
         {
+            DFDatabaseCallbackDelegate delegate = DFDatabase.defaultDatabase.delegate;
             try
             {
                 if (DFDatabase.defaultDatabase.debug == 1)
@@ -92,12 +88,14 @@ public class DFDataDownloader
                 {
                     DFError error = new DFError(1, "No data was returned.  Please try again if this is in error");
                     delegate.returnedData(null, error);
+                    DFDatabase.defaultDatabase.delegate = null;
                 }
                 else
                 {
                     Gson gsonConverter = new Gson();
                     JsonObject object = gsonConverter.fromJson(response, JsonObject.class);
                     delegate.returnedData(object, null);
+                    DFDatabase.defaultDatabase.delegate = null;
                 }
             }
             catch (Exception e)
@@ -106,8 +104,16 @@ public class DFDataDownloader
                 {
                     e.printStackTrace();
                 }
-                DFError error = new DFError(0, "There was an unknown error.  Please try again.  SQL statement delivered: " + SQLStatement.formattedSQLStatement());
+
+                if (delegate == null)
+                {
+                    System.out.println("Callback delegate got set to NULL before arriving at end of thread.  Please make sure you're not calling multiple");
+                    return;
+                }
+
+                DFError error = new DFError(0, "There was a(n) " + e.getCause() + " error.  It's recommended you set DFDatabase -debug to 1.  Please try again.");
                 delegate.returnedData(null, error);
+                DFDatabase.defaultDatabase.delegate = null;
             }
         }).start();
     }
