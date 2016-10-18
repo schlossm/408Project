@@ -12,6 +12,6 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-		Frame f = new Frame("School of Thought");
+		new Frame("School of Thought");
 	}
 }

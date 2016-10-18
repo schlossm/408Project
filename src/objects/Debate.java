@@ -10,32 +10,55 @@ public class Debate implements Serializable {
 	boolean isOpen;
 	ArrayList<Post> list;
 	String title;
+	
+	
+	static DebateQuery jsonQuery;
+	static PostQuery jsonQuery2;
+	
 	public Debate(String title){
-		this.title = title;
-		this.list = new ArrayList<Post>();
-		this.isOpen = true;
+		try{
+			Debate.jsonQuery = new DebateQuery();
+			if(Debate.jsonQuery != null){
+				this.title = title;
+				this.list = new ArrayList<Post>();
+				this.isOpen = true;
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	//Needed for DebateQuery
 	public Debate(String title, ArrayList<Post> list, Boolean isOpen){
-		this.title = title;
-		this.list = list;
-		this.isOpen = isOpen;
+		Debate.jsonQuery = new DebateQuery();
+		
+		if(Debate.jsonQuery != null){
+			this.title = title;
+			this.list = list;
+			this.isOpen = isOpen;
+		}
 	}
 	
-	public Debate createDebate(String title){
-		Debate newDebate = new Debate(title);
-		return newDebate;
+	public boolean createDebate(String title, String debateText, String start, String end){
+		boolean debateMade = false;
+		try {
+			Debate.jsonQuery.createNewDebate(title, debateText, start, end);
+			debateMade = true;
+			}
+		 catch (Exception e){
+			e.printStackTrace();
+		}
+		return debateMade;
 	}
 	public void closeDebate(Debate toBeClosed){
 		toBeClosed.isOpen = false;
 	}
-	@Nullable public Debate getDebateWithTitle(String title){
-		Debate oldDebate = null;
-		/*
-		 * TODO: Get old debate from database
-		 */
-		return oldDebate;
+	public void getDebateWithTitle(String title){
+		try{
+			Debate.jsonQuery.getDebateByTitle(title);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 	public ArrayList<Post> getPosts(){
 		return this.list;

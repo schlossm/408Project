@@ -37,7 +37,8 @@ public class DFDatabaseTest implements DFDatabaseCallbackDelegate
     public void executeSQLStatement() throws Exception
     {
         DFSQL statement = new DFSQL().select("userID").from("Users");
-        DFDatabase.defaultDatabase.execute(statement, this);
+        DFDatabase.defaultDatabase.delegate = this;
+        DFDatabase.defaultDatabase.execute(statement);
     }
 
     @Test

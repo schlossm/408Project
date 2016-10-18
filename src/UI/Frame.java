@@ -1,5 +1,10 @@
 package UI;
+import JSON_translation.*;
+import objects.*;
+import objects.User.UserType;
+
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
 import javax.swing.JPanel;
@@ -9,15 +14,35 @@ import java.awt.Toolkit;
 import java.awt.Window;
 
 import UIKit.*;
+import database.DFDatabase;
 
-public class Frame extends JFrame {
+public class Frame extends JFrame implements DFNotificationCenterDelegate {
 	
-	public JPanel login, debate, admin, rules, account;
+	public Login login;
+	public Account account;
+	public DebateThread thread;
+	public Admin admin;
+	public Rules rules;
 	public JTabbedPane tabs;
+	public UserQuery uq, uq2;
+	public DebateQuery dq;
+	public PostQuery pq;
+	public User user;
+	public Debate debate;
 	
+	@SuppressWarnings("deprecation")
 	public Frame(String title) {
 		
-		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) login, "login");
+		uq = new UserQuery();
+		uq2 = new UserQuery();
+		dq = new DebateQuery();
+		pq = new PostQuery();
+		
+		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) this, "success");
+		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) this, "failure");
+		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) this, "returned");
+		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) this, "exists");
+		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) this, "success");
 		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) debate, "debate");
 		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) admin, "admin");
 		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) rules, "rules");
@@ -25,25 +50,82 @@ public class Frame extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		login = new Login(this);
-		//debate = new DebateThread("If all living things have a conscious and unconscious thought, can a being with artificial intelligence ever be considered living?", "It seems impossible for a machine to ever have an unconsious thought because code executes exactly what it intends to.", "408Bosses");
-		//debate = new DebateThread();
-		//admin = new Admin(0);
-		rules = new Rules("Hello, these are the rules.");
-		account = new Account();
-		
 		tabs = new JTabbedPane();
-		tabs.add("Log In", login);
-		tabs.add("Create Account", account);
-		//tabs.add("Debate", debate);
-		//tabs.add("Administration", admin);
-		//tabs.add("Rules", rules);
 		tabs.setVisible(true);
+	
+		login = new Login(this);
+		tabs.add(login, "Log in");
+			
+		account = new Account(this);
+		tabs.add(account, "Create Account");
+		
+		thread = new DebateThread(this);
+		
+		admin = new Admin(this);
+
+		rules = new Rules(this);
+		rules.setText("Here are the rules");
+		
 		add(tabs);
 		setVisible(true);
 		
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setMinimumSize(new Dimension(600, 400));
 		this.setTitle(title);
+	}
+
+	@Override
+	public void performActionFor(String notificationName, Object obj) {
+		// TODO Auto-generated method stub
+		System.out.println("PerformActionFor: " + notificationName);
+		if (notificationName.equals(UIStrings.exists)) {
+			//Account Action
+			boolean exists = (Boolean) obj;
+			if (!exists) {
+				//uq.addNewUser(username.getText(), DFDatabase.defaultDatabase.encryptString(password.getText()), UserType.USER);
+				
+				String actualPassword = "";
+				for (int i = 0; i < account.password.getPassword().length; i++) {
+					actualPassword += account.password.getPassword()[i];
+				}
+				
+				uq.addNewUser(account.username.getText(), DFDatabase.defaultDatabase.hashString(actualPassword), UserType.USER);
+				JOptionPane.showMessageDialog(this, "Your account was created.");
+			}
+			else {
+				JOptionPane.showMessageDialog(this, "This username already exists, please use another.", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		if (notificationName.equals(UIStrings.success)) {
+			//Login Action
+			JOptionPane.showMessageDialog(this, "Login was successful.");
+			
+			uq2.getUser(account.username.getText());
+			
+			//tabs.removeAll();
+			System.out.println("Here");
+			tabs.addTab("Debate", thread);
+			//dq.getDebateByTitle(null);
+			//dq.getCurrentDebate();
+			tabs.addTab("Rules", rules);
+			System.out.println("Here again");
+		}
+		else if (notificationName.equals(UIStrings.failure)) {
+			// Login Action
+			JOptionPane.showMessageDialog(this, "The username or password is invalid.", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		else if (notificationName.equals(UIStrings.returned)) {
+			// UserQuery Action
+			user = (User) obj;
+			// May need action to set the usertype of admin.
+			if (user == null) {
+				System.out.println("Returned user was null");
+			}
+			else if (user != null && !user.getUserType().equals(UserType.USER)) {
+				tabs.addTab("Administration", admin);
+				admin.setUserType(user.getUserType());
+			}
+			
+		}
 	}
 }

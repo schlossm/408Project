@@ -44,6 +44,11 @@ public class DFDatabase
 	private final DFDataUploader   dataUploader		= new DFDataUploader(website, writeFile, websiteUserName, databaseUserPass);
 
 	/**
+	 * The Callback delegate
+	 */
+	public DFDatabaseCallbackDelegate delegate;
+
+	/**
 	 * A reference to the data size printer object
 	 */
 	public final DFDataSizePrinter dataSizePrinter = DFDataSizePrinter.current;
@@ -93,14 +98,15 @@ public class DFDatabase
 	}
 
 	/**
-	 * @deprecated use `execute(_:, _:)` instead
 	 * @param statement the SQL statement to execute backend side
 	 * @param delegate the delegate object that will respond to data changes.  This object must conform to the DFDatabaseCallbackDelegate interface
 	 */
-    @Deprecated public void executeSQLStatement(DFSQL statement, DFDatabaseCallbackDelegate delegate)
+    public void executeSQLStatement(DFSQL statement, DFDatabaseCallbackDelegate delegate)
     {
-		System.out.println(getMethodName(2) + " is now deprecated.  Use `execute(_:, _:)` instead.  Will call new method for you this time");
-		execute(statement, delegate);
+		System.out.println(getMethodName(2) + " is now deprecated.  Use `execute(_:)` instead");
+		System.out.println("NOTE: You must set a callback delegate BEFORE calling `execute(_:)`.");
+		this.delegate = delegate;
+		execute(statement);
     }
 
 	/**
@@ -109,6 +115,24 @@ public class DFDatabase
 	 */
 	public void execute(@NotNull DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
 	{
+		System.out.println(getMethodName(2) + " is now deprecated.  Use `execute(_:)` instead");
+		System.out.println("NOTE: You must set a callback delegate BEFORE calling `execute(_:)`.");
+
+		this.delegate = delegate;
+
+		execute(SQLStatement);
+	}
+
+	/**
+	 * @param SQLStatement the SQL statement to execute backend side
+	 */
+	public void execute(@NotNull DFSQL SQLStatement)
+	{
+		if (delegate == null)
+		{
+			System.out.println("Warning! You must set a callback delegate BEFORE calling `execute(_:)`.  System will fall through now.");
+		}
+
 		if (SQLStatement == null)
 		{
 			delegate.returnedData(null, new DFError(-3, "Null DFSQL object delivered"));
@@ -117,12 +141,10 @@ public class DFDatabase
 
 		if (SQLStatement.formattedSQLStatement().contains("UPDATE") || SQLStatement.formattedSQLStatement().contains("INSERT"))
 		{
-			dataUploader.delegate = delegate;
 			dataUploader.uploadDataWith(SQLStatement);
 		}
 		else
 		{
-			dataDownloader.delegate = delegate;
 			dataDownloader.downloadDataWith(SQLStatement);
 		}
 	}

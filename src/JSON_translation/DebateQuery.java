@@ -68,7 +68,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 			e1.printStackTrace();
 		}
 	}
-	
+		
 	@Override
 	public void returnedData(JsonObject jsonObject, DFError error) {
 		// TODO Auto-generated method stub
@@ -99,11 +99,10 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 			postQuery.getDebatePosts(debateId);
 		} else if (getMaxDebateId) {
 			try {
-				 debateId = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("debateID").getAsInt() + 1;
+				 debateId = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("MAX(debateID)").getAsInt() + 1;
 			}catch (NullPointerException e2){
 				//DFNotificationCenter.defaultCenter.post(UIStrings.debateReturned, null);
 			}
-			debateId = 4;
 			uploadNewDebateToDatabase(debateId);
 		}
 		resetBooleans();
@@ -181,7 +180,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 	
 	public static void main(String[] args){
 		DebateQuery debateQuery = new DebateQuery();
-		//debateQuery.getDebateByTitle("createTestDebate");
-		debateQuery.createNewDebate("createTestDebate", "trying to create new debate", "10/21/2016 12:00 AM", "10/30/2016 12:00 AM");
+		debateQuery.getDebateByTitle("testDebate");
+		//debateQuery.createNewDebate("createTestDebateWithMaxId", "mAX ID IS WORKING NOW", "10/21/2016 12:00 AM", "10/30/2016 12:00 AM");
 	}
 }

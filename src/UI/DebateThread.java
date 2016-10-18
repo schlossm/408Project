@@ -9,6 +9,9 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
+
+import JSON_translation.DebateQuery;
+
 import javax.swing.JOptionPane;
 import java.awt.Dimension;
 import java.awt.event.*;
@@ -23,9 +26,12 @@ public class DebateThread extends JPanel implements ActionListener{
 	public ArrayList<Post> commentArray;
 	private Debate d;
 	private User u;
+	public DebateQuery dq = new DebateQuery();
 	
-	public DebateThread(User u, Debate d) {
-		this.d = d;
+	public Frame frame;
+	
+	public DebateThread(Frame frame) {
+		this.u = frame.user;
 		this.setLayout(new GridBagLayout());
 		
 		GridBagConstraints c = new GridBagConstraints();
@@ -36,7 +42,7 @@ public class DebateThread extends JPanel implements ActionListener{
 		c.gridy = 0;
 		this.add(threadAuthor, c);
 		*/
-		threadTitle = new JLabel(d.getTitle());
+		threadTitle = new JLabel();
 		c.gridx = 1;
 		c.gridy = 0;
 		this.add(threadTitle, c);
@@ -47,33 +53,7 @@ public class DebateThread extends JPanel implements ActionListener{
 		this.add(threadDescription, c);
 		*/
 		commentList = new JPanel();
-		populateComments(d.getPosts());
 
-		if (d.isOpen()) {
-			addPoll = new JButton("Add Poll");
-			addPoll.setActionCommand("poll");
-			addPoll.setEnabled(false);
-			c.gridx = 0;
-			c.gridy = 2;
-			this.add(addPoll, c);
-			
-			comment = new JTextArea("Write a comment in here.");
-			c.gridx = 1;
-			c.gridy = 2;
-			this.add(comment, c);
-			
-			postComment = new JButton("Submit");
-			postComment.setActionCommand("comment");
-			postComment.addActionListener(this);
-			c.gridx = 2;
-			c.gridy = 2;
-			this.add(postComment, c);
-		}
-		else {
-			c.gridx = 1;
-			c.gridy = 2;
-			this.add(new JLabel("Sorry, this debate is closed."), c);
-		}
 		this.setVisible(true);
 	}
 	
@@ -105,6 +85,49 @@ public class DebateThread extends JPanel implements ActionListener{
 		}
 		this.remove(1);
 		this.add(scrollPane, c);
+	}
+	
+	public void displayDebate(Debate d) {
+		this.d = d;
+		
+		threadTitle.setText(d.getTitle());
+		//threadDescription.setText();
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		
+		populateComments(d.getPosts());
+
+		if (d.isOpen() && u.isBanned() == false) {
+			addPoll = new JButton("Add Poll");
+			addPoll.setActionCommand("poll");
+			addPoll.setEnabled(false);
+			c.gridx = 0;
+			c.gridy = 2;
+			this.add(addPoll, c);
+			
+			comment = new JTextArea("Write a comment in here.");
+			c.gridx = 1;
+			c.gridy = 2;
+			this.add(comment, c);
+			
+			postComment = new JButton("Submit");
+			postComment.setActionCommand("comment");
+			postComment.addActionListener(this);
+			c.gridx = 2;
+			c.gridy = 2;
+			this.add(postComment, c);
+		}
+		else if (u.isBanned()) {
+			c.gridx = 1;
+			c.gridy = 2;
+			this.add(new JLabel("Sorry, your account does not have access to post on this thread."), c);
+		}
+		else {
+			c.gridx = 1;
+			c.gridy = 2;
+			this.add(new JLabel("Sorry, this debate is closed."), c);
+		}
 	}
 	
 }
