@@ -9,7 +9,12 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+
+import static database.DFDatabase.getMethodName;
+import static database.DFError.*;
 
 /**
  * Uploads an SQL statement to a remote SQL database
@@ -80,7 +85,12 @@ public class DFDataUploader
 
                 if (Objects.equals(response, ""))
                 {
-                    DFError error = new DFError(1, "No data was returned.   Please try again if this is in error.");
+                    Map<String, String> errorInfo = new HashMap<>();
+                    errorInfo.put(kMethodName, getMethodName(1));
+                    errorInfo.put(kExpandedDescription, "No data was returned from the database.  Response: " + response);
+                    errorInfo.put(kURL, website + "/" + writeFile);
+                    errorInfo.put(kSQLStatement, SQLStatement.formattedSQLStatement());
+                    DFError error = new DFError(1, "No data was returned", errorInfo);
                     delegate.uploadStatus(DFDataUploaderReturnStatus.error, error);
                     DFDatabase.defaultDatabase.delegate = null;
                     return;
@@ -99,7 +109,8 @@ public class DFDataUploader
             }
             catch(NullPointerException | IOException e)
             {
-                if (DFDatabase.defaultDatabase.debug == 1) {
+                if (DFDatabase.defaultDatabase.debug == 1)
+                {
                     e.printStackTrace();
                 }
 
@@ -109,7 +120,12 @@ public class DFDataUploader
                     return;
                 }
 
-                DFError error = new DFError(0, "There was a(n) " + e.getCause() + " error.  It's recommended you set DFDatabase -debug to 1.  Please try again.");
+                Map<String, String> errorInfo = new HashMap<>();
+                errorInfo.put(kMethodName, getMethodName(1));
+                errorInfo.put(kExpandedDescription, "A(n) "+ e.getCause() + " Exception was raised.  Setting DFDatabase -debug to 1 will print the stack trace for this error");
+                errorInfo.put(kURL, website + "/" + writeFile);
+                errorInfo.put(kSQLStatement, SQLStatement.formattedSQLStatement());
+                DFError error = new DFError(0, "There was a(n) " + e.getCause() + " error", errorInfo);
                 delegate.uploadStatus(DFDataUploaderReturnStatus.error, error);
                 DFDatabase.defaultDatabase.delegate = null;
             }
