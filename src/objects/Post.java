@@ -79,6 +79,18 @@ public class Post implements Serializable
 		 * TODO: Update the UI on if post was shown
 		 */
 	}
+	
+	public boolean isHidden() {
+		return this.isHidden;
+	}
+	
+	public boolean isFlagged() {
+		return this.isFlagged;
+	}
+	
+	public int getNumFlags() {
+		return this.numReports;
+	}
 
 
 
