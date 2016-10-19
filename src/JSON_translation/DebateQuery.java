@@ -46,11 +46,16 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		try {
 			dfsql.select(selectedRows).from("Debate").whereEquals("title", debateTitle);
 			System.out.println(dfsql.formattedSQLStatement());
-			DFDatabase.defaultDatabase.execute(dfsql, this);
-		} catch (DFSQLError e1) {
+			DFDatabase.defaultDatabase.delegate = this;
+			DFDatabase.defaultDatabase.execute(dfsql);
+			} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		}
 	}
+	
+	/* Add download all Debates and store in local storage
+	 * Add a getCurrentDebateMethod
+	 */
 	
 	public void createNewDebate(String debateTitle, String debateText, String startDate, String endDate){
 		DFSQL dfsql = new DFSQL();
@@ -63,8 +68,9 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		try {
 			dfsql.select("MAX(debateID)").from("Debate");
 			System.out.println(dfsql.formattedSQLStatement());
-			DFDatabase.defaultDatabase.execute(dfsql, this);
-		} catch (DFSQLError e1) {
+			DFDatabase.defaultDatabase.delegate = this;
+			DFDatabase.defaultDatabase.execute(dfsql);
+			} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		}
 	}
@@ -101,8 +107,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 			try {
 				 debateId = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("MAX(debateID)").getAsInt() + 1;
 			}catch (NullPointerException e2){
-				//DFNotificationCenter.defaultCenter.post(UIStrings.debateReturned, null);
-			}
+				DFNotificationCenter.defaultCenter.post(UIStrings.debateCreated, Boolean.FALSE);			}
 			uploadNewDebateToDatabase(debateId);
 		}
 		resetBooleans();
@@ -116,8 +121,9 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		try {
 			dfsql.insert("Debate", values, rows);
 			System.out.println(dfsql.formattedSQLStatement());
-			DFDatabase.defaultDatabase.execute(dfsql, this);
-		} catch (DFSQLError e1) {
+			DFDatabase.defaultDatabase.delegate = this;
+			DFDatabase.defaultDatabase.execute(dfsql);
+			} catch (DFSQLError e1) {
 			e1.printStackTrace();
 			isaddSuccess = false;
 		}
@@ -142,14 +148,17 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		// TODO Auto-generated method stub
 		if(success == DFDataUploaderReturnStatus.success){
 			System.out.println("success uploading this");
+			DFNotificationCenter.defaultCenter.post(UIStrings.debateCreated, Boolean.TRUE);
 		} else if (success == DFDataUploaderReturnStatus.failure) {
 			System.out.println("Failure uploading this");
+			DFNotificationCenter.defaultCenter.post(UIStrings.debateCreated, Boolean.FALSE);
 		}
 		else if(success == DFDataUploaderReturnStatus.error){
 			System.out.println("Error uploading this");
 			System.out.println(error.code);
 			System.out.println(error.description);
 			System.out.println(error.userInfo);
+			DFNotificationCenter.defaultCenter.post(UIStrings.debateCreated, Boolean.FALSE);
 		} else {
 			System.out.println("I have no clue!");
 		}
