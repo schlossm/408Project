@@ -27,6 +27,10 @@ public class PostQuery implements DFDatabaseCallbackDelegate {
 	private JsonObject jsonObject;
 	private DFDataUploaderReturnStatus uploadSuccess;
 	private boolean getDebatePostsReturn;
+	private boolean postToDebateReturn;
+	private int postID = 0;
+	private Post givenPost = null;
+	private int givenDebateID = 0;
 	private String bufferString;
 	
 	public void getDebatePosts(int debateID) {
@@ -35,14 +39,33 @@ public class PostQuery implements DFDatabaseCallbackDelegate {
 		getDebatePostsReturn = true;
 		try {
 			dfsql.select(selectedRows).from("Comment").joinOn("DebateComment", "`DebateComment`.postID", "`Comment`.postID").whereEquals("`DebateComment`.debateID", Integer.toString(debateID));
-			DFDatabase.defaultDatabase.executeSQLStatement(dfsql, this);
+			DFDatabase.defaultDatabase.execute(dfsql);
+		} catch (DFSQLError e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	/*
+	 * Insert Post into Comment
+	 * Insert postID and debateID into DebateComment
+	 */
+	public void postToDebate(Post post, int debateID) {
+		DFSQL dfsql = new DFSQL();
+		postToDebateReturn = true;
+		givenPost = post;
+		givenDebateID = debateID;
+		
+		try {
+			dfsql.select("MAX(postID)").from("Comment");
+			System.out.println(dfsql.formattedSQLStatement());
+			DFDatabase.defaultDatabase.execute(dfsql);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		}
 	}
 	
 	private void returnHandler(){
-		if(getDebatePostsReturn){
+		if (getDebatePostsReturn){
 			int postIDReceived = 0;
 			String messageReceived = null;
 			String usernameReceived = null;
@@ -64,15 +87,52 @@ public class PostQuery implements DFDatabaseCallbackDelegate {
 					Post p = new Post(postIDReceived, messageReceived, usernameReceived, timeStampReceived, flaggedReceived, isHiddenReceived);
 					posts.add(p);
 				}
-			}catch (NullPointerException e2){
+			} catch (NullPointerException e2){
 				DFNotificationCenter.defaultCenter.postNotification(UIStrings.postsReturned, null);				
 			}
 			
 			 DFNotificationCenter.defaultCenter.postNotification(UIStrings.postsReturned, posts);
+		} else if (postToDebateReturn) {
+			try {
+				 postID = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("MAX(postID)").getAsInt() + 1;
+			} catch (NullPointerException e2){
+				//DFNotificationCenter.defaultCenter.post(UIStrings.debateReturned, null);
+			}
+			uploadNewPostToDatabase(postID);
 		}
 		
 		getDebatePostsReturn = false;
+		postToDebateReturn = false;
 		bufferString = null;
+	}
+	
+	private void uploadNewPostToDatabase(int postID){
+		int isHidden = givenPost.isHidden() ? 1 : 0;
+		String[] rows = {"postID", "message", "userID", "timeStamp", "flagged", "isHidden"};
+		String[] values = {String.valueOf(postID), givenPost.getText(), givenPost.getPoster(), givenPost.getTimestamp(), String.valueOf(givenPost.getNumFlags()), String.valueOf(isHidden)};
+		DFSQL dfsql = new DFSQL();
+		try {
+			dfsql.insert("Post", values, rows);
+			System.out.println(dfsql.formattedSQLStatement());
+			DFDatabase.defaultDatabase.execute(dfsql);
+		} catch (DFSQLError e1) {
+			e1.printStackTrace();
+		}
+		
+		String[] rows2 = {"debateID", "postID"};
+		String[] values2 = {String.valueOf(givenDebateID), String.valueOf(postID)};
+		DFSQL dfsql2 = new DFSQL();
+		try {
+			dfsql2.insert("DebateComment", values2, rows2);
+			System.out.println(dfsql2.formattedSQLStatement());
+			DFDatabase.defaultDatabase.execute(dfsql2);
+		} catch (DFSQLError e1) {
+			e1.printStackTrace();
+		}
+		
+		postID = 0;
+		givenPost = null;
+		givenDebateID = 0;
 	}
 	
 	@Override
