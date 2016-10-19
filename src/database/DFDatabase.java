@@ -1,4 +1,5 @@
 package database;
+
 import com.sun.istack.internal.NotNull;
 import database.dfDatabaseFramework.DFSQL.DFSQL;
 import database.dfDatabaseFramework.Utilities.DFDataSizePrinter;
@@ -16,6 +17,12 @@ import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.security.*;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+import static database.DFError.kExpandedDescription;
+import static database.DFError.kMethodName;
 
 /**
  * The main database communicator class.  All communication with the database will run through this class
@@ -133,9 +140,12 @@ public class DFDatabase
 			System.out.println("Warning! You must set a callback delegate BEFORE calling `execute(_:)`.  System will fall through now.");
 		}
 
-		if (SQLStatement == null)
+		if (SQLStatement == null || Objects.equals(SQLStatement.formattedSQLStatement(), ""))
 		{
-			delegate.returnedData(null, new DFError(-3, "Null DFSQL object delivered"));
+			Map<String, String> errorInfo = new HashMap<>();
+			errorInfo.put(kMethodName, getMethodName(1));
+			errorInfo.put(kExpandedDescription, "DFDatabase cannot work with a null or empty DFSQL Object.");
+			delegate.returnedData(null, new DFError(-3, "Null DFSQL object delivered", errorInfo));
 			return;
 		}
 
