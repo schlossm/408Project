@@ -26,11 +26,14 @@ import java.util.ArrayList;
 public class PostQuery implements DFDatabaseCallbackDelegate {
 	private JsonObject jsonObject;
 	private DFDataUploaderReturnStatus uploadSuccess;
+	
 	private boolean getDebatePostsReturn;
 	private boolean postToDebateReturn;
+	
 	private int postID = 0;
 	private Post givenPost = null;
 	private int givenDebateID = 0;
+	
 	private String bufferString;
 	
 	public void getDebatePosts(int debateID) {
@@ -62,6 +65,37 @@ public class PostQuery implements DFDatabaseCallbackDelegate {
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		}
+	}
+	
+	public boolean updateFlags(Post post) {
+		DFSQL dfsql = new DFSQL();
+		
+		try {
+			dfsql.update("Comment", "flagged", String.valueOf(post.getNumFlags())).whereEquals("postID", String.valueOf(postID));
+			DFDatabase.defaultDatabase.delegate = this;
+			DFDatabase.defaultDatabase.execute(dfsql);
+		} catch (DFSQLError e1) {
+			e1.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean updateIsHidden(Post post) {
+		DFSQL dfsql = new DFSQL();
+		int isHidden = post.isHidden() ? 1 : 0;
+		
+		try {
+			dfsql.update("Comment", "isHidden", String.valueOf(isHidden)).whereEquals("postID", String.valueOf(postID));
+			DFDatabase.defaultDatabase.delegate = this;
+			DFDatabase.defaultDatabase.execute(dfsql);
+		} catch (DFSQLError e1) {
+			e1.printStackTrace();
+			return false;
+		}
+		
+		return true;
 	}
 	
 	private void returnHandler(){
