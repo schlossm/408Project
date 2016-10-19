@@ -80,7 +80,7 @@ public class UserQueryTest implements DFNotificationCenterDelegate{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+		System.out.println(user.getUsername());
 		assertTrue(!user.isBanned());
 		assertTrue(user.getUserType() == UserType.USER);
 		assertTrue(user.getUsername().equals(name));
@@ -173,9 +173,10 @@ public class UserQueryTest implements DFNotificationCenterDelegate{
 		DFNotificationCenter.defaultCenter.register(this, UIStrings.success);
 		DFNotificationCenter.defaultCenter.register(this, UIStrings.failure);
 		
-		String encryptedPassword = DFDatabase.defaultDatabase.encryptString("blahblah");
+		String encryptedPassword = DFDatabase.defaultDatabase.hashString("blahblah");
+		
 		System.out.println(encryptedPassword);
-		userQuery.verifyUserLogin(invalidName, encryptedPassword);
+		userQuery.verifyUserLogin(name, encryptedPassword);
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
