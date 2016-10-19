@@ -103,12 +103,10 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 			uq2.getUser(account.username.getText());
 			
 			//tabs.removeAll();
-			System.out.println("Here");
 			tabs.addTab("Debate", thread);
 			//dq.getDebateByTitle(null);
 			//dq.getCurrentDebate();
 			tabs.addTab("Rules", rules);
-			System.out.println("Here again");
 		}
 		else if (notificationName.equals(UIStrings.failure)) {
 			// Login Action

@@ -1,13 +1,18 @@
 package database;
 
-import java.util.Dictionary;
+
+import java.util.Map;
 
 /**
  * The error class for DFDatabase.  More powerful than implementing the Exception class
  */
-@SuppressWarnings("unused")
 public class DFError
 {
+	public static String kSQLStatement = "SQL Statement";
+	public static String kURL = "URL";
+	public static String kMethodName = "Method Name";
+	public static String kExpandedDescription = "Expanded Description";
+
 	/**
 	 * The error code
 	 */
@@ -19,16 +24,9 @@ public class DFError
 	/**
 	 * Optional user information.  Strings only
 	 */
-	final public Dictionary<String, String> userInfo;
+	final public Map<String, String> userInfo;
 	
-	public DFError(int code, String description)
-	{
-		this.code = code;
-		this.description = description;
-		this.userInfo = null;
-	}
-	
-	public DFError(int code, String description, Dictionary<String, String> userInfo)
+	public DFError(int code, String description, Map<String, String> userInfo)
 	{
 		this.code = code;
 		this.description = description;
