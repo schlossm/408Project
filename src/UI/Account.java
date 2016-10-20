@@ -38,7 +38,8 @@ public class Account extends JPanel implements ActionListener {
 		username.setSize(size);
 		username.setMinimumSize(size);
 		username.setMaximumSize(size);
-		password = new JPasswordField(32);
+		username.setColumns(36);
+		password = new JPasswordField(36);
 		password.setMinimumSize(size);
 		password.setSize(size);
 		password.setMaximumSize(size);
@@ -75,6 +76,12 @@ public class Account extends JPanel implements ActionListener {
 		if (e.getActionCommand().equals("account")) {
 			if (username.getText().equals("") && password.getPassword() == null) {
 				JOptionPane.showMessageDialog(this, "Please fill in all of the fields.", "Error", JOptionPane.ERROR_MESSAGE);	
+			}
+			else if (!username.getText().matches("[A-Za-z0-9._%+-]+")) {
+				JOptionPane.showMessageDialog(this, "Please choose a username with valid characters (alphabetical letters, numbers, _, %, +, -, or .", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			else if (username.getText().length() > 32) {
+				JOptionPane.showMessageDialog(this, "Please choose a username that is 32 characters or shorter.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			else {				
 				frame.uq.getUser(username.getText());

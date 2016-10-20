@@ -42,7 +42,7 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) this, "failure");
 		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) this, "returned");
 		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) this, "exists");
-		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) this, "success");
+		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) this, "debateReturned");
 		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) debate, "debate");
 		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) admin, "admin");
 		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) rules, "rules");
@@ -99,12 +99,13 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 		if (notificationName.equals(UIStrings.success)) {
 			//Login Action
 			JOptionPane.showMessageDialog(this, "Login was successful.");
+			uq2.getUser(login.username.getText());
 			
-			uq2.getUser(account.username.getText());
+			tabs.removeAll();
+
+			dq.getDebateByTitle("Test Debate");
 			
-			//tabs.removeAll();
 			tabs.addTab("Debate", thread);
-			//dq.getDebateByTitle(null);
 			//dq.getCurrentDebate();
 			tabs.addTab("Rules", rules);
 		}
@@ -122,8 +123,18 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 			else if (user != null && !user.getUserType().equals(UserType.USER)) {
 				tabs.addTab("Administration", admin);
 				admin.setUserType(user.getUserType());
-			}
+			}	
+		}
+		else if (notificationName.equals(UIStrings.debateReturned)) {
+			// DebateQuery Action
+			debate = (Debate) obj;
 			
+			if (debate == null) {
+				System.out.println("Returned debate was null");
+			}
+			else if (debate != null) {
+				thread.displayDebate(debate);
+			}
 		}
 	}
 }

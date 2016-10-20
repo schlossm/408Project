@@ -43,6 +43,7 @@ public class Login extends JPanel implements ActionListener {
 		label1.setName("label1");
 		username = new JFormattedTextField();
 		username.setName("username");
+		username.setColumns(36);
 		
 		c.gridx = 0;
 		c.gridy = 0;
@@ -58,7 +59,7 @@ public class Login extends JPanel implements ActionListener {
 		*/
 		JLabel label2 = new JLabel("Password:");
 		label2.setName("label2");
-		password = new JPasswordField(30);
+		password = new JPasswordField(36);
 		password.setName("password");
 		/*
 		label2.setAlignmentX(Component.CENTER_ALIGNMENT);
