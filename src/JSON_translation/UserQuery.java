@@ -1,20 +1,15 @@
 package JSON_translation;
 
 
-import javax.print.attribute.standard.RequestingUserName;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
 import UI.UIStrings;
 import UIKit.DFNotificationCenter;
+import com.google.gson.JsonObject;
 import database.DFDatabase;
 import database.DFDatabaseCallbackDelegate;
 import database.DFError;
-import database.dfDatabaseFramework.DFSQL.DFSQL;
-import database.dfDatabaseFramework.DFSQL.DFSQLError;
-import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploaderReturnStatus;
+import database.DFSQL.DFSQL;
+import database.DFSQL.DFSQLError;
+import database.WebServer.DFDataUploaderReturnStatus;
 import objects.User;
 import objects.User.UserType;
 

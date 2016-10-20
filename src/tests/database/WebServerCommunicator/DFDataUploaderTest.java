@@ -1,4 +1,4 @@
-package tests.database.dfDatabaseFramework.WebServerCommunicator;
+package tests.database.WebServerCommunicator;
 
 
 import com.google.gson.JsonObject;
@@ -6,8 +6,8 @@ import com.sun.istack.internal.Nullable;
 import database.DFDatabase;
 import database.DFDatabaseCallbackDelegate;
 import database.DFError;
-import database.dfDatabaseFramework.DFSQL.DFSQL;
-import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploaderReturnStatus;
+import database.DFSQL.DFSQL;
+import database.WebServer.DFDataUploaderReturnStatus;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

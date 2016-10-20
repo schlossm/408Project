@@ -1,4 +1,4 @@
-package database.dfDatabaseFramework.DFSQL;
+package database.DFSQL;
 
 /**
  * The various clauses to perform Joins and Where Statements

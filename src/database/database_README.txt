@@ -6,17 +6,18 @@ database
 |- DFDatabase
 |- DFDatabaseCallbackDelegate
 |- DFError
-|- dfDatabaseFramework
+|- DFSQL
    |- DFSQL
-      |- DFSQL
-      |- DFSQLClauseStruct
-      |- DFSQLConjunctionClause
-      |- DFSQLError
-      |- JoinParam
-      |- JoinStruct
-   |- Utilities
-      |- DFDataSizePrinter
-   |- WebServerCommunicator
-      |- DFDataDownloader
-      |- DFDataUploader
-      |- DFDataUploaderReturnStatus
+   |- DFSQLClauseStruct
+   |- DFSQLConjunctionClause
+   |- DFSQLError
+   |- JoinParam
+   |- JoinStruct
+|- Utilities
+   |- DFDataSizePrinter
+|- WebServer
+   |- DFWebServerDispatch
+      |- DispatchDirection
+   |- DFDataDownloader
+   |- DFDataUploader
+   |- DFDataUploaderReturnStatus

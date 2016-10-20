@@ -8,10 +8,10 @@ import java.util.Map;
  */
 public class DFError
 {
-	public static String kSQLStatement = "SQL Statement";
-	public static String kURL = "URL";
-	public static String kMethodName = "Method Name";
-	public static String kExpandedDescription = "Expanded Description";
+	public static final String kSQLStatement = "SQL Statement";
+	public static final String kURL = "URL";
+	public static final String kMethodName = "Method Name";
+	public static final String kExpandedDescription = "Expanded Description";
 
 	/**
 	 * The error code

@@ -2,7 +2,6 @@ package tests;
 
 import UIKit.DFNotificationCenter;
 import UIKit.DFNotificationCenterDelegate;
-import database.dfDatabaseFramework.DFSQL.DFSQL;
 
 public class DFNotificationCenterExample
 {
@@ -10,8 +9,6 @@ public class DFNotificationCenterExample
 
     public static void main(String[] args)
     {
-        System.out.println(new DFSQL().formattedSQLStatement());
-
         DFNotificationCenterListener listener = new DFNotificationCenterListener();
         DFNotificationCenter.defaultCenter.register(listener, TestNotificationString);
 
