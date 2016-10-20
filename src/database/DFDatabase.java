@@ -1,10 +1,9 @@
 package database;
 
 import com.sun.istack.internal.NotNull;
-import database.dfDatabaseFramework.DFSQL.DFSQL;
-import database.dfDatabaseFramework.Utilities.DFDataSizePrinter;
-import database.dfDatabaseFramework.WebServerCommunicator.DFDataDownloader;
-import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploader;
+import database.DFSQL.DFSQL;
+import database.WebServer.DFWebServerDispatch;
+import database.WebServer.DispatchDirection;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.BadPaddingException;
@@ -34,31 +33,19 @@ public class DFDatabase
 	 * The singleton instance of DFDatabase
 	 */
 	public static final DFDatabase defaultDatabase = new DFDatabase();
-	
-	private final String website			= "http://debateforum.michaelschlosstech.com";
-	private final String readFile			= "ReadFile.php";
-	private final String writeFile			= "WriteFile.php";
+
 	private final String websiteUserName	= "DFJavaApp";
 	private final String websiteUserPass	= "3xT-MA8-HEm-sTd";
-    private final String databaseUserPass	= "3xT-MA8-HEm-sTd";
 	private final char[] hexArray			= "0123456789ABCDEF".toCharArray();
 	private boolean useEncryption           = true;
 
 	private SecretKeySpec secretKeySpec;
 	private byte[] iv;
 
-	private final DFDataDownloader dataDownloader	= new DFDataDownloader(website, readFile, websiteUserName, databaseUserPass);
-	private final DFDataUploader   dataUploader		= new DFDataUploader(website, writeFile, websiteUserName, databaseUserPass);
-
 	/**
 	 * The Callback delegate
 	 */
 	public DFDatabaseCallbackDelegate delegate;
-
-	/**
-	 * A reference to the data size printer object
-	 */
-	public final DFDataSizePrinter dataSizePrinter = DFDataSizePrinter.current;
 
 	/**
 	 * Wanna debug DFDatabase? Set this flag to 1.
@@ -149,14 +136,7 @@ public class DFDatabase
 			return;
 		}
 
-		if (SQLStatement.formattedSQLStatement().contains("UPDATE") || SQLStatement.formattedSQLStatement().contains("INSERT"))
-		{
-			dataUploader.uploadDataWith(SQLStatement);
-		}
-		else
-		{
-			dataDownloader.downloadDataWith(SQLStatement);
-		}
+		DFWebServerDispatch.current.add(SQLStatement.formattedSQLStatement().contains("UPDATE") || SQLStatement.formattedSQLStatement().contains("INSERT") ? DispatchDirection.upload : DispatchDirection.download, SQLStatement, delegate);
 	}
 
 	public @NotNull String hashString(String decryptedString)

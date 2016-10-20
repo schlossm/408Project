@@ -3,7 +3,7 @@ package database;
 import com.google.gson.JsonObject;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
-import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploaderReturnStatus;
+import database.WebServer.DFDataUploaderReturnStatus;
 
 public interface DFDatabaseCallbackDelegate
 {

@@ -1,4 +1,4 @@
-package database.dfDatabaseFramework.DFSQL;
+package database.DFSQL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
