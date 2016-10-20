@@ -2,6 +2,7 @@ package objects;
 import JSON_translation.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.sun.istack.internal.Nullable;
  
@@ -10,7 +11,9 @@ public class Debate implements Serializable {
 	boolean isOpen;
 	ArrayList<Post> list;
 	String title;
-	
+	String text;
+	Date startDate;
+	Date endDate;
 	
 	static DebateQuery jsonQuery;
 	static PostQuery jsonQuery2;
@@ -29,13 +32,16 @@ public class Debate implements Serializable {
 	}
 	
 	//Needed for DebateQuery
-	public Debate(String title, ArrayList<Post> list, Boolean isOpen){
+	public Debate(String title, ArrayList<Post> list, Boolean isOpen, String text, Date startDate, Date endDate){
 		Debate.jsonQuery = new DebateQuery();
 		
 		if(Debate.jsonQuery != null){
 			this.title = title;
 			this.list = list;
 			this.isOpen = isOpen;
+			this.text = text;
+			this.startDate = startDate;
+			this.endDate = endDate;
 		}
 	}
 	

@@ -242,4 +242,9 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		//debateQuery.createNewDebate("createTestDebateWithMaxId", "mAX ID IS WORKING NOW", "10/21/2016 12:00 AM", "10/30/2016 12:00 AM");
 		debateQuery.checkIfCurrentDebate("10/21/2016 12:00 AM", "10/30/2016 12:00 AM");
 	}
+	
+	private class debateHashObject{
+		
+	}
+	
 }
