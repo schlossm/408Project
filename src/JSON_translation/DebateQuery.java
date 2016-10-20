@@ -13,7 +13,12 @@ import database.WebServer.DFDataUploaderReturnStatus;
 import objects.Debate;
 import objects.Post;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 
 public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCenterDelegate{
 	private  int debateId = 0;
@@ -24,8 +29,8 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 	private  ArrayList<Post> debatePosts;
 	private JsonObject jsonObject;
 	private DFDataUploaderReturnStatus uploadSuccess;
-	private boolean getDebateReturn;
-	private boolean getMaxDebateId;
+	private boolean getDebateReturn, getMaxDebateId, getArchivedDebatesReturn;
+	private HashMap<String, Debate> archivedDebates;
 	
 	public void getDebateByTitle(String debateTitle){	
 		DFSQL dfsql = new DFSQL();
@@ -41,8 +46,25 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		}
 	}
 	
+	public void getArchivedDebates(){
+		DFSQL dfsql = new DFSQL();
+		String[] selectedRows = {"debateID", "text", "startDate", "endDate"};
+		getArchivedDebatesReturn = true;
+		try {
+			dfsql.select(selectedRows).from("Debate");
+			System.out.println(dfsql.formattedSQLStatement());
+			DFDatabase.defaultDatabase.delegate = this;
+			DFDatabase.defaultDatabase.execute(dfsql);
+			} catch (DFSQLError e1) {
+			e1.printStackTrace();
+		}	
+	}
+	
 	/* Add download all Debates and store in local storage
 	 * Add a getCurrentDebateMethod
+	 * Check for duplicate debate Title.
+	 * Use Local Storage
+	 * Check for timestamp issue when adding debate
 	 */
 	
 	public void createNewDebate(String debateTitle, String debateText, String startDate, String endDate){
@@ -91,14 +113,53 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 			PostQuery postQuery = new PostQuery();
 			DFNotificationCenter.defaultCenter.register(this, UIStrings.postsReturned);
 			postQuery.getDebatePosts(debateId);
+		} else if (getArchivedDebatesReturn) {
+			
+			try {
+				for(int i = 0; i < jsonObject.get("Data").getAsJsonArray().size(); i++){
+					debateId = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("debateID").getAsInt();
+					debateTitle = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("title").getAsString();
+					debateText = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("text").getAsString();
+					debateStartDate = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("startDate").getAsString();
+					debateEndDate = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("endDate").getAsString();
+					boolean isCurrentDebate = checkIfCurrentDebate(debateStartDate, debateEndDate);
+					Debate debate = new Debate(debateTitle, null, isCurrentDebate);
+					archivedDebates.put(debateTitle, debate);
+				}
+			}catch (NullPointerException e2){
+				DFNotificationCenter.defaultCenter.post(UIStrings.debateReturned, null);
+			}
 		} else if (getMaxDebateId) {
 			try {
 				 debateId = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("MAX(debateID)").getAsInt() + 1;
 			}catch (NullPointerException e2){
-				DFNotificationCenter.defaultCenter.post(UIStrings.debateCreated, Boolean.FALSE);			}
+				DFNotificationCenter.defaultCenter.post(UIStrings.debateCreated, Boolean.FALSE);			
+			}
 			uploadNewDebateToDatabase(debateId);
 		}
 		resetBooleans();
+	}
+	
+	private boolean checkIfCurrentDebate(String startDate, String endDate){
+		
+		DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+		Calendar calobj = Calendar.getInstance();
+		System.out.println(sdf.format(calobj.getTime()));
+			try {
+				java.util.Date startingDate = (Date)sdf.parse(startDate);
+				java.util.Date endingDate = (Date)sdf.parse(endDate);
+				java.util.Date currentDate = calobj.getTime();
+				System.out.println(startingDate + " "+ endingDate+ " " + currentDate);
+				if(currentDate.before(startingDate)){
+					return false;
+				} else if(currentDate.after(endingDate)) {
+					return false;
+				}
+			} catch (java.text.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return true;
 	}
 	
 	private void uploadNewDebateToDatabase(int debateId){
@@ -177,7 +238,8 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 	
 	public static void main(String[] args){
 		DebateQuery debateQuery = new DebateQuery();
-		debateQuery.getDebateByTitle("testDebate");
+		//debateQuery.getDebateByTitle("testDebate");
 		//debateQuery.createNewDebate("createTestDebateWithMaxId", "mAX ID IS WORKING NOW", "10/21/2016 12:00 AM", "10/30/2016 12:00 AM");
+		debateQuery.checkIfCurrentDebate("10/21/2016 12:00 AM", "10/30/2016 12:00 AM");
 	}
 }
