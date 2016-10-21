@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static database.DFDatabase.getMethodName;
+import static database.DFDatabase.print;
 import static database.DFError.*;
 import static database.WebServer.DFWebServerDispatch.*;
 
@@ -35,7 +36,7 @@ class DFDataDownloader
 	{
 		if (DFDatabase.defaultDatabase.debug == 1)
 		{
-			System.out.println(SQLStatement.formattedSQLStatement());
+			print(SQLStatement.formattedSQLStatement());
 		}
 		new Thread(() ->
         {
@@ -43,7 +44,7 @@ class DFDataDownloader
             {
                 if (DFDatabase.defaultDatabase.debug == 1)
                 {
-                    System.out.println("Downloading Data...");
+                    print("Downloading Data...");
                 }
                 String urlParameters = "Password=" + databaseUserPass + "&Username=" + websiteUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement();
                 byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
@@ -71,8 +72,8 @@ class DFDataDownloader
                 DFWebServerDispatch.current.dataSizePrinter.printDataSize(response.length());
                 if (DFDatabase.defaultDatabase.debug == 1)
                 {
-                    System.out.println("Data Downloaded!");
-                    System.out.println(response);
+                    print("Data Downloaded!");
+                    print(response);
                 }
 
                 conn.disconnect();
@@ -86,14 +87,12 @@ class DFDataDownloader
                     errorInfo.put(kSQLStatement, SQLStatement.formattedSQLStatement());
                     DFError error = new DFError(1, "No data was returned", errorInfo);
                     delegate.returnedData(null, error);
-                    DFDatabase.defaultDatabase.delegate = null;
                 }
                 else
                 {
                     Gson gsonConverter = new Gson();
                     JsonObject object = gsonConverter.fromJson(response, JsonObject.class);
                     delegate.returnedData(object, null);
-                    DFDatabase.defaultDatabase.delegate = null;
                 }
             }
             catch (Exception e)
@@ -103,12 +102,6 @@ class DFDataDownloader
                     e.printStackTrace();
                 }
 
-                if (delegate == null)
-                {
-                    System.out.println("Callback delegate got set to NULL before arriving at end of thread.  Please make sure you're not calling multiple");
-                    return;
-                }
-
                 Map<String, String> errorInfo = new HashMap<>();
                 errorInfo.put(kMethodName, getMethodName(1));
                 errorInfo.put(kExpandedDescription, "A(n) "+ e.getCause() + " Exception was raised.  Setting DFDatabase -debug to 1 will print the stack trace for this error");
@@ -116,7 +109,6 @@ class DFDataDownloader
                 errorInfo.put(kSQLStatement, SQLStatement.formattedSQLStatement());
                 DFError error = new DFError(0, "There was a(n) " + e.getCause() + " error", errorInfo);
                 delegate.returnedData(null, error);
-                DFDatabase.defaultDatabase.delegate = null;
             }
         }).start();
     }

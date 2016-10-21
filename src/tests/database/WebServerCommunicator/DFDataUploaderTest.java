@@ -21,8 +21,7 @@ public class DFDataUploaderTest implements DFDatabaseCallbackDelegate
     public void uploadDataWith() throws Exception
     {
         DFSQL statement = new DFSQL().insert("user", new String[]{"mschloss", "blahblah20"}, new String[]{"userID", "password"});
-        DFDatabase.defaultDatabase.delegate = this;
-        DFDatabase.defaultDatabase.execute(statement);
+        DFDatabase.defaultDatabase.execute(statement, this);
     }
 
     @Override
