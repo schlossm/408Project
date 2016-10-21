@@ -79,19 +79,16 @@ class DFDataUploader
                     errorInfo.put(kSQLStatement, SQLStatement.formattedSQLStatement());
                     DFError error = new DFError(1, "No data was returned", errorInfo);
                     delegate.uploadStatus(DFDataUploaderReturnStatus.error, error);
-                    DFDatabase.defaultDatabase.delegate = null;
                     return;
                 }
 
                 if (response.contains("Success"))
                 {
                     delegate.uploadStatus(DFDataUploaderReturnStatus.success, null);
-                    DFDatabase.defaultDatabase.delegate = null;
                 }
                 else
                 {
                     delegate.uploadStatus(DFDataUploaderReturnStatus.failure, null);
-                    DFDatabase.defaultDatabase.delegate = null;
                 }
             }
             catch(NullPointerException | IOException e)
@@ -101,12 +98,6 @@ class DFDataUploader
                     e.printStackTrace();
                 }
 
-                if (delegate == null)
-                {
-                    System.out.println("Callback delegate got set to NULL before arriving at end of thread.  Please make sure you're not calling multiple");
-                    return;
-                }
-
                 Map<String, String> errorInfo = new HashMap<>();
                 errorInfo.put(kMethodName, getMethodName(1));
                 errorInfo.put(kExpandedDescription, "A(n) "+ e.getCause() + " Exception was raised.  Setting DFDatabase -debug to 1 will print the stack trace for this error");
@@ -114,7 +105,6 @@ class DFDataUploader
                 errorInfo.put(kSQLStatement, SQLStatement.formattedSQLStatement());
                 DFError error = new DFError(0, "There was a(n) " + e.getCause() + " error", errorInfo);
                 delegate.uploadStatus(DFDataUploaderReturnStatus.error, error);
-                DFDatabase.defaultDatabase.delegate = null;
             }
         }).start();
 	}
