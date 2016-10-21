@@ -9,5 +9,10 @@
 	<classpathentry kind="lib" path="src/database/dfDatabaseFramework/gson-2.2.3.jar"/>
 	<classpathentry kind="lib" path="src/database/dfDatabaseFramework/gson-2.2.4-sources.jar"/>
 	<classpathentry kind="lib" path="src/JSON_translation/java-json.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Alex/Desktop/School/Fall 2016/cs408/408Project/src/database/bcprov-ext-jdk15on-155.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Alex/Desktop/School/Fall 2016/cs408/408Project/src/database/commons-crypto-1.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Alex/Desktop/School/Fall 2016/cs408/408Project/src/database/commons-crypto-1.0.0-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Alex/Desktop/School/Fall 2016/cs408/408Project/src/database/gson-2.2.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Alex/Desktop/School/Fall 2016/cs408/408Project/src/database/gson-2.2.4-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
