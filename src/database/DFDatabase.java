@@ -42,9 +42,6 @@ public class DFDatabase
 	private SecretKeySpec secretKeySpec;
 	private byte[] iv;
 
-	/**
-	 * The Callback delegate
-	 */
 	public DFDatabaseCallbackDelegate delegate;
 
 	/**
@@ -97,9 +94,8 @@ public class DFDatabase
 	 */
     public void executeSQLStatement(DFSQL statement, DFDatabaseCallbackDelegate delegate)
     {
-		System.out.println(getMethodName(2) + " is now deprecated.  Use `execute(_:)` instead");
-		System.out.println("NOTE: You must set a callback delegate BEFORE calling `execute(_:)`.");
-		this.delegate = delegate;
+		System.out.println(getMethodName(2) + " is now deprecated.  Use `execute(_:, _:)` instead");
+		System.out.println("NOTE: You must give a callback delegate.");
 		execute(statement);
     }
 
@@ -109,22 +105,9 @@ public class DFDatabase
 	 */
 	public void execute(@NotNull DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
 	{
-		System.out.println(getMethodName(2) + " is now deprecated.  Use `execute(_:)` instead");
-		System.out.println("NOTE: You must set a callback delegate BEFORE calling `execute(_:)`.");
-
-		this.delegate = delegate;
-
-		execute(SQLStatement);
-	}
-
-	/**
-	 * @param SQLStatement the SQL statement to execute backend side
-	 */
-	public void execute(@NotNull DFSQL SQLStatement)
-	{
-		if (delegate == null)
+		if (delegate == null && this.delegate == null)
 		{
-			System.out.println("Warning! You must set a callback delegate BEFORE calling `execute(_:)`.  System will fall through now.");
+			System.out.println("Warning! You must give a callback delegate.  System will fall through now.");
 		}
 
 		if (SQLStatement == null || Objects.equals(SQLStatement.formattedSQLStatement(), ""))
@@ -132,11 +115,23 @@ public class DFDatabase
 			Map<String, String> errorInfo = new HashMap<>();
 			errorInfo.put(kMethodName, getMethodName(1));
 			errorInfo.put(kExpandedDescription, "DFDatabase cannot work with a null or empty DFSQL Object.");
-			delegate.returnedData(null, new DFError(-3, "Null DFSQL object delivered", errorInfo));
+			if (delegate != null)
+			{
+				delegate.returnedData(null, new DFError(-3, "Null DFSQL object delivered", errorInfo));
+			}
 			return;
 		}
 
-		DFWebServerDispatch.current.add(SQLStatement.formattedSQLStatement().contains("UPDATE") || SQLStatement.formattedSQLStatement().contains("INSERT") ? DispatchDirection.upload : DispatchDirection.download, SQLStatement, delegate);
+		DFWebServerDispatch.current.add(SQLStatement.formattedSQLStatement().contains("UPDATE") || SQLStatement.formattedSQLStatement().contains("INSERT") ? DispatchDirection.upload : DispatchDirection.download, SQLStatement, delegate != null ? delegate : this.delegate);
+	}
+
+	/**
+	 * @param SQLStatement the SQL statement to execute backend side
+	 */
+	public void execute(@NotNull DFSQL SQLStatement)
+	{
+		System.out.println(getMethodName(1) + " is now deprecated.  Use `execute(_:, _:)` instead");
+		System.out.println("NOTE: You must give a callback delegate or system will fall through.");
 	}
 
 	public @NotNull String hashString(String decryptedString)
