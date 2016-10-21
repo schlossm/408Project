@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static database.DFDatabase.getMethodName;
+import static database.DFDatabase.print;
 import static database.DFError.*;
 import static database.WebServer.DFWebServerDispatch.*;
 
@@ -30,7 +31,7 @@ class DFDataUploader
 	{
 		if (DFDatabase.defaultDatabase.debug == 1)
 		{
-			System.out.println(SQLStatement.formattedSQLStatement());
+			print(SQLStatement.formattedSQLStatement());
 		}
 
 		new Thread(() ->
@@ -39,9 +40,13 @@ class DFDataUploader
             {
                 if (DFDatabase.defaultDatabase.debug == 1)
                 {
-                    System.out.println("Uploading Data...");
+                    print("Uploading Data...");
                 }
                 String urlParameters  = "Password="+ databaseUserPass + "&Username="+ websiteUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement();
+                if (DFDatabase.defaultDatabase.debug == 1)
+                {
+                    print(urlParameters);
+                }
                 byte[] postData       = urlParameters.getBytes(StandardCharsets.UTF_8);
                 int    postDataLength = postData.length;
                 String request        = website + "/" + writeFile;
@@ -53,8 +58,8 @@ class DFDataUploader
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 conn.setRequestProperty("charset", "utf-8");
                 conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
-                conn.setUseCaches(false);
-                try( DataOutputStream wr = new DataOutputStream(conn.getOutputStream()))
+                conn.setUseCaches(true);
+                try(DataOutputStream wr = new DataOutputStream(conn.getOutputStream()))
                 {
                     wr.write(postData);
                 }
@@ -65,9 +70,11 @@ class DFDataUploader
                     sb.append((char)c);
                 String response = sb.toString();
 
+                conn.disconnect();
+
                 if (DFDatabase.defaultDatabase.debug == 1)
                 {
-                    System.out.println("Data Uploaded! Response: " + response);
+                    print("Data Uploaded! Response: " + response);
                 }
 
                 if (Objects.equals(response, ""))

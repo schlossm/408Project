@@ -5,6 +5,8 @@ import database.DFDatabase;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import static database.DFDatabase.print;
+
 class DFNotificationCenterObject
 {
 	final DFNotificationCenterDelegate observer;
@@ -38,7 +40,7 @@ public class DFNotificationCenter
 	 */
 	public void addObserver(DFNotificationCenterDelegate object, String notificationName)
 	{
-		System.out.println(DFDatabase.getMethodName(2) + " is now deprecated.  Use `register(_:, _:)` instead");
+		print(DFDatabase.getMethodName(2) + " is now deprecated.  Use `register(_:, _:)` instead");
 		register(object, notificationName);
 	}
 
@@ -82,7 +84,7 @@ public class DFNotificationCenter
 	 */
 	public void postNotification(String notificationName, Object userData)
 	{
-		System.out.println(DFDatabase.getMethodName(2) + " is now deprecated.  Use `post(_:, _:)` instead");
+		print(DFDatabase.getMethodName(2) + " is now deprecated.  Use `post(_:, _:)` instead");
 		post(notificationName, userData);
 	}
 
