@@ -5,8 +5,8 @@ import com.sun.istack.internal.Nullable;
 import database.DFDatabase;
 import database.DFDatabaseCallbackDelegate;
 import database.DFError;
-import database.dfDatabaseFramework.DFSQL.DFSQL;
-import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploaderReturnStatus;
+import database.DFSQL.DFSQL;
+import database.WebServer.DFDataUploaderReturnStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,8 +37,7 @@ public class DFDatabaseTest implements DFDatabaseCallbackDelegate
     public void executeSQLStatement() throws Exception
     {
         DFSQL statement = new DFSQL().select("userID").from("Users");
-        DFDatabase.defaultDatabase.delegate = this;
-        DFDatabase.defaultDatabase.execute(statement);
+        DFDatabase.defaultDatabase.execute(statement, this);
     }
 
     @Test

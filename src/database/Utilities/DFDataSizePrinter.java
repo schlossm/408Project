@@ -1,4 +1,4 @@
-package database.dfDatabaseFramework.Utilities;
+package database.Utilities;
 
 import java.util.Formatter;
 import java.util.Locale;

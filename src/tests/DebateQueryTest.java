@@ -92,7 +92,7 @@ public class DebateQueryTest implements DFNotificationCenterDelegate{
 	@Test
 	public void getDebateByTitleValidTitleTest(){
 		DFNotificationCenter.defaultCenter.register(this, UIStrings.debateReturned);
-		dq.getDebateByTitle(debateTitle);
+		//dq.getDebateByTitle(debateTitle);
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
@@ -107,7 +107,7 @@ public class DebateQueryTest implements DFNotificationCenterDelegate{
 	@Test
 	public void getDebateByTitleInvalidTitleTest(){
 		DFNotificationCenter.defaultCenter.register(this, UIStrings.debateReturned);
-		dq.getDebateByTitle(invalidDebateTitle);
+		//dq.getDebateByTitle(invalidDebateTitle);
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
@@ -119,7 +119,7 @@ public class DebateQueryTest implements DFNotificationCenterDelegate{
 	@Test
 	public void createNewDebateValidEverythingTest(){
 		DFNotificationCenter.defaultCenter.register(this, UIStrings.debateReturned);
-		dq.getDebateByTitle(invalidDebateTitle);
+		//dq.getDebateByTitle(invalidDebateTitle);
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {

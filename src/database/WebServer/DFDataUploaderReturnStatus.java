@@ -1,4 +1,4 @@
-package database.dfDatabaseFramework.WebServerCommunicator;
+package database.WebServer;
 
 /**
  * The return status from the uploader class

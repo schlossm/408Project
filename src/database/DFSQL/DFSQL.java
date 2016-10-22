@@ -1,4 +1,4 @@
-package database.dfDatabaseFramework.DFSQL;
+package database.DFSQL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
@@ -17,7 +17,7 @@ import java.util.Objects;
     private String[] insertData;
     
     private DFSQLClauseStruct[] updateStatements;
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection") private final ArrayList<DFSQL> appendedDFSQL;
+    private final ArrayList<DFSQL> appendedDFSQL;
     
     public DFSQL()
     {
@@ -36,18 +36,21 @@ import java.util.Objects;
         return this;
     }
 
+    private int layer = 0;
+
     /**
      * @return A human readable formatted SQL statement
      */
     public final String formattedSQLStatement()
     {
+	    layer++;
     	String returnString;
     	if (updateStatements != null)	//This will be an UPDATE SET
     	{
     		if (fromTables == null)		{ return ""; }
     		if (fromTables.length != 1)	{ return ""; }
     		
-    		returnString = "UPDATE `" + fromTables[0] + "` SET ";
+    		returnString = "UPDATE " + fromTables[0] + " SET ";
     		
     		for (DFSQLClauseStruct statement : updateStatements)
     		{
@@ -59,7 +62,7 @@ import java.util.Objects;
     				right = "'" + right + "'";
     			}
     			
-    			returnString += "`" + left + "`=" + right + ", ";
+    			returnString += left + "=" + right + ", ";
     		}
     		
     		returnString = returnString.substring(0, returnString.length() - 2);
@@ -104,7 +107,7 @@ import java.util.Objects;
     				
         			if (whereStatement.conjunction == DFSQLConjunctionClause.none)
         			{
-        				returnString += " `" + left + "`" + joiner + right;
+        				returnString += " " + left + joiner + right;
         			}
         			else
         			{
@@ -117,15 +120,27 @@ import java.util.Objects;
         				{
         					conjunction = " OR";
         				}
-        				
-        				returnString += " `" + left + "`" + joiner + right + conjunction;
+        				returnString += " " + left + joiner + right + conjunction;
         			}
         		}
         	}
         	
         	returnString += ";";
-    		
-    		System.out.println(returnString);
+
+		    if (layer > 1)
+		    {
+			    return returnString;
+		    }
+
+		    if (appendedDFSQL.size() != 0)
+		    {
+			    for (DFSQL statement : appendedDFSQL)
+			    {
+				    returnString += " " + statement.formattedSQLStatement();
+			    }
+		    }
+
+		    layer = 0;
     		return returnString;
     	}
     	
@@ -261,7 +276,6 @@ import java.util.Objects;
     				{
     					conjunction = " OR";
     				}
-    				
     				returnString += " " + left + joiner + right + conjunction;
     			}
     		}

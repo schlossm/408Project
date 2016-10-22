@@ -1,9 +1,9 @@
-package database.dfDatabaseFramework.WebServerCommunicator;
+package database.WebServer;
 
 import database.DFDatabase;
 import database.DFDatabaseCallbackDelegate;
 import database.DFError;
-import database.dfDatabaseFramework.DFSQL.DFSQL;
+import database.DFSQL.DFSQL;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -14,47 +14,39 @@ import java.util.Map;
 import java.util.Objects;
 
 import static database.DFDatabase.getMethodName;
+import static database.DFDatabase.print;
 import static database.DFError.*;
+import static database.WebServer.DFWebServerDispatch.*;
 
 /**
  * Uploads an SQL statement to a remote SQL database
  */
-public class DFDataUploader
+class DFDataUploader
 {
-	private final String website;
-	private final String writeFile;
-	private final String databaseUserName;
-    private final String databaseUserPass;
-
-    public DFDataUploader(String website, String writeFile, String databaseUserName, String databaseUserPass)
-    {
-    	this.website = website;
-    	this.writeFile = writeFile;
-    	this.databaseUserName = databaseUserName;
-    	this.databaseUserPass = databaseUserPass;
-    }
-
     /**
      * Uploads data to the database
      * @param SQLStatement the SQL statement to execute on the web server
      */
-	public void uploadDataWith(DFSQL SQLStatement)
+    void uploadDataWith(DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
 	{
 		if (DFDatabase.defaultDatabase.debug == 1)
 		{
-			System.out.println(SQLStatement.formattedSQLStatement());
+			print(SQLStatement.formattedSQLStatement());
 		}
 
 		new Thread(() ->
         {
-            DFDatabaseCallbackDelegate delegate = DFDatabase.defaultDatabase.delegate;
             try
             {
                 if (DFDatabase.defaultDatabase.debug == 1)
                 {
-                    System.out.println("Uploading Data...");
+                    print("Uploading Data...");
                 }
-                String urlParameters  = "Password="+ databaseUserPass + "&Username="+ databaseUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement();
+                String urlParameters  = "Password="+ databaseUserPass + "&Username="+ websiteUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement();
+                if (DFDatabase.defaultDatabase.debug == 1)
+                {
+                    print(urlParameters);
+                }
                 byte[] postData       = urlParameters.getBytes(StandardCharsets.UTF_8);
                 int    postDataLength = postData.length;
                 String request        = website + "/" + writeFile;
@@ -66,8 +58,8 @@ public class DFDataUploader
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 conn.setRequestProperty("charset", "utf-8");
                 conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
-                conn.setUseCaches(false);
-                try( DataOutputStream wr = new DataOutputStream(conn.getOutputStream()))
+                conn.setUseCaches(true);
+                try(DataOutputStream wr = new DataOutputStream(conn.getOutputStream()))
                 {
                     wr.write(postData);
                 }
@@ -78,9 +70,11 @@ public class DFDataUploader
                     sb.append((char)c);
                 String response = sb.toString();
 
+                conn.disconnect();
+
                 if (DFDatabase.defaultDatabase.debug == 1)
                 {
-                    System.out.println("Data Uploaded! Response: " + response);
+                    print("Data Uploaded! Response: " + response);
                 }
 
                 if (Objects.equals(response, ""))
@@ -92,19 +86,16 @@ public class DFDataUploader
                     errorInfo.put(kSQLStatement, SQLStatement.formattedSQLStatement());
                     DFError error = new DFError(1, "No data was returned", errorInfo);
                     delegate.uploadStatus(DFDataUploaderReturnStatus.error, error);
-                    DFDatabase.defaultDatabase.delegate = null;
                     return;
                 }
 
                 if (response.contains("Success"))
                 {
                     delegate.uploadStatus(DFDataUploaderReturnStatus.success, null);
-                    DFDatabase.defaultDatabase.delegate = null;
                 }
                 else
                 {
                     delegate.uploadStatus(DFDataUploaderReturnStatus.failure, null);
-                    DFDatabase.defaultDatabase.delegate = null;
                 }
             }
             catch(NullPointerException | IOException e)
@@ -114,12 +105,6 @@ public class DFDataUploader
                     e.printStackTrace();
                 }
 
-                if (delegate == null)
-                {
-                    System.out.println("Callback delegate got set to NULL before arriving at end of thread.  Please make sure you're not calling multiple");
-                    return;
-                }
-
                 Map<String, String> errorInfo = new HashMap<>();
                 errorInfo.put(kMethodName, getMethodName(1));
                 errorInfo.put(kExpandedDescription, "A(n) "+ e.getCause() + " Exception was raised.  Setting DFDatabase -debug to 1 will print the stack trace for this error");
@@ -127,7 +112,6 @@ public class DFDataUploader
                 errorInfo.put(kSQLStatement, SQLStatement.formattedSQLStatement());
                 DFError error = new DFError(0, "There was a(n) " + e.getCause() + " error", errorInfo);
                 delegate.uploadStatus(DFDataUploaderReturnStatus.error, error);
-                DFDatabase.defaultDatabase.delegate = null;
             }
         }).start();
 	}

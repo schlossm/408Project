@@ -1,10 +1,9 @@
 package database;
 
 import com.sun.istack.internal.NotNull;
-import database.dfDatabaseFramework.DFSQL.DFSQL;
-import database.dfDatabaseFramework.Utilities.DFDataSizePrinter;
-import database.dfDatabaseFramework.WebServerCommunicator.DFDataDownloader;
-import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploader;
+import database.DFSQL.DFSQL;
+import database.WebServer.DFWebServerDispatch;
+import database.WebServer.DispatchDirection;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.BadPaddingException;
@@ -34,41 +33,32 @@ public class DFDatabase
 	 * The singleton instance of DFDatabase
 	 */
 	public static final DFDatabase defaultDatabase = new DFDatabase();
-	
-	private final String website			= "http://debateforum.michaelschlosstech.com";
-	private final String readFile			= "ReadFile.php";
-	private final String writeFile			= "WriteFile.php";
+
 	private final String websiteUserName	= "DFJavaApp";
 	private final String websiteUserPass	= "3xT-MA8-HEm-sTd";
-    private final String databaseUserPass	= "3xT-MA8-HEm-sTd";
 	private final char[] hexArray			= "0123456789ABCDEF".toCharArray();
 	private boolean useEncryption           = true;
 
 	private SecretKeySpec secretKeySpec;
 	private byte[] iv;
 
-	private final DFDataDownloader dataDownloader	= new DFDataDownloader(website, readFile, websiteUserName, databaseUserPass);
-	private final DFDataUploader   dataUploader		= new DFDataUploader(website, writeFile, websiteUserName, databaseUserPass);
-
-	/**
-	 * The Callback delegate
-	 */
-	public DFDatabaseCallbackDelegate delegate;
-
-	/**
-	 * A reference to the data size printer object
-	 */
-	public final DFDataSizePrinter dataSizePrinter = DFDataSizePrinter.current;
+	@Deprecated public DFDatabaseCallbackDelegate delegate;
 
 	/**
 	 * Wanna debug DFDatabase? Set this flag to 1.
 	 */
-	public int debug = 0;
+	public int debug = 1;
 	
 	private Cipher encryptor, decryptor;
 
 	private DFDatabase()
-	{ 
+	{
+
+		Authenticator.setDefault (new Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication (websiteUserName, websiteUserPass.toCharArray());
+			}
+		});
 		try 
 		{
 			Security.addProvider(new BouncyCastleProvider());
@@ -80,7 +70,7 @@ public class DFDatabase
 			byte[] key = encryptionKey.getBytes();
 			MessageDigest sha = MessageDigest.getInstance("SHA-1");
 			key = sha.digest(key);
-			key = Arrays.copyOf(key, 16); // use only first 128 bit
+			key = Arrays.copyOf(key, 16);
 
 			secretKeySpec = new SecretKeySpec(key, "AES");
 
@@ -89,17 +79,11 @@ public class DFDatabase
 			random.nextBytes(iv);
 			IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
 			encryptor.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
-
-			Authenticator.setDefault (new Authenticator() {
-			    protected PasswordAuthentication getPasswordAuthentication() {
-			        return new PasswordAuthentication (websiteUserName, websiteUserPass.toCharArray());
-			    }
-			});
 		} 
 		catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e)
 		{
 			e.printStackTrace();
-			System.out.println("Encryption failed to initialize.  Falling back to NO encryption.");
+			print("Encryption failed to initialize.  Falling back to NO encryption.");
 			useEncryption = false;
 		}
 	}
@@ -110,9 +94,8 @@ public class DFDatabase
 	 */
     public void executeSQLStatement(DFSQL statement, DFDatabaseCallbackDelegate delegate)
     {
-		System.out.println(getMethodName(2) + " is now deprecated.  Use `execute(_:)` instead");
-		System.out.println("NOTE: You must set a callback delegate BEFORE calling `execute(_:)`.");
-		this.delegate = delegate;
+	    print(getMethodName(2) + " is now deprecated.  Use `execute(_:, _:)` instead");
+	    print("NOTE: You must give a callback delegate.");
 		execute(statement);
     }
 
@@ -122,22 +105,9 @@ public class DFDatabase
 	 */
 	public void execute(@NotNull DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
 	{
-		System.out.println(getMethodName(2) + " is now deprecated.  Use `execute(_:)` instead");
-		System.out.println("NOTE: You must set a callback delegate BEFORE calling `execute(_:)`.");
-
-		this.delegate = delegate;
-
-		execute(SQLStatement);
-	}
-
-	/**
-	 * @param SQLStatement the SQL statement to execute backend side
-	 */
-	public void execute(@NotNull DFSQL SQLStatement)
-	{
-		if (delegate == null)
+		if (delegate == null && this.delegate == null)
 		{
-			System.out.println("Warning! You must set a callback delegate BEFORE calling `execute(_:)`.  System will fall through now.");
+			print("Warning! You must give a callback delegate.  System will fall through now.");
 		}
 
 		if (SQLStatement == null || Objects.equals(SQLStatement.formattedSQLStatement(), ""))
@@ -145,18 +115,25 @@ public class DFDatabase
 			Map<String, String> errorInfo = new HashMap<>();
 			errorInfo.put(kMethodName, getMethodName(1));
 			errorInfo.put(kExpandedDescription, "DFDatabase cannot work with a null or empty DFSQL Object.");
-			delegate.returnedData(null, new DFError(-3, "Null DFSQL object delivered", errorInfo));
+			if (delegate != null)
+			{
+				delegate.returnedData(null, new DFError(-3, "Null DFSQL object delivered", errorInfo));
+			}
 			return;
 		}
 
-		if (SQLStatement.formattedSQLStatement().contains("UPDATE") || SQLStatement.formattedSQLStatement().contains("INSERT"))
-		{
-			dataUploader.uploadDataWith(SQLStatement);
-		}
-		else
-		{
-			dataDownloader.downloadDataWith(SQLStatement);
-		}
+		DFWebServerDispatch.current.add(SQLStatement.formattedSQLStatement().contains("UPDATE") || SQLStatement.formattedSQLStatement().contains("INSERT") ? DispatchDirection.upload : DispatchDirection.download, SQLStatement, delegate != null ? delegate : this.delegate);
+	}
+
+	/**
+	 * @param SQLStatement the SQL statement to execute backend side
+	 */
+	public void execute(@NotNull DFSQL SQLStatement)
+	{
+		print(getMethodName(1) + " is now deprecated.  Use `execute(_:, _:)` instead");
+		print("NOTE: You must give a callback delegate or system will fall through.");
+
+		execute(SQLStatement, null);
 	}
 
 	public @NotNull String hashString(String decryptedString)
@@ -269,5 +246,10 @@ public class DFDatabase
 		}
 
 		return stringBuilder.toString();
+	}
+
+	public static void print(Object object)
+	{
+		System.out.println(object);
 	}
 }

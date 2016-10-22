@@ -1,4 +1,4 @@
-package database.dfDatabaseFramework.DFSQL;
+package database.DFSQL;
 
 class JoinStruct 
 {

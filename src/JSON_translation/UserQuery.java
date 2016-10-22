@@ -1,20 +1,15 @@
 package JSON_translation;
 
 
-import javax.print.attribute.standard.RequestingUserName;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
 import UI.UIStrings;
 import UIKit.DFNotificationCenter;
+import com.google.gson.JsonObject;
 import database.DFDatabase;
 import database.DFDatabaseCallbackDelegate;
 import database.DFError;
-import database.dfDatabaseFramework.DFSQL.DFSQL;
-import database.dfDatabaseFramework.DFSQL.DFSQLError;
-import database.dfDatabaseFramework.WebServerCommunicator.DFDataUploaderReturnStatus;
+import database.DFSQL.DFSQL;
+import database.DFSQL.DFSQLError;
+import database.WebServer.DFDataUploaderReturnStatus;
 import objects.User;
 import objects.User.UserType;
 
@@ -31,8 +26,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		getUserReturn = true;
 		try {
 			dfsql.select(selectedRows).from("User").whereEquals("userID", username);
-			DFDatabase.defaultDatabase.delegate = this;
-			DFDatabase.defaultDatabase.execute(dfsql);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		}
@@ -77,8 +71,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		int isBannedInt = 0;
 		try {
 			DFSQL dfsql = new DFSQL().select("banned").from("User").whereEquals("userID", username);
-			DFDatabase.defaultDatabase.delegate = this;
-			DFDatabase.defaultDatabase.execute(dfsql);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 			isBannedInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsInt();
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
@@ -95,8 +88,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		int userTypeInt = 0;
 		try {
 			DFSQL dfsql = new DFSQL().select("privilegeLevel").from("User").whereEquals("userID", username);
-			DFDatabase.defaultDatabase.delegate = this;
-			DFDatabase.defaultDatabase.execute(dfsql);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 			userTypeInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel").getAsInt();
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
@@ -121,8 +113,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		try {
 			dfsql.insert("User", values, rows);
 			System.out.println(dfsql.formattedSQLStatement());
-			DFDatabase.defaultDatabase.delegate = this;
-			DFDatabase.defaultDatabase.execute(dfsql);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 			} catch (DFSQLError e1) {
 			e1.printStackTrace();
 			isaddSuccess = false;
@@ -161,8 +152,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		DFSQL dfsql = new DFSQL();
 		try {
 			dfsql.update("User", "privilegeLevel", String.valueOf(convertedUserType)).whereEquals("userID", userName);
-			DFDatabase.defaultDatabase.delegate = this;
-			DFDatabase.defaultDatabase.execute(dfsql);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 			} catch (DFSQLError e1) {
 			e1.printStackTrace();
 			return false;
@@ -176,8 +166,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		System.out.println(newbanStatusInt);
 		try {
 			dfsql.update("User", "banned", String.valueOf(newbanStatusInt)).whereEquals("userID", userName);
-			DFDatabase.defaultDatabase.delegate = this;
-			DFDatabase.defaultDatabase.execute(dfsql);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 			return false;
@@ -192,8 +181,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		verifyUserLoginReturn = true;
 		try {
 			dfsql.select(selectedRows).from("User").whereEquals("userID", userName);
-			DFDatabase.defaultDatabase.delegate = this;
-			DFDatabase.defaultDatabase.execute(dfsql);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		}

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 public class PostQueryTest implements DFNotificationCenterDelegate {
 	private static PostQuery pq;
 	private static int debateID, invalidDebateID;
+	private static String username;
 	private static ArrayList<Post> posts;
 	
 	/*
@@ -53,6 +54,7 @@ public class PostQueryTest implements DFNotificationCenterDelegate {
 	public void setUp() throws Exception {
 		debateID = 1;
 		invalidDebateID = 0;
+		username = "testusername";
 	}
 
 	/*
@@ -70,26 +72,63 @@ public class PostQueryTest implements DFNotificationCenterDelegate {
 	@Test
 	public void testGetDebatePosts() {
 		pq.getDebatePosts(debateID);
+		
 		DFNotificationCenter.defaultCenter.addObserver(this, UIStrings.postsReturned);
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		
+		// Still need to actually set posts
 		assertTrue(posts != null);
 	}
 	
 	@Test
 	public void testGetInvalidDebatePosts() {
 		pq.getDebatePosts(invalidDebateID);
+		
 		DFNotificationCenter.defaultCenter.addObserver(this, UIStrings.postsReturned);
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		
+		// Still need to actually set posts
 		assertTrue(posts != null);
 	}
+	
+	@Test
+	public void testPostToDebate() {
+		Post post = new Post(username, "This is a post!");
+		pq.postToDebate(post, debateID);
+		
+		DFNotificationCenter.defaultCenter.addObserver(this, UIStrings.postsReturned);
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		// Still need to get posts and compare size to before
+		assertTrue(posts != null);
+	}
+	
+	/*@Test
+	public void testUpdateFlags() {
+		
+	}
+	
+	@Test
+	public void testUpdateIsHidden() {
+		
+	}
+	
+	@Test
+	public void testUploadNewPostToDatabase() {
+		
+	}*/
 
 	@Override
 	public void performActionFor(String notificationName, Object userData) {
