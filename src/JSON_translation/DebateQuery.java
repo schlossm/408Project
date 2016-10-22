@@ -36,7 +36,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 	private  ArrayList<Post> debatePosts;
 	private JsonObject jsonObject;
 	private DFDataUploaderReturnStatus uploadSuccess;
-	private boolean getDebateReturn, getMaxDebateId, getArchivedDebatesReturn;
+	private boolean getCurrentDebateReturn, getMaxDebateId, getArchivedDebatesReturn;
 	private HashMap<Integer, Debate> archivedDebates;
 	
 	public void getCurrentDebate(){	
@@ -44,9 +44,9 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		String[] selectedRows = {"debateID", "text", "startDate", "endDate"};
 		Calendar calobj = Calendar.getInstance();
 		Date currentDate = calobj.getTime();
-		getDebateReturn = true;
+		getCurrentDebateReturn = true;
 		try {
-			new DFSQL().select(selectedRows).from("debate").whereCustom(new WhereStruct[]{new WhereStruct(DFSQLConjunctionClause.and, DFSQLConjunctionClause.lessThan, new DFSQLClauseStruct("startDate", dateToStringConverter(currentDate))), new WhereStruct(DFSQLConjunctionClause.none, DFSQLConjunctionClause.greaterThan, new DFSQLClauseStruct("endDate", dateToStringConverter(currentDate)))});
+			dfsql.select(selectedRows).from("Debate").whereCustom(new WhereStruct[]{new WhereStruct(DFSQLConjunctionClause.and, DFSQLConjunctionClause.lessThan, new DFSQLClauseStruct("startDate", dateToStringConverter(currentDate))), new WhereStruct(DFSQLConjunctionClause.none, DFSQLConjunctionClause.greaterThan, new DFSQLClauseStruct("endDate", dateToStringConverter(currentDate)))});
 			System.out.println(dfsql.formattedSQLStatement());
 			DFDatabase.defaultDatabase.execute(dfsql, this);
 			} catch (DFSQLError e1) {
@@ -108,7 +108,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 	}
 	
 	private void returnHandler(){
-		if(getDebateReturn){
+		if(getCurrentDebateReturn){
 			try {
 				 debateId = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("debateID").getAsInt();
 				 debateText = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("text").getAsString();
@@ -134,7 +134,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 					archivedDebates.put(Integer.valueOf(debateId), debate);
 				}
 				getPostsForArchivedDebates();
-				resetBooleans();
+				//resetBooleans();
 
 				//Debate sample = archivedDebates.get(1);
 				//System.out.println(sample.getTitle());
@@ -148,8 +148,9 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 				DFNotificationCenter.defaultCenter.post(UIStrings.debateCreated, Boolean.FALSE);			
 			}
 			uploadNewDebateToDatabase(debateId);
+			resetBooleans();
 		}
-		resetBooleans();
+		//resetBooleans();
 	}
 	
 	private void getPostsForArchivedDebates(){
@@ -210,8 +211,9 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 	}
 	
 	private void resetBooleans(){
-		getDebateReturn = false;
+		getCurrentDebateReturn = false;
 		getMaxDebateId = false;
+		getArchivedDebatesReturn = false;
 	}
 	private void resetAttributes(){
 		debateId = 0;
@@ -245,20 +247,35 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 
 	@Override
 	public void performActionFor(String notificationName, Object userData) {
-		if(notificationName.equals(UIStrings.postsReturned)){
+		if(notificationName.equals(UIStrings.postsReturned) &&  getArchivedDebatesReturn){
 			if(userData == null){
 				debatePosts = null;
 			} else{
 				debatePosts = (ArrayList<Post>)userData;
 			}
 			constructDebatesWithPosts(debatePosts);
-		} else if (notificationName.equals(UIStrings.debateReturned)) {
+		}else if (notificationName.equals(UIStrings.postsReturned) && getCurrentDebateReturn) {
+			if(userData == null){
+				debatePosts = null;
+			} else{
+				debatePosts = (ArrayList<Post>)userData;
+			}
+			constructCurrentDebateWithPosts(debatePosts);
+		}else if (notificationName.equals(UIStrings.debateReturned)) {
 			Debate debateObject = (Debate)userData;
 			System.out.println(debateObject.getTitle());
 			System.out.println(debateObject.isOpen());
 		}
+		resetBooleans();
 	}
-
+	
+	private void constructCurrentDebateWithPosts(ArrayList<Post> debatePosts) {
+		boolean isCurrentDebate = checkIfCurrentDebate(debateStartDate, debateEndDate);
+		Debate debate = new Debate(debateTitle, debatePosts, isCurrentDebate, debateText, stringToDateConverter(debateStartDate), stringToDateConverter(debateEndDate), debateId);
+		DFNotificationCenter.defaultCenter.post(UIStrings.debateReturned, debate);
+		resetAttributes();
+	}
+	
 	private void constructDebatesWithPosts(ArrayList<Post> debatePosts){
 		if(debateIdCounter > maxDebateId){
 			debateIdCounter = 1; return;
@@ -282,9 +299,9 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		//debateQuery.getDebateByTitle("testDebate");
 		//debateQuery.createNewDebate("createTestDebateWithMaxId", "mAX ID IS WORKING NOW", "10/21/2016 12:00 AM", "10/30/2016 12:00 AM");
 		//debateQuery.getArchivedDebates();
-		Calendar calobj = Calendar.getInstance();
-		Date currentDate = calobj.getTime();
-		System.out.println(debateQuery.dateToStringConverter(currentDate));
+		//Calendar calobj = Calendar.getInstance();
+		//Date currentDate = calobj.getTime();
+		//System.out.println(debateQuery.dateToStringConverter(currentDate));
 		debateQuery.getCurrentDebate();
 		//debateQuery.testPostQuery(1);
 	}
