@@ -42,17 +42,23 @@ public class DFDatabase
 	private SecretKeySpec secretKeySpec;
 	private byte[] iv;
 
-	public DFDatabaseCallbackDelegate delegate;
+	@Deprecated public DFDatabaseCallbackDelegate delegate;
 
 	/**
 	 * Wanna debug DFDatabase? Set this flag to 1.
 	 */
-	public int debug = 0;
+	public int debug = 1;
 	
 	private Cipher encryptor, decryptor;
 
 	private DFDatabase()
-	{ 
+	{
+
+		Authenticator.setDefault (new Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication (websiteUserName, websiteUserPass.toCharArray());
+			}
+		});
 		try 
 		{
 			Security.addProvider(new BouncyCastleProvider());
@@ -64,7 +70,7 @@ public class DFDatabase
 			byte[] key = encryptionKey.getBytes();
 			MessageDigest sha = MessageDigest.getInstance("SHA-1");
 			key = sha.digest(key);
-			key = Arrays.copyOf(key, 16); // use only first 128 bit
+			key = Arrays.copyOf(key, 16);
 
 			secretKeySpec = new SecretKeySpec(key, "AES");
 
@@ -73,17 +79,11 @@ public class DFDatabase
 			random.nextBytes(iv);
 			IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
 			encryptor.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
-
-			Authenticator.setDefault (new Authenticator() {
-			    protected PasswordAuthentication getPasswordAuthentication() {
-			        return new PasswordAuthentication (websiteUserName, websiteUserPass.toCharArray());
-			    }
-			});
 		} 
 		catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e)
 		{
 			e.printStackTrace();
-			System.out.println("Encryption failed to initialize.  Falling back to NO encryption.");
+			print("Encryption failed to initialize.  Falling back to NO encryption.");
 			useEncryption = false;
 		}
 	}
@@ -94,8 +94,8 @@ public class DFDatabase
 	 */
     public void executeSQLStatement(DFSQL statement, DFDatabaseCallbackDelegate delegate)
     {
-		System.out.println(getMethodName(2) + " is now deprecated.  Use `execute(_:, _:)` instead");
-		System.out.println("NOTE: You must give a callback delegate.");
+	    print(getMethodName(2) + " is now deprecated.  Use `execute(_:, _:)` instead");
+	    print("NOTE: You must give a callback delegate.");
 		execute(statement);
     }
 
@@ -107,7 +107,7 @@ public class DFDatabase
 	{
 		if (delegate == null && this.delegate == null)
 		{
-			System.out.println("Warning! You must give a callback delegate.  System will fall through now.");
+			print("Warning! You must give a callback delegate.  System will fall through now.");
 		}
 
 		if (SQLStatement == null || Objects.equals(SQLStatement.formattedSQLStatement(), ""))
@@ -130,8 +130,10 @@ public class DFDatabase
 	 */
 	public void execute(@NotNull DFSQL SQLStatement)
 	{
-		System.out.println(getMethodName(1) + " is now deprecated.  Use `execute(_:, _:)` instead");
-		System.out.println("NOTE: You must give a callback delegate or system will fall through.");
+		print(getMethodName(1) + " is now deprecated.  Use `execute(_:, _:)` instead");
+		print("NOTE: You must give a callback delegate or system will fall through.");
+
+		execute(SQLStatement, null);
 	}
 
 	public @NotNull String hashString(String decryptedString)
@@ -244,5 +246,10 @@ public class DFDatabase
 		}
 
 		return stringBuilder.toString();
+	}
+
+	public static void print(Object object)
+	{
+		System.out.println(object);
 	}
 }

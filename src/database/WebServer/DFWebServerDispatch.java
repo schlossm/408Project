@@ -4,12 +4,15 @@ package database.WebServer;
 import com.google.gson.JsonObject;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
+import database.DFDatabase;
 import database.DFDatabaseCallbackDelegate;
 import database.DFError;
 import database.DFSQL.DFSQL;
 import database.Utilities.DFDataSizePrinter;
 
 import java.util.ArrayList;
+
+import static database.DFDatabase.print;
 
 /**
  * Created by michaelschloss on 10/19/16.
@@ -36,6 +39,11 @@ public class DFWebServerDispatch implements DFDatabaseCallbackDelegate
 	public void add(DispatchDirection direction, DFSQL statement, DFDatabaseCallbackDelegate delegate)
 	{
 		queue.add(new PrivateDFDispatchObject(direction, statement, delegate));
+		if (DFDatabase.defaultDatabase.debug == 1)
+		{
+			print("Added new entry!");
+			print("Queue size: " + queue.size());
+		}
 		if (!isProcessing)
 		{
 			isProcessing = true;
@@ -45,6 +53,7 @@ public class DFWebServerDispatch implements DFDatabaseCallbackDelegate
 
 	private void processQueue()
 	{
+		print("Processing");
 		if (queue.size() == 0)
 		{
 			isProcessing = false;
@@ -73,6 +82,7 @@ public class DFWebServerDispatch implements DFDatabaseCallbackDelegate
 	public void uploadStatus(@NotNull DFDataUploaderReturnStatus success, @Nullable DFError error)
 	{
 		nextObject.delegate.uploadStatus(success, error);
+		processQueue();
 	}
 }
 

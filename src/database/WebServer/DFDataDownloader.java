@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static database.DFDatabase.getMethodName;
+import static database.DFDatabase.print;
 import static database.DFError.*;
 import static database.WebServer.DFWebServerDispatch.*;
 
@@ -35,7 +36,7 @@ class DFDataDownloader
 	{
 		if (DFDatabase.defaultDatabase.debug == 1)
 		{
-			System.out.println(SQLStatement.formattedSQLStatement());
+			print(SQLStatement.formattedSQLStatement());
 		}
 		new Thread(() ->
         {
@@ -43,7 +44,7 @@ class DFDataDownloader
             {
                 if (DFDatabase.defaultDatabase.debug == 1)
                 {
-                    System.out.println("Downloading Data...");
+                    print("Downloading Data...");
                 }
                 String urlParameters = "Password=" + databaseUserPass + "&Username=" + websiteUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement();
                 byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
@@ -71,8 +72,8 @@ class DFDataDownloader
                 DFWebServerDispatch.current.dataSizePrinter.printDataSize(response.length());
                 if (DFDatabase.defaultDatabase.debug == 1)
                 {
-                    System.out.println("Data Downloaded!");
-                    System.out.println(response);
+                    print("Data Downloaded!");
+                    print(response);
                 }
 
                 conn.disconnect();
