@@ -4,6 +4,8 @@ import UI.UIStrings;
 import UIKit.DFNotificationCenter;
 import UIKit.DFNotificationCenterDelegate;
 import com.google.gson.JsonObject;
+import com.sun.javafx.runtime.VersionInfo;
+
 import database.DFDatabase;
 import database.DFDatabaseCallbackDelegate;
 import database.DFError;
@@ -15,6 +17,7 @@ import database.DFSQL.WhereStruct;
 import database.WebServer.DFDataUploaderReturnStatus;
 import objects.Debate;
 import objects.Post;
+import UIKit.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -76,6 +79,8 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 	 */
 	
 	public void createNewDebate(String debateTitle, String debateText, String startDate, String endDate){
+		if(!checkForDuplicateDebateTitle(debateTitle)){return;}
+		if(!checkForOverLappingDates(startDate, endDate)){return;}
 		DFSQL dfsql = new DFSQL();
 		getMaxDebateId = true;
 		this.debateTitle = debateTitle;
@@ -92,6 +97,31 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		}
 	}
 		
+	private boolean checkForOverLappingDates(String startdate, String enddate){
+		HashMap<Integer, Debate> cachedDebates = loadFromLocalStorage();
+		Date javaStartDate = stringToDateConverter(startdate);
+		Date javaEndDate = stringToDateConverter(enddate);
+		for (Debate debate : cachedDebates.values()) {
+			if(debate.getStartDate().before(javaStartDate) && debate.getEndDate().after(javaStartDate)){
+				return false;
+			}
+			if(debate.getStartDate().before(javaEndDate) && debate.getEndDate().after(javaEndDate)){
+				return false;
+			}
+		}
+		return true;
+	}
+	private boolean checkForDuplicateDebateTitle(String debatetitle) {
+		// TODO Auto-generated method stub
+		HashMap<Integer, Debate> cachedDebates = loadFromLocalStorage();
+		for (Debate debate : cachedDebates.values()) {
+			if(debate.getTitle().equals(debatetitle)){
+				return false;
+			}
+		}
+		return true;
+	}
+
 	@Override
 	public void returnedData(JsonObject jsonObject, DFError error) {
 		// TODO Auto-generated method stub
@@ -286,8 +316,18 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		 archivedDebates.replace(debateIdCounter, debateAppend);
 		 debateIdCounter++;
 		 resetAttributes();
+		 storeToLocalStorage();
 	}
 	
+	private void storeToLocalStorage() {
+		LocalStorage.saveObjectToFile(archivedDebates, "cache/archivedDebates.ser");
+	}
+	
+	private HashMap<Integer, Debate> loadFromLocalStorage(){
+		HashMap<Integer, Debate> cachedDebates = (HashMap<Integer, Debate>) LocalStorage.loadObjectFromFile("cache/archivedDebates.ser");
+		return cachedDebates;
+	}
+
 	public void testPostQuery(int debateId){
 		PostQuery postQuery = new PostQuery();
 		DFNotificationCenter.defaultCenter.register(this, UIStrings.postsReturned);
@@ -302,8 +342,8 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		//Calendar calobj = Calendar.getInstance();
 		//Date currentDate = calobj.getTime();
 		//System.out.println(debateQuery.dateToStringConverter(currentDate));
-		debateQuery.getCurrentDebate();
-		//debateQuery.testPostQuery(1);
+		//debateQuery.getCurrentDebate();
+		debateQuery.testPostQuery(2);
 	}
 	
 }
