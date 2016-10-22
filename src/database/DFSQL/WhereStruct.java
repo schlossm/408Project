@@ -12,6 +12,7 @@ package database.DFSQL;
 	public WhereStruct(DFSQLConjunctionClause conjunction, DFSQLConjunctionClause joiner, DFSQLClauseStruct clause) throws DFSQLError
 	{
 		if (conjunction != DFSQLConjunctionClause.and &&
+			    conjunction != DFSQLConjunctionClause.none &&
 			    conjunction != DFSQLConjunctionClause.or)
 			throw DFSQLError.DFSQLConjunctionClauseDoesntMatch;
 		if (joiner != DFSQLConjunctionClause.equals &&
