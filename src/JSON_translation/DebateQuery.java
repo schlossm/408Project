@@ -26,6 +26,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import javax.swing.text.StyledEditorKit.ForegroundAction;
+
 import org.w3c.dom.css.Counter;
 
 public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCenterDelegate{
@@ -97,7 +99,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		}
 	}
 		
-	private boolean checkForOverLappingDates(String startdate, String enddate){
+	public boolean checkForOverLappingDates(String startdate, String enddate){
 		HashMap<Integer, Debate> cachedDebates = loadFromLocalStorage();
 		Date javaStartDate = stringToDateConverter(startdate);
 		Date javaEndDate = stringToDateConverter(enddate);
@@ -108,10 +110,16 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 			if(debate.getStartDate().before(javaEndDate) && debate.getEndDate().after(javaEndDate)){
 				return false;
 			}
+			if(debate.getStartDate().equals(javaStartDate) || debate.getEndDate().equals(javaEndDate)){
+				return false;
+			}
+			if(debate.getStartDate().after(javaStartDate) && debate.getEndDate().before(javaEndDate)){
+				return false;
+			}
 		}
 		return true;
 	}
-	private boolean checkForDuplicateDebateTitle(String debatetitle) {
+	public boolean checkForDuplicateDebateTitle(String debatetitle) {
 		// TODO Auto-generated method stub
 		HashMap<Integer, Debate> cachedDebates = loadFromLocalStorage();
 		for (Debate debate : cachedDebates.values()) {
@@ -295,7 +303,16 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 			Debate debateObject = (Debate)userData;
 			System.out.println(debateObject.getTitle());
 			System.out.println(debateObject.isOpen());
-		}
+		} /*else if (notificationName.equals(UIStrings.postsReturned)) {
+			System.out.println("testing posts and comes out safe.");
+			if (userData != null) {
+				System.out.println("posts returned");
+				ArrayList<Post> posts = (ArrayList<Post>)userData;
+				System.out.println(posts.get(0).getText());
+			} else {
+				System.out.println("null posts returnewd");
+			}
+		}*/
 		resetBooleans();
 	}
 	
@@ -334,16 +351,34 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		postQuery.getDebatePosts(debateId);
 	}
 	
+	private void printHashMap(HashMap<Integer, Debate> debates){
+		for (HashMap.Entry<Integer, Debate> entry : debates.entrySet()) {
+		    Integer key = entry.getKey();
+		    Debate debate = entry.getValue();
+		    System.out.println();
+		    System.out.println("Debate Id: "+key);
+		    System.out.println(debate.getTitle());
+			System.out.println(debate.getPosts());
+			System.out.println(debate.getStartDate());
+			System.out.println(debate.getEndDate());
+			System.out.println();
+		}
+	}
+	
 	public static void main(String[] args){
 		DebateQuery debateQuery = new DebateQuery();
 		//debateQuery.getDebateByTitle("testDebate");
 		//debateQuery.createNewDebate("createTestDebateWithMaxId", "mAX ID IS WORKING NOW", "10/21/2016 12:00 AM", "10/30/2016 12:00 AM");
 		//debateQuery.getArchivedDebates();
+		//debateQuery.printHashMap(debateQuery.archivedDebates);
 		//Calendar calobj = Calendar.getInstance();
 		//Date currentDate = calobj.getTime();
 		//System.out.println(debateQuery.dateToStringConverter(currentDate));
 		//debateQuery.getCurrentDebate();
-		debateQuery.testPostQuery(2);
+		//debateQuery.testPostQuery(1);
+		debateQuery.archivedDebates = debateQuery.loadFromLocalStorage();
+		System.out.println(debateQuery.checkForOverLappingDates("10/31/2016 12:00 AM", "11/09/2016 12:00 AM"));
+		debateQuery.printHashMap(debateQuery.archivedDebates);
 	}
 	
 }
