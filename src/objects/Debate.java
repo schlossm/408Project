@@ -10,6 +10,7 @@ import com.sun.istack.internal.Nullable;
 public class Debate implements Serializable {
 	boolean isOpen;
 	ArrayList<Post> list;
+	int id;
 	String title;
 	String text;
 	Date startDate;
@@ -32,7 +33,7 @@ public class Debate implements Serializable {
 	}
 	
 	//Needed for DebateQuery
-	public Debate(String title, ArrayList<Post> list, Boolean isOpen, String text, Date startDate, Date endDate){
+	public Debate(String title, ArrayList<Post> list, Boolean isOpen, String text, Date startDate, Date endDate, int id){
 		Debate.jsonQuery = new DebateQuery();
 		
 		if(Debate.jsonQuery != null){
@@ -42,6 +43,7 @@ public class Debate implements Serializable {
 			this.text = text;
 			this.startDate = startDate;
 			this.endDate = endDate;
+			this.id = id;
 		}
 	}
 	
@@ -68,6 +70,9 @@ public class Debate implements Serializable {
 	}
 	public ArrayList<Post> getPosts(){
 		return this.list;
+	}
+	public void setPosts(ArrayList<Post> list){
+		this.list = list;
 	}
 	public void post(Post post){
 		list.add(post);
