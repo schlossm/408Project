@@ -63,7 +63,7 @@ public class Debate implements Serializable {
 	}
 	public void getDebateWithTitle(String title){
 		try{
-			Debate.jsonQuery.getDebateByTitle(title);
+			Debate.jsonQuery.getCurrentDebate();;
 		}catch (Exception e){
 			e.printStackTrace();
 		}

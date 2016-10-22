@@ -8,7 +8,10 @@ import database.DFDatabase;
 import database.DFDatabaseCallbackDelegate;
 import database.DFError;
 import database.DFSQL.DFSQL;
+import database.DFSQL.DFSQLClauseStruct;
+import database.DFSQL.DFSQLConjunctionClause;
 import database.DFSQL.DFSQLError;
+import database.DFSQL.WhereStruct;
 import database.WebServer.DFDataUploaderReturnStatus;
 import objects.Debate;
 import objects.Post;
@@ -36,12 +39,14 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 	private boolean getDebateReturn, getMaxDebateId, getArchivedDebatesReturn;
 	private HashMap<Integer, Debate> archivedDebates;
 	
-	public void getDebateByTitle(String debateTitle){	
+	public void getCurrentDebate(){	
 		DFSQL dfsql = new DFSQL();
 		String[] selectedRows = {"debateID", "text", "startDate", "endDate"};
+		Calendar calobj = Calendar.getInstance();
+		Date currentDate = calobj.getTime();
 		getDebateReturn = true;
 		try {
-			dfsql.select(selectedRows).from("Debate").whereEquals("title", debateTitle);
+			new DFSQL().select(selectedRows).from("debate").whereCustom(new WhereStruct[]{new WhereStruct(DFSQLConjunctionClause.and, DFSQLConjunctionClause.lessThan, new DFSQLClauseStruct("startDate", dateToStringConverter(currentDate))), new WhereStruct(DFSQLConjunctionClause.none, DFSQLConjunctionClause.greaterThan, new DFSQLClauseStruct("endDate", dateToStringConverter(currentDate)))});
 			System.out.println(dfsql.formattedSQLStatement());
 			DFDatabase.defaultDatabase.execute(dfsql, this);
 			} catch (DFSQLError e1) {
@@ -182,6 +187,12 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		return dateObject;
 	}
 	
+	private String dateToStringConverter(Date dateObject){
+		DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+		String dateString = sdf.format(dateObject);
+		return dateString;
+	}
+	
 	private void uploadNewDebateToDatabase(int debateId){
 		boolean isaddSuccess;
 		String[] rows = {"debateID", "title", "text", "startDate", "endDate"};
@@ -270,7 +281,11 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		DebateQuery debateQuery = new DebateQuery();
 		//debateQuery.getDebateByTitle("testDebate");
 		//debateQuery.createNewDebate("createTestDebateWithMaxId", "mAX ID IS WORKING NOW", "10/21/2016 12:00 AM", "10/30/2016 12:00 AM");
-		debateQuery.getArchivedDebates();		
+		//debateQuery.getArchivedDebates();
+		Calendar calobj = Calendar.getInstance();
+		Date currentDate = calobj.getTime();
+		System.out.println(debateQuery.dateToStringConverter(currentDate));
+		debateQuery.getCurrentDebate();
 		//debateQuery.testPostQuery(1);
 	}
 	
