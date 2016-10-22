@@ -120,7 +120,6 @@ import java.util.Objects;
         				{
         					conjunction = " OR";
         				}
-        				
         				returnString += " " + left + joiner + right + conjunction;
         			}
         		}
@@ -277,7 +276,6 @@ import java.util.Objects;
     				{
     					conjunction = " OR";
     				}
-    				
     				returnString += " " + left + joiner + right + conjunction;
     			}
     		}
