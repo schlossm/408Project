@@ -69,7 +69,7 @@ public class LocalStorage {
 	/*
 	 * Save an individual object to a file (*.ser)
 	 */
-	private static void saveObjectToFile(Object object, String filename) {
+	public static void saveObjectToFile(Object object, String filename) {
 		try {
 			FileOutputStream fileOut = new FileOutputStream(filename);
 			ObjectOutputStream objOut = new ObjectOutputStream(fileOut);
@@ -90,7 +90,7 @@ public class LocalStorage {
 	 * 
 	 * Returns null on failure
 	 */
-	private static Object loadObjectFromFile(String filename) {
+	public static Object loadObjectFromFile(String filename) {
 		try {
 			Object object;
 			

@@ -81,7 +81,12 @@ public class Debate implements Serializable {
 	{
 		 return this.title;
 	}
-		 	
+	public Date getStartDate(){
+		return this.startDate;
+	}
+	public Date getEndDate(){
+		return this.endDate;
+	}
 	public boolean isOpen() 
 	{
 		 return this.isOpen;
