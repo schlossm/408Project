@@ -321,7 +321,7 @@ import java.util.Objects;
         if (selectRows != null)         { throw DFSQLError.conditionAlreadyExists; }
         if (row.contains("*")) 		   	{ throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(row, ""))               	{ throw DFSQLError.cannotUseEmptyValue; }
-        if (row.length() > 64)			{ throw DFSQLError.lengthTooLong; }
+        if (row.length() > 64)			{ throw DFSQLError.rowLengthTooLong; }
         
         selectRows = new String[] { row };
         
@@ -342,7 +342,7 @@ import java.util.Objects;
         {
             if (row.contains("*"))	{ throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(row, ""))         	{ throw DFSQLError.cannotUseEmptyValue; }
-            if (row.length() > 64)	{ throw DFSQLError.lengthTooLong; }
+            if (row.length() > 64)	{ throw DFSQLError.rowLengthTooLong; }
         }
         
         selectRows = rows;
@@ -363,7 +363,7 @@ import java.util.Objects;
         if (fromTables != null)         { throw DFSQLError.conditionAlreadyExists; }
         if (table.contains("*"))        { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(table, ""))  { throw DFSQLError.cannotUseEmptyValue; }
-        if (table.length() > 64)        { throw DFSQLError.lengthTooLong; }
+        if (table.length() > 64)        { throw DFSQLError.tableLengthTooLong; }
 
         fromTables = new String[] {table};
         
@@ -384,7 +384,7 @@ import java.util.Objects;
         {
             if (table.contains("*"))        { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(table, ""))  { throw DFSQLError.cannotUseEmptyValue; }
-            if (table.length() > 64)        { throw DFSQLError.lengthTooLong; }
+            if (table.length() > 64)        { throw DFSQLError.tableLengthTooLong; }
         }
         
         fromTables = tables;
@@ -407,16 +407,15 @@ import java.util.Objects;
         if (fromTables != null)         { throw DFSQLError.conditionAlreadyExists; }
         if (table.contains("*"))        { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(table, ""))  { throw DFSQLError.cannotUseEmptyValue; }
-        if (table.length() > 64)        { throw DFSQLError.lengthTooLong; }
+        if (table.length() > 64)        { throw DFSQLError.tableLengthTooLong; }
 
         fromTables = new String[] {table};
 
         if (leftHandSide.contains("*"))         { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(leftHandSide, ""))   { throw DFSQLError.cannotUseEmptyValue; }
-        if (leftHandSide.length() > 64)         { throw DFSQLError.lengthTooLong; }
+        if (leftHandSide.length() > 64)         { throw DFSQLError.rowLengthTooLong; }
         if (rightHandSide.contains("*"))        { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(rightHandSide, ""))  { throw DFSQLError.cannotUseEmptyValue; }
-        if (rightHandSide.length() > 64)        { throw DFSQLError.lengthTooLong; }
 
         updateStatements = new DFSQLClauseStruct[] {new DFSQLClauseStruct(leftHandSide, rightHandSide)};
         
@@ -435,7 +434,7 @@ import java.util.Objects;
         if (fromTables != null)         { throw DFSQLError.conditionAlreadyExists; }
         if (table.contains("*"))        { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(table, ""))  { throw DFSQLError.cannotUseEmptyValue; }
-        if (table.length() > 64)        { throw DFSQLError.lengthTooLong; }
+        if (table.length() > 64)        { throw DFSQLError.tableLengthTooLong; }
 
         fromTables = new String[] {table};
         
@@ -443,11 +442,10 @@ import java.util.Objects;
         {
             if (statement.leftHandSide.contains("*"))           { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.leftHandSide, ""))     { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.leftHandSide.length() > 64)           { throw DFSQLError.lengthTooLong; }
+            if (statement.leftHandSide.length() > 64)           { throw DFSQLError.rowLengthTooLong; }
 
             if (statement.rightHandSide.contains("*"))          { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.rightHandSide, ""))    { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.rightHandSide.length() > 64)          { throw DFSQLError.lengthTooLong; }
         }
         
         updateStatements = statements;
@@ -474,7 +472,7 @@ import java.util.Objects;
         if (values.length != rows.length) { throw DFSQLError.conditionsMustBeEqual; }
         if (table.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(table, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (table.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (table.length() > 64) { throw DFSQLError.tableLengthTooLong; }
 
         fromTables = new String[] {table};
         
@@ -482,14 +480,13 @@ import java.util.Objects;
         {
             if (value.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(value, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (value.length() > 64) { throw DFSQLError.lengthTooLong; }
         }
         
         for (String row : rows)
         {
             if (row.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(row, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (row.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (row.length() > 64) { throw DFSQLError.rowLengthTooLong; }
         }
         
         insertData = values;
@@ -514,14 +511,13 @@ import java.util.Objects;
 
         if (leftHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(leftHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
         if (rightHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(rightHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
 
         if (table.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(table, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (table.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (table.length() > 64) { throw DFSQLError.tableLengthTooLong; }
 
         joinStatements = new ArrayList<>();
         joinStatements.add(new JoinStruct(DFSQLConjunctionClause.natural, table, new DFSQLClauseStruct(leftHandSide, rightHandSide)));
@@ -545,15 +541,14 @@ import java.util.Objects;
         {
             if (statement.leftHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.leftHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (statement.leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
             if (statement.rightHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.rightHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
 
             if (statement.table.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.table, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.table.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (statement.table.length() > 64) { throw DFSQLError.tableLengthTooLong; }
 
             joinStatements.add(new JoinStruct(DFSQLConjunctionClause.natural, statement.table, new DFSQLClauseStruct(statement.leftHandSide, statement.rightHandSide)));
         }
@@ -575,15 +570,14 @@ import java.util.Objects;
 
         if (leftHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(leftHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
         if (rightHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(rightHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
 
         if (table.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(table, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (table.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (table.length() > 64) { throw DFSQLError.tableLengthTooLong; }
 
         joinStatements = new ArrayList<>();
         joinStatements.add(new JoinStruct(DFSQLConjunctionClause.natural, table, new DFSQLClauseStruct(leftHandSide, rightHandSide)));
@@ -607,15 +601,14 @@ import java.util.Objects;
         {
             if (statement.leftHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.leftHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (statement.leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
             if (statement.rightHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.rightHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
 
             if (statement.table.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.table, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.table.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (statement.table.length() > 64) { throw DFSQLError.tableLengthTooLong; }
 
             joinStatements.add(new JoinStruct(DFSQLConjunctionClause.natural, statement.table, new DFSQLClauseStruct(statement.leftHandSide, statement.rightHandSide)));
         }
@@ -637,15 +630,14 @@ import java.util.Objects;
 
         if (leftHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(leftHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
         if (rightHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(rightHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
 
         if (table.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(table, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (table.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (table.length() > 64) { throw DFSQLError.tableLengthTooLong; }
 
         joinStatements = new ArrayList<>();
         joinStatements.add(new JoinStruct(DFSQLConjunctionClause.leftOuter, table, new DFSQLClauseStruct(leftHandSide, rightHandSide)));
@@ -668,15 +660,14 @@ import java.util.Objects;
         {
             if (statement.leftHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.leftHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (statement.leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
             if (statement.rightHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.rightHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
 
             if (statement.table.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.table, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.table.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (statement.table.length() > 64) { throw DFSQLError.tableLengthTooLong; }
 
             joinStatements.add(new JoinStruct(DFSQLConjunctionClause.leftOuter, statement.table, new DFSQLClauseStruct(statement.leftHandSide, statement.rightHandSide)));
         }
@@ -698,15 +689,14 @@ import java.util.Objects;
 
         if (leftHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(leftHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
         if (rightHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(rightHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
 
         if (table.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(table, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (table.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (table.length() > 64) { throw DFSQLError.tableLengthTooLong; }
 
         joinStatements = new ArrayList<>();
         joinStatements.add(new JoinStruct(DFSQLConjunctionClause.rightOuter, table, new DFSQLClauseStruct(leftHandSide, rightHandSide)));
@@ -729,15 +719,14 @@ import java.util.Objects;
         {
             if (statement.leftHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.leftHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (statement.leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
             if (statement.rightHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.rightHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
 
             if (statement.table.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.table, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.table.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (statement.table.length() > 64) { throw DFSQLError.tableLengthTooLong; }
 
             joinStatements.add(new JoinStruct(DFSQLConjunctionClause.rightOuter, statement.table, new DFSQLClauseStruct(statement.leftHandSide, statement.rightHandSide)));
         }
@@ -759,15 +748,14 @@ import java.util.Objects;
 
         if (leftHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(leftHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
         if (rightHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(rightHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
 
         if (table.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(table, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (table.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (table.length() > 64) { throw DFSQLError.tableLengthTooLong; }
 
         joinStatements = new ArrayList<>();
         joinStatements.add(new JoinStruct(DFSQLConjunctionClause.fullOuter, table, new DFSQLClauseStruct(leftHandSide, rightHandSide)));
@@ -790,15 +778,14 @@ import java.util.Objects;
         {
             if (statement.leftHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.leftHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (statement.leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
             if (statement.rightHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.rightHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
 
             if (statement.table.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.table, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.table.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (statement.table.length() > 64) { throw DFSQLError.tableLengthTooLong; }
 
             joinStatements.add(new JoinStruct(DFSQLConjunctionClause.fullOuter, statement.table, new DFSQLClauseStruct(statement.leftHandSide, statement.rightHandSide)));
         }
@@ -820,15 +807,14 @@ import java.util.Objects;
 
         if (leftHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(leftHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
         if (rightHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(rightHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
 
         if (table.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(table, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (table.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (table.length() > 64) { throw DFSQLError.tableLengthTooLong; }
 
         joinStatements = new ArrayList<>();
         joinStatements.add(new JoinStruct(DFSQLConjunctionClause.cross, table, new DFSQLClauseStruct(leftHandSide, rightHandSide)));
@@ -851,15 +837,14 @@ import java.util.Objects;
         {
             if (statement.leftHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.leftHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (statement.leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
             if (statement.rightHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.rightHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
 
             if (statement.table.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.table, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.table.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (statement.table.length() > 64) { throw DFSQLError.tableLengthTooLong; }
 
             joinStatements.add(new JoinStruct(DFSQLConjunctionClause.cross, statement.table, new DFSQLClauseStruct(statement.leftHandSide, statement.rightHandSide)));
         }
@@ -881,15 +866,14 @@ import java.util.Objects;
 
         if (leftHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(leftHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
         if (rightHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(rightHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
 
         if (table.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(table, "")) { throw DFSQLError.cannotUseEmptyValue; }
-        if (table.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (table.length() > 64) { throw DFSQLError.tableLengthTooLong; }
 
         joinStatements = new ArrayList<>();
         joinStatements.add(new JoinStruct(DFSQLConjunctionClause.inner, table, new DFSQLClauseStruct(leftHandSide, rightHandSide)));
@@ -913,15 +897,14 @@ import java.util.Objects;
         {
             if (statement.leftHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.leftHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (statement.leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
             if (statement.rightHandSide.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.rightHandSide, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
 
             if (statement.table.contains("*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
             if (Objects.equals(statement.table, "")) { throw DFSQLError.cannotUseEmptyValue; }
-            if (statement.table.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (statement.table.length() > 64) { throw DFSQLError.tableLengthTooLong; }
 
             joinStatements.add(new JoinStruct(DFSQLConjunctionClause.inner, statement.table, new DFSQLClauseStruct(statement.leftHandSide, statement.rightHandSide)));
         }
@@ -945,8 +928,7 @@ import java.util.Objects;
         if (whereStatements != null) { throw DFSQLError.conditionAlreadyExists; }
         if (Objects.equals(leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-        if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
-        if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
         whereStatements = new ArrayList<>();
         whereStatements.add(new WhereStruct(DFSQLConjunctionClause.none, DFSQLConjunctionClause.equals, new DFSQLClauseStruct(leftHandSide, rightHandSide)));
@@ -966,8 +948,7 @@ import java.util.Objects;
         if (whereStatements != null) { throw DFSQLError.conditionAlreadyExists; }
         if (Objects.equals(leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-        if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
-        if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
         whereStatements = new ArrayList<>();
         whereStatements.add(new WhereStruct(DFSQLConjunctionClause.none, DFSQLConjunctionClause.notEquals, new DFSQLClauseStruct(leftHandSide, rightHandSide)));
@@ -987,8 +968,7 @@ import java.util.Objects;
         if (whereStatements != null) { throw DFSQLError.conditionAlreadyExists; }
         if (Objects.equals(leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-        if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
-        if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
         whereStatements = new ArrayList<>();
         whereStatements.add(new WhereStruct(DFSQLConjunctionClause.none, DFSQLConjunctionClause.lessThan, new DFSQLClauseStruct(leftHandSide, rightHandSide)));
@@ -1008,8 +988,7 @@ import java.util.Objects;
         if (whereStatements != null) { throw DFSQLError.conditionAlreadyExists; }
         if (Objects.equals(leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-        if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
-        if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
         whereStatements = new ArrayList<>();
         whereStatements.add(new WhereStruct(DFSQLConjunctionClause.none, DFSQLConjunctionClause.lessThanOrEqualTo, new DFSQLClauseStruct(leftHandSide, rightHandSide)));
@@ -1029,8 +1008,7 @@ import java.util.Objects;
         if (whereStatements != null) { throw DFSQLError.conditionAlreadyExists; }
         if (Objects.equals(leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-        if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
-        if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
         whereStatements = new ArrayList<>();
         whereStatements.add(new WhereStruct(DFSQLConjunctionClause.none, DFSQLConjunctionClause.greaterThan, new DFSQLClauseStruct(leftHandSide, rightHandSide)));
@@ -1050,8 +1028,7 @@ import java.util.Objects;
         if (whereStatements != null) { throw DFSQLError.conditionAlreadyExists; }
         if (Objects.equals(leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
         if (Objects.equals(rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-        if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
-        if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+        if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
 
         whereStatements = new ArrayList<>();
         whereStatements.add(new WhereStruct(DFSQLConjunctionClause.none, DFSQLConjunctionClause.greaterThanOrEqualTo, new DFSQLClauseStruct(leftHandSide, rightHandSide)));
@@ -1078,13 +1055,12 @@ import java.util.Objects;
         for (String leftHandSide : leftHandSides)
         {
             if (Objects.equals(leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
         }
         
         for (String rightHandSide : rightHandSides)
         {
             if (Objects.equals(rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
         }
         
         for (int index = 0; index < leftHandSides.length - 1; index++)
@@ -1117,13 +1093,12 @@ import java.util.Objects;
         for (String leftHandSide : leftHandSides)
         {
             if (Objects.equals(leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
         }
         
         for (String rightHandSide : rightHandSides)
         {
             if (Objects.equals(rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
         }
         
         for (int index = 0; index < leftHandSides.length - 1; index++)
@@ -1156,13 +1131,12 @@ import java.util.Objects;
         for (String leftHandSide : leftHandSides)
         {
             if (Objects.equals(leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
         }
         
         for (String rightHandSide : rightHandSides)
         {
             if (Objects.equals(rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
         }
         
         for (int index = 0; index < leftHandSides.length - 1; index++)
@@ -1195,13 +1169,12 @@ import java.util.Objects;
         for (String leftHandSide : leftHandSides)
         {
             if (Objects.equals(leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
         }
         
         for (String rightHandSide : rightHandSides)
         {
             if (Objects.equals(rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
         }
         
         for (int index = 0; index < leftHandSides.length - 1; index++)
@@ -1234,13 +1207,12 @@ import java.util.Objects;
         for (String leftHandSide : leftHandSides)
         {
             if (Objects.equals(leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
         }
         
         for (String rightHandSide : rightHandSides)
         {
             if (Objects.equals(rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
         }
         
         for (int index = 0; index < leftHandSides.length - 1; index++)
@@ -1273,13 +1245,12 @@ import java.util.Objects;
         for (String leftHandSide : leftHandSides)
         {
             if (Objects.equals(leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
         }
         
         for (String rightHandSide : rightHandSides)
         {
             if (Objects.equals(rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
         }
         
         for (int index = 0; index < leftHandSides.length - 1; index++)
@@ -1314,13 +1285,12 @@ import java.util.Objects;
         for (String leftHandSide : leftHandSides)
         {
             if (Objects.equals(leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
         }
         
         for (String rightHandSide : rightHandSides)
         {
             if (Objects.equals(rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
         }
         
         for (int index = 0; index < leftHandSides.length - 1; index++)
@@ -1353,13 +1323,12 @@ import java.util.Objects;
         for (String leftHandSide : leftHandSides)
         {
             if (Objects.equals(leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
         }
         
         for (String rightHandSide : rightHandSides)
         {
             if (Objects.equals(rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
         }
         
         for (int index = 0; index < leftHandSides.length - 1; index++)
@@ -1392,13 +1361,12 @@ import java.util.Objects;
         for (String leftHandSide : leftHandSides)
         {
             if (Objects.equals(leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
         }
         
         for (String rightHandSide : rightHandSides)
         {
             if (Objects.equals(rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
         }
         
         for (int index = 0; index < leftHandSides.length - 1; index++)
@@ -1431,13 +1399,12 @@ import java.util.Objects;
         for (String leftHandSide : leftHandSides)
         {
             if (Objects.equals(leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
         }
         
         for (String rightHandSide : rightHandSides)
         {
             if (Objects.equals(rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
         }
 
         for (int index = 0; index < leftHandSides.length - 1; index++)
@@ -1470,13 +1437,12 @@ import java.util.Objects;
         for (String leftHandSide : leftHandSides)
         {
             if (Objects.equals(leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
         }
         
         for (String rightHandSide : rightHandSides)
         {
             if (Objects.equals(rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
         }
         
         for (int index = 0; index < leftHandSides.length - 1; index++)
@@ -1510,13 +1476,12 @@ import java.util.Objects;
         for (String leftHandSide : leftHandSides)
         {
             if (Objects.equals(leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
         }
         
         for (String rightHandSide : rightHandSides)
         {
             if (Objects.equals(rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
         }
         
         for (int index = 0; index < leftHandSides.length - 1; index++)
@@ -1550,9 +1515,8 @@ import java.util.Objects;
         	DFSQLClauseStruct SQLClause = whereClause.clause;
 
             if (Objects.equals(SQLClause.leftHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (SQLClause.leftHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
+            if (SQLClause.leftHandSide.length() > 64) { throw DFSQLError.rowLengthTooLong; }
             if (Objects.equals(SQLClause.rightHandSide, "*")) { throw DFSQLError.cannotUseAllRowsSQLSpecifier; }
-            if (SQLClause.rightHandSide.length() > 64) { throw DFSQLError.lengthTooLong; }
         }
        
         whereStatements = new ArrayList<>();

@@ -7,12 +7,12 @@ package database.DFSQL;
 public class DFSQLError extends Exception
 {
 	/**
-	 * Specifies that the condition has already been created
+	 * Specifies that the condition has already been formed
 	 */
 	static final DFSQLError conditionAlreadyExists			    = new DFSQLError("Condition Already Exists");
 
 	/**
-	 * Specifies that `*` was attempted to be used in the SQL statement
+	 * Specifies that `*` was was given as a parameter
 	 */
 	static final DFSQLError cannotUseAllRowsSQLSpecifier 	    = new DFSQLError("Cannot Use All Rows SQL Specifier");
 
@@ -22,9 +22,14 @@ public class DFSQLError extends Exception
 	static final DFSQLError cannotUseEmptyValue 			    = new DFSQLError("Cannot Use Empty Value");
 
 	/**
-	 * Specifies that the parameter exceeded 64 characters length
+	 * Specifies that the row exceeded 64 characters length
 	 */
-	static final DFSQLError lengthTooLong 					    = new DFSQLError("Length Too Long");
+	static final DFSQLError rowLengthTooLong 					= new DFSQLError("Row Length Too Long");
+
+	/**
+	 * Specifies that the table exceeded 64 characters length
+	 */
+	static final DFSQLError tableLengthTooLong 				    = new DFSQLError("Table Length Too Long");
 
 	/**
 	 * Specifies that the conditions given do not equal each other in size
