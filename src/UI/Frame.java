@@ -108,6 +108,10 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 			tabs.addTab("Debate", thread);
 			//dq.getCurrentDebate();
 			tabs.addTab("Rules", rules);
+			if (user != null && !user.getUserType().equals(UserType.USER)) {
+				tabs.addTab("Administration", admin);
+				admin.setUserType(user.getUserType());
+			}
 		}
 		else if (notificationName.equals(UIStrings.failure)) {
 			// Login Action
