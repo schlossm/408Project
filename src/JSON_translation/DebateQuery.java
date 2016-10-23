@@ -359,7 +359,8 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		    System.out.println();
 		    System.out.println("Debate Id: "+key);
 		    System.out.println(debate.getTitle());
-			System.out.println(debate.getPosts());
+			System.out.println(debate.getText());
+		    System.out.println(debate.getPosts());
 			System.out.println(debate.getStartDate());
 			System.out.println(debate.getEndDate());
 			System.out.println();
@@ -370,16 +371,17 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		DebateQuery debateQuery = new DebateQuery();
 		//debateQuery.getDebateByTitle("testDebate");
 		//debateQuery.createNewDebate("createTestDebateWithMaxId", "mAX ID IS WORKING NOW", "10/21/2016 12:00 AM", "10/30/2016 12:00 AM");
-		debateQuery.getArchivedDebates();
+		//debateQuery.getArchivedDebates();
 		//debateQuery.printHashMap(debateQuery.archivedDebates);
 		//Calendar calobj = Calendar.getInstance();
 		//Date currentDate = calobj.getTime();
 		//System.out.println(debateQuery.dateToStringConverter(currentDate));
 		//debateQuery.getCurrentDebate();
 		//debateQuery.testPostQuery(1);
-		//debateQuery.archivedDebates = debateQuery.loadFromLocalStorage();
-		//System.out.println(debateQuery.checkForOverLappingDates("10/31/2016 12:00 AM", "11/09/2016 12:00 AM"));
-		//debateQuery.printHashMap(debateQuery.archivedDebates);
+		debateQuery.archivedDebates = debateQuery.loadFromLocalStorage();
+		System.out.println(debateQuery.checkForOverLappingDates("10/31/2016 12:00 AM", "11/09/2016 12:00 AM"));
+		debateQuery.printHashMap(debateQuery.archivedDebates);
+		//debateQuery.createNewDebate("Just trying out some stuff", "So many changes to test. Fuck", "10/31/2016 12:00 AM", "11/09/2016 12:00 AM");
 		while(true)
 		{
 		try
