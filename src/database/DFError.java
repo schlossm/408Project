@@ -1,6 +1,5 @@
 package database;
 
-
 import java.util.Map;
 
 /**
@@ -31,5 +30,11 @@ public class DFError
 		this.code = code;
 		this.description = description;
 		this.userInfo = userInfo;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Error: " + String.valueOf(code) + ".\nDescription: " + description + "\nUser Info: " + userInfo.toString();
 	}
 }

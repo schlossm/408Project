@@ -18,8 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static database.DFDatabase.getMethodName;
-import static database.DFDatabase.print;
+import static database.DFDatabase.*;
 import static database.DFError.*;
 import static database.WebServer.DFWebServerDispatch.*;
 
@@ -34,18 +33,13 @@ class DFDataDownloader
      */
     void downloadDataWith(DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
 	{
-		if (DFDatabase.defaultDatabase.debug == 1)
-		{
-			print(SQLStatement.formattedSQLStatement());
-		}
+        debugLog(SQLStatement.formattedSQLStatement());
+        String calleeMethod = getMethodNameOfSuperMethod(0);
 		new Thread(() ->
         {
             try
             {
-                if (DFDatabase.defaultDatabase.debug == 1)
-                {
-                    print("Downloading Data...");
-                }
+                debugLog("Downloading Data...");
                 String urlParameters = "Password=" + databaseUserPass + "&Username=" + websiteUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement();
                 byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
                 int postDataLength = postData.length;
@@ -69,30 +63,31 @@ class DFDataDownloader
                 for (int c; (c = in.read()) >= 0; )
                     sb.append((char) c);
                 String response = sb.toString();
-                DFWebServerDispatch.current.dataSizePrinter.printDataSize(response.length());
-                if (DFDatabase.defaultDatabase.debug == 1)
-                {
-                    print("Data Downloaded!");
-                    print(response);
-                }
+                if (!(Objects.equals(response, "") || response.contains("No Data")))
+                    DFWebServerDispatch.current.dataSizePrinter.printDataSize(response.length());
+                else
+                    DFWebServerDispatch.current.dataSizePrinter.printDataSize(0);
+
+                debugLog("Data Downloaded!");
+                debugLog(response);
 
                 conn.disconnect();
 
                 if (Objects.equals(response, "") || response.contains("No Data"))
                 {
                     Map<String, String> errorInfo = new HashMap<>();
-                    errorInfo.put(kMethodName, getMethodName(1));
+                    errorInfo.put(kMethodName, calleeMethod);
                     errorInfo.put(kExpandedDescription, "No data was returned from the database.  Response: " + response);
                     errorInfo.put(kURL, website + "/" + readFile);
                     errorInfo.put(kSQLStatement, SQLStatement.formattedSQLStatement());
                     DFError error = new DFError(1, "No data was returned", errorInfo);
-                    delegate.returnedData(null, error);
+                    queue.add(() -> delegate.returnedData(null, error));
                 }
                 else
                 {
                     Gson gsonConverter = new Gson();
                     JsonObject object = gsonConverter.fromJson(response, JsonObject.class);
-                    delegate.returnedData(object, null);
+                    queue.add(() -> delegate.returnedData(object, null));
                 }
             }
             catch (Exception e)
@@ -103,13 +98,14 @@ class DFDataDownloader
                 }
 
                 Map<String, String> errorInfo = new HashMap<>();
-                errorInfo.put(kMethodName, getMethodName(1));
+                errorInfo.put(kMethodName, calleeMethod);
                 errorInfo.put(kExpandedDescription, "A(n) "+ e.getCause() + " Exception was raised.  Setting DFDatabase -debug to 1 will print the stack trace for this error");
                 errorInfo.put(kURL, website + "/" + readFile);
                 errorInfo.put(kSQLStatement, SQLStatement.formattedSQLStatement());
                 DFError error = new DFError(0, "There was a(n) " + e.getCause() + " error", errorInfo);
-                delegate.returnedData(null, error);
+                queue.add(() -> delegate.returnedData(null, error));
             }
+
         }).start();
     }
 }

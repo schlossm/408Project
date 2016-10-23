@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static database.DFError.kExpandedDescription;
 import static database.DFError.kMethodName;
@@ -29,6 +31,8 @@ import static database.DFError.kMethodName;
 @SuppressWarnings("unused")
 public class DFDatabase
 {
+	public static final BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
+
 	/**
 	 * The singleton instance of DFDatabase
 	 */
@@ -47,7 +51,7 @@ public class DFDatabase
 	/**
 	 * Wanna debug DFDatabase? Set this flag to 1.
 	 */
-	public int debug = 1;
+	public int debug = 0;
 	
 	private Cipher encryptor, decryptor;
 
@@ -87,17 +91,6 @@ public class DFDatabase
 			useEncryption = false;
 		}
 	}
-
-	/**
-	 * @param statement the SQL statement to execute backend side
-	 * @param delegate the delegate object that will respond to data changes.  This object must conform to the DFDatabaseCallbackDelegate interface
-	 */
-    public void executeSQLStatement(DFSQL statement, DFDatabaseCallbackDelegate delegate)
-    {
-	    print(getMethodName(2) + " is now deprecated.  Use `execute(_:, _:)` instead");
-	    print("NOTE: You must give a callback delegate.");
-		execute(statement);
-    }
 
 	/**
 	 * @param SQLStatement the SQL statement to execute backend side
@@ -248,8 +241,33 @@ public class DFDatabase
 		return stringBuilder.toString();
 	}
 
+	public @NotNull static String getMethodNameOfSuperMethod(final int numberOfParameters)
+	{
+		final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("`");
+		stringBuilder.append(ste[Integer.min(ste.length - 1, Integer.max(0, 0))].getMethodName());
+		stringBuilder.append("(_:");
+		if (numberOfParameters > 0)
+		{
+			for (int i = 0; i < numberOfParameters - 1; i++)
+			{
+				stringBuilder.append(", _:");
+			}
+		}
+		stringBuilder.append(")`");
+
+		return stringBuilder.toString();
+	}
+
 	public static void print(Object object)
 	{
 		System.out.println(object);
+	}
+
+	public static void debugLog(Object object)
+	{
+		if (DFDatabase.defaultDatabase.debug == 1) print(object);
 	}
 }

@@ -1,7 +1,10 @@
 package database.Utilities;
 
+
 import java.util.Formatter;
 import java.util.Locale;
+
+import static database.DFDatabase.print;
 
 /**
  * Prints human readable data sizes nicely formatted by byte size
@@ -59,7 +62,10 @@ public class DFDataSizePrinter
         	fileSize = "PB";
         	break;
         }
+
+	    String size = new String(sb);
+	    size = size.replace(".00", "");
         
-        System.out.println("Downloaded Data Size: " + new String(sb) + " " + fileSize);
+        print("Downloaded Data Size: " + size + " " + fileSize);
     }
 }
