@@ -40,7 +40,6 @@ class DFDataDownloader
 			print(SQLStatement.formattedSQLStatement());
 		}
         String calleeMethod = getMethodNameOfSuperMethod(0);
-        print(calleeMethod);
 		new Thread(() ->
         {
             try
@@ -72,7 +71,10 @@ class DFDataDownloader
                 for (int c; (c = in.read()) >= 0; )
                     sb.append((char) c);
                 String response = sb.toString();
-                DFWebServerDispatch.current.dataSizePrinter.printDataSize(response.length());
+                if (!(Objects.equals(response, "") || response.contains("No Data")))
+                    DFWebServerDispatch.current.dataSizePrinter.printDataSize(response.length());
+                else
+                    DFWebServerDispatch.current.dataSizePrinter.printDataSize(0);
                 if (DFDatabase.defaultDatabase.debug == 1)
                 {
                     print("Data Downloaded!");
@@ -90,7 +92,6 @@ class DFDataDownloader
                     errorInfo.put(kSQLStatement, SQLStatement.formattedSQLStatement());
                     DFError error = new DFError(1, "No data was returned", errorInfo);
                     queue.add(() -> delegate.returnedData(null, error));
-
                 }
                 else
                 {
