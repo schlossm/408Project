@@ -90,7 +90,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		debateStartDate = startDate;
 		debateEndDate = endDate;
 		this.debateText = debateText;
-		
+		encryptDebateAttributes();
 		try {
 			dfsql.select("MAX(debateID)").from("Debate");
 			System.out.println(dfsql.formattedSQLStatement());
@@ -154,6 +154,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 				 debateText = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("text").getAsString();
 				 debateStartDate = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("startDate").getAsString();
 				 debateEndDate = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("endDate").getAsString();
+				 decryptDebateAttributes();
 			}catch (NullPointerException e2){
 				DFNotificationCenter.defaultCenter.post(UIStrings.debateReturned, null);
 			}
@@ -169,6 +170,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 					debateText = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("text").getAsString();
 					debateStartDate = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("startDate").getAsString();
 					debateEndDate = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("endDate").getAsString();
+					decryptDebateAttributes();
 					boolean isCurrentDebate = checkIfCurrentDebate(debateStartDate, debateEndDate);
 					Debate debate = new Debate(debateTitle, null, isCurrentDebate, debateText, stringToDateConverter(debateStartDate), stringToDateConverter(debateEndDate), debateId);
 					archivedDebates.put(Integer.valueOf(debateId), debate);
@@ -354,6 +356,16 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		HashMap<Integer, Debate> cachedDebates = (HashMap<Integer, Debate>) LocalStorage.loadObjectFromFile("cache/archivedDebates.ser");
 		return cachedDebates;
 	}
+	
+	private void encryptDebateAttributes(){
+		debateTitle = DFDatabase.defaultDatabase.encryptString(debateTitle);
+		debateText = DFDatabase.defaultDatabase.encryptString(debateText);
+	}
+	
+	private void decryptDebateAttributes(){
+		debateTitle = DFDatabase.defaultDatabase.decryptString(debateTitle);
+		debateText = DFDatabase.defaultDatabase.decryptString(debateText);
+	}
 
 	public void testPostQuery(int debateId){
 		PostQuery postQuery = new PostQuery();
@@ -385,12 +397,13 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		//Calendar calobj = Calendar.getInstance();
 		//Date currentDate = calobj.getTime();
 		//System.out.println(debateQuery.dateToStringConverter(currentDate));
-		debateQuery.getCurrentDebate();
+		//debateQuery.getCurrentDebate();
 		//debateQuery.testPostQuery(1);
 		//debateQuery.archivedDebates = debateQuery.loadFromLocalStorage();
 		//System.out.println(debateQuery.checkForOverLappingDates("10/31/2016 12:00 AM", "11/09/2016 12:00 AM"));
 		//debateQuery.printHashMap(debateQuery.archivedDebates);
 		//debateQuery.createNewDebate("Loading Current Debate", "This is the most current Debate", "10/21/2016 12:00 AM", "10/29/2016 12:00 AM");
+		debateQuery.createNewDebate("Encryption Check", "Just checking if encrypting and decrypting works", "03/11/2016 12:00 AM", "03/13/2016 12:00 AM");
 		while(true) 
 		{
 		try
