@@ -374,11 +374,11 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		//Calendar calobj = Calendar.getInstance();
 		//Date currentDate = calobj.getTime();
 		//System.out.println(debateQuery.dateToStringConverter(currentDate));
-		//debateQuery.getCurrentDebate();
+		debateQuery.getCurrentDebate();
 		//debateQuery.testPostQuery(1);
-		debateQuery.archivedDebates = debateQuery.loadFromLocalStorage();
-		System.out.println(debateQuery.checkForOverLappingDates("10/31/2016 12:00 AM", "11/09/2016 12:00 AM"));
-		debateQuery.printHashMap(debateQuery.archivedDebates);
+		//debateQuery.archivedDebates = debateQuery.loadFromLocalStorage();
+		//System.out.println(debateQuery.checkForOverLappingDates("10/31/2016 12:00 AM", "11/09/2016 12:00 AM"));
+		//debateQuery.printHashMap(debateQuery.archivedDebates);
 	}
 	
 }
