@@ -4,18 +4,24 @@ import com.google.gson.JsonObject;
 
 import UI.UIStrings;
 import UIKit.DFNotificationCenter;
+import UIKit.DFNotificationCenterDelegate;
 import database.DFDatabase;
 import database.DFDatabaseCallbackDelegate;
 import database.DFError;
 import database.DFSQL.DFSQL;
 import database.DFSQL.DFSQLError;
+import database.DFSQL.DFSQLClauseStruct;
+import database.DFSQL.DFSQLConjunctionClause;
+import database.DFSQL.WhereStruct;
 import database.WebServer.DFDataUploaderReturnStatus;
-
+import objects.Debate;
 import objects.Post;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
-public class PostQuery implements DFDatabaseCallbackDelegate {
+public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCenterDelegate {
 	private JsonObject jsonObject;
 	private DFDataUploaderReturnStatus uploadSuccess;
 	
@@ -28,13 +34,15 @@ public class PostQuery implements DFDatabaseCallbackDelegate {
 	
 	private String bufferString;
 	
+	private static ArrayList<Post> debatePosts; // for testing
+	
 	public void getDebatePosts(int debateID) {
 		DFSQL dfsql = new DFSQL();
 		String[] selectedRows = {"postID", "message", "username", "timeStamp", "flagged", "isHidden"};
 		getDebatePostsReturn = true;
 		try {
 			dfsql.select(selectedRows).from("Comment").joinOn("DebateComment", "`DebateComment`.postID", "`Comment`.postID").whereEquals("`DebateComment`.debateID", Integer.toString(debateID));
-			DFDatabase.defaultDatabase.execute(dfsql);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		}
@@ -53,7 +61,7 @@ public class PostQuery implements DFDatabaseCallbackDelegate {
 		try {
 			dfsql.select("MAX(postID)").from("Comment");
 			System.out.println(dfsql.formattedSQLStatement());
-			DFDatabase.defaultDatabase.execute(dfsql);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		}
@@ -65,7 +73,7 @@ public class PostQuery implements DFDatabaseCallbackDelegate {
 		try {
 			dfsql.update("Comment", "flagged", String.valueOf(post.getNumFlags())).whereEquals("postID", String.valueOf(postID));
 			DFDatabase.defaultDatabase.delegate = this;
-			DFDatabase.defaultDatabase.execute(dfsql);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 			return false;
@@ -81,7 +89,7 @@ public class PostQuery implements DFDatabaseCallbackDelegate {
 		try {
 			dfsql.update("Comment", "isHidden", String.valueOf(isHidden)).whereEquals("postID", String.valueOf(postID));
 			DFDatabase.defaultDatabase.delegate = this;
-			DFDatabase.defaultDatabase.execute(dfsql);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 			return false;
@@ -140,7 +148,7 @@ public class PostQuery implements DFDatabaseCallbackDelegate {
 		try {
 			dfsql.insert("Post", values, rows);
 			System.out.println(dfsql.formattedSQLStatement());
-			DFDatabase.defaultDatabase.execute(dfsql);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		}
@@ -193,5 +201,27 @@ public class PostQuery implements DFDatabaseCallbackDelegate {
 			System.out.println("I have no clue!");
 		}
 		this.uploadSuccess = success;
+	}
+	
+	@Override
+	public void performActionFor(String notificationName, Object userData) {
+		if(notificationName.equals(UIStrings.postsReturned)){
+			if(userData == null){
+				debatePosts = null;
+			} else{
+				debatePosts = (ArrayList<Post>)userData;
+			}
+		}
+	}
+
+	public void testPostQuery(int debateId){
+		PostQuery postQuery = new PostQuery();
+		DFNotificationCenter.defaultCenter.register(this, UIStrings.postsReturned);
+		postQuery.getDebatePosts(debateId);
+	}
+	
+	public static void main(String[] args){
+		DebateQuery debateQuery = new DebateQuery();
+		debateQuery.testPostQuery(1);
 	}
 }

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import static database.DFDatabase.print;
 
 /**
- * Created by michaelschloss on 10/19/16.
+ * Manages a Queue of WebServer Dispatch objects to retain atomicity of delegates and sql statements.  prevents overloading DFDataDownloader and DFDataUploader
  */
 public class DFWebServerDispatch implements DFDatabaseCallbackDelegate
 {
@@ -53,11 +53,14 @@ public class DFWebServerDispatch implements DFDatabaseCallbackDelegate
 
 	private void processQueue()
 	{
-		print("Processing");
 		if (queue.size() == 0)
 		{
 			isProcessing = false;
 			return;
+		}
+		if (DFDatabase.defaultDatabase.debug == 1)
+		{
+			print("Processing Next Entry in Dispatch Queue");
 		}
 
 		nextObject = queue.remove(0);
