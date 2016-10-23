@@ -38,7 +38,7 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 	
 	public void getDebatePosts(int debateID) {
 		DFSQL dfsql = new DFSQL();
-		String[] selectedRows = {"postID", "message", "username", "timeStamp", "flagged", "isHidden"};
+		String[] selectedRows = {"postID", "message", "userID", "timeStamp", "flagged", "isHidden"};
 		getDebatePostsReturn = true;
 		try {
 			dfsql.select(selectedRows).from("Comment").joinOn("DebateComment", "`DebateComment`.postID", "`Comment`.postID").whereEquals("`DebateComment`.debateID", Integer.toString(debateID));
@@ -113,19 +113,21 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 				for (int i = 0; i < jsonObject.get("Data").getAsJsonArray().size(); ++i) {
 					postIDReceived = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("postID").getAsInt();
 					messageReceived = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("message").getAsString();
-					usernameReceived = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("username").getAsString();
+					usernameReceived = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("userID").getAsString();
 					timeStampReceived = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("timeStamp").getAsString();
 					flaggedReceived = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("flagged").getAsInt();
 					isHiddenReceived = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("isHidden").getAsInt();
+					
+					System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 					
 					Post p = new Post(postIDReceived, messageReceived, usernameReceived, timeStampReceived, flaggedReceived, isHiddenReceived);
 					posts.add(p);
 				}
 			} catch (NullPointerException e2){
-				DFNotificationCenter.defaultCenter.postNotification(UIStrings.postsReturned, null);				
+				DFNotificationCenter.defaultCenter.post(UIStrings.postsReturned, null);				
 			}
 			
-			 DFNotificationCenter.defaultCenter.postNotification(UIStrings.postsReturned, posts);
+			 DFNotificationCenter.defaultCenter.post(UIStrings.postsReturned, posts);
 		} else if (postToDebateReturn) {
 			try {
 				 postID = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("MAX(postID)").getAsInt() + 1;
@@ -205,11 +207,14 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 	
 	@Override
 	public void performActionFor(String notificationName, Object userData) {
+		System.out.println("**** PERFORM ACTION FOR WAS CALLED ****");
 		if(notificationName.equals(UIStrings.postsReturned)){
-			if(userData == null){
+			if(userData == null) {
 				debatePosts = null;
-			} else{
+				System.out.println("**** RETURNED USERDATA IS NULL ****");
+			} else {
 				debatePosts = (ArrayList<Post>)userData;
+				System.out.println("**** DEBATE POSTS WILL APPEAR BELOW ****\n" + debatePosts);
 			}
 		}
 	}
