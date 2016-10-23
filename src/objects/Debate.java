@@ -19,7 +19,7 @@ public class Debate implements Serializable {
 	static DebateQuery jsonQuery;
 	static PostQuery jsonQuery2;
 	
-	/*public Debate(String title){
+	public Debate(String title){
 		try{
 			Debate.jsonQuery = new DebateQuery();
 			if(Debate.jsonQuery != null){
@@ -30,7 +30,7 @@ public class Debate implements Serializable {
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-	}*/
+	}
 	
 	//Needed for DebateQuery
 	public Debate(String title, ArrayList<Post> list, Boolean isOpen, String text, Date startDate, Date endDate, int id){
