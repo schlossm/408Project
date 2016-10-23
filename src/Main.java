@@ -1,6 +1,6 @@
-
 import UI.Frame;
 
+import static database.DFDatabase.queue;
 
 /**
  * Main.java
@@ -10,8 +10,22 @@ import UI.Frame;
  */
 public class Main
 {
+
+
 	public static void main(String[] args)
 	{
 		new Frame("School of Thought");
+		while(true)
+		{
+			try
+			{
+				queue.take().run();
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+				System.exit(-1);
+			}
+		}
 	}
 }

@@ -18,8 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static database.DFDatabase.getMethodName;
+import static database.DFDatabase.getMethodNameOfSuperMethod;
 import static database.DFDatabase.print;
+import static database.DFDatabase.queue;
 import static database.DFError.*;
 import static database.WebServer.DFWebServerDispatch.*;
 
@@ -38,6 +39,8 @@ class DFDataDownloader
 		{
 			print(SQLStatement.formattedSQLStatement());
 		}
+        String calleeMethod = getMethodNameOfSuperMethod(0);
+        print(calleeMethod);
 		new Thread(() ->
         {
             try
@@ -81,18 +84,19 @@ class DFDataDownloader
                 if (Objects.equals(response, "") || response.contains("No Data"))
                 {
                     Map<String, String> errorInfo = new HashMap<>();
-                    errorInfo.put(kMethodName, getMethodName(1));
+                    errorInfo.put(kMethodName, calleeMethod);
                     errorInfo.put(kExpandedDescription, "No data was returned from the database.  Response: " + response);
                     errorInfo.put(kURL, website + "/" + readFile);
                     errorInfo.put(kSQLStatement, SQLStatement.formattedSQLStatement());
                     DFError error = new DFError(1, "No data was returned", errorInfo);
-                    delegate.returnedData(null, error);
+                    queue.add(() -> delegate.returnedData(null, error));
+
                 }
                 else
                 {
                     Gson gsonConverter = new Gson();
                     JsonObject object = gsonConverter.fromJson(response, JsonObject.class);
-                    delegate.returnedData(object, null);
+                    queue.add(() -> delegate.returnedData(object, null));
                 }
             }
             catch (Exception e)
@@ -103,13 +107,14 @@ class DFDataDownloader
                 }
 
                 Map<String, String> errorInfo = new HashMap<>();
-                errorInfo.put(kMethodName, getMethodName(1));
+                errorInfo.put(kMethodName, calleeMethod);
                 errorInfo.put(kExpandedDescription, "A(n) "+ e.getCause() + " Exception was raised.  Setting DFDatabase -debug to 1 will print the stack trace for this error");
                 errorInfo.put(kURL, website + "/" + readFile);
                 errorInfo.put(kSQLStatement, SQLStatement.formattedSQLStatement());
                 DFError error = new DFError(0, "There was a(n) " + e.getCause() + " error", errorInfo);
-                delegate.returnedData(null, error);
+                queue.add(() -> delegate.returnedData(null, error));
             }
+
         }).start();
     }
 }

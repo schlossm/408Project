@@ -15,6 +15,7 @@ import java.util.Objects;
 
 import static database.DFDatabase.getMethodName;
 import static database.DFDatabase.print;
+import static database.DFDatabase.queue;
 import static database.DFError.*;
 import static database.WebServer.DFWebServerDispatch.*;
 
@@ -85,17 +86,17 @@ class DFDataUploader
                     errorInfo.put(kURL, website + "/" + writeFile);
                     errorInfo.put(kSQLStatement, SQLStatement.formattedSQLStatement());
                     DFError error = new DFError(1, "No data was returned", errorInfo);
-                    delegate.uploadStatus(DFDataUploaderReturnStatus.error, error);
+                    queue.add(() -> delegate.uploadStatus(DFDataUploaderReturnStatus.error, error));
                     return;
                 }
 
                 if (response.contains("Success"))
                 {
-                    delegate.uploadStatus(DFDataUploaderReturnStatus.success, null);
+                    queue.add(() -> delegate.uploadStatus(DFDataUploaderReturnStatus.success, null));
                 }
                 else
                 {
-                    delegate.uploadStatus(DFDataUploaderReturnStatus.failure, null);
+                    queue.add(() -> delegate.uploadStatus(DFDataUploaderReturnStatus.failure, null));
                 }
             }
             catch(NullPointerException | IOException e)
@@ -111,7 +112,7 @@ class DFDataUploader
                 errorInfo.put(kURL, website + "/" + writeFile);
                 errorInfo.put(kSQLStatement, SQLStatement.formattedSQLStatement());
                 DFError error = new DFError(0, "There was a(n) " + e.getCause() + " error", errorInfo);
-                delegate.uploadStatus(DFDataUploaderReturnStatus.error, error);
+                queue.add(() -> delegate.uploadStatus(DFDataUploaderReturnStatus.error, error));
             }
         }).start();
 	}
