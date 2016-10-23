@@ -265,4 +265,9 @@ public class DFDatabase
 	{
 		System.out.println(object);
 	}
+
+	public static void debugLog(Object object)
+	{
+		if (DFDatabase.defaultDatabase.debug == 1) print(object);
+	}
 }

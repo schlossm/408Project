@@ -1,5 +1,6 @@
 package database.Utilities;
 
+
 import java.util.Formatter;
 import java.util.Locale;
 
@@ -61,7 +62,10 @@ public class DFDataSizePrinter
         	fileSize = "PB";
         	break;
         }
+
+	    String size = new String(sb);
+	    size = size.replace(".00", "");
         
-        print("Downloaded Data Size: " + new String(sb) + " " + fileSize);
+        print("Downloaded Data Size: " + size + " " + fileSize);
     }
 }

@@ -13,9 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static database.DFDatabase.getMethodName;
-import static database.DFDatabase.print;
-import static database.DFDatabase.queue;
+import static database.DFDatabase.*;
 import static database.DFError.*;
 import static database.WebServer.DFWebServerDispatch.*;
 
@@ -30,19 +28,13 @@ class DFDataUploader
      */
     void uploadDataWith(DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
 	{
-		if (DFDatabase.defaultDatabase.debug == 1)
-		{
-			print(SQLStatement.formattedSQLStatement());
-		}
+        debugLog(SQLStatement.formattedSQLStatement());
 
 		new Thread(() ->
         {
             try
             {
-                if (DFDatabase.defaultDatabase.debug == 1)
-                {
-                    print("Uploading Data...");
-                }
+                debugLog("Uploading Data...");
                 String urlParameters  = "Password="+ databaseUserPass + "&Username="+ websiteUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement();
                 if (DFDatabase.defaultDatabase.debug == 1)
                 {
@@ -73,10 +65,7 @@ class DFDataUploader
 
                 conn.disconnect();
 
-                if (DFDatabase.defaultDatabase.debug == 1)
-                {
-                    print("Data Uploaded! Response: " + response);
-                }
+                debugLog("Data Uploaded! Response: " + response);
 
                 if (Objects.equals(response, ""))
                 {

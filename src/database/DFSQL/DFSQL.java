@@ -36,14 +36,11 @@ import java.util.Objects;
         return this;
     }
 
-    private int layer = 0;
-
     /**
      * @return A human readable formatted SQL statement
      */
     public final String formattedSQLStatement()
     {
-	    layer++;
     	String returnString;
     	if (updateStatements != null)	//This will be an UPDATE SET
     	{
@@ -127,11 +124,6 @@ import java.util.Objects;
         	
         	returnString += ";";
 
-		    if (layer > 1)
-		    {
-			    return returnString;
-		    }
-
 		    if (appendedDFSQL.size() != 0)
 		    {
 			    for (DFSQL statement : appendedDFSQL)
@@ -140,7 +132,6 @@ import java.util.Objects;
 			    }
 		    }
 
-		    layer = 0;
     		return returnString;
     	}
     	
@@ -167,6 +158,15 @@ import java.util.Objects;
     			}
     		}
     		returnString = returnString.substring(0, returnString.length() - 1) + ");";
+
+		    if (appendedDFSQL.size() != 0)
+		    {
+			    for (DFSQL statement : appendedDFSQL)
+			    {
+				    returnString += " " + statement.formattedSQLStatement();
+			    }
+		    }
+
     		return returnString;
     	}
     	
@@ -282,6 +282,15 @@ import java.util.Objects;
     	}
     	
     	returnString += ";";
+
+	    if (appendedDFSQL.size() != 0)
+	    {
+		    for (DFSQL statement : appendedDFSQL)
+		    {
+			    returnString += " " + statement.formattedSQLStatement();
+		    }
+	    }
+
     	return returnString;
     }
     

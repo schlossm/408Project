@@ -15,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by michaelschloss on 9/22/16.
  */
+@SuppressWarnings("DefaultFileTemplate")
 public class DFDataDownloaderTest implements DFDatabaseCallbackDelegate
 {
     @Test
