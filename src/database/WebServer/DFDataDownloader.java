@@ -18,9 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static database.DFDatabase.getMethodNameOfSuperMethod;
-import static database.DFDatabase.print;
-import static database.DFDatabase.queue;
+import static database.DFDatabase.*;
 import static database.DFError.*;
 import static database.WebServer.DFWebServerDispatch.*;
 
@@ -35,19 +33,13 @@ class DFDataDownloader
      */
     void downloadDataWith(DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
 	{
-		if (DFDatabase.defaultDatabase.debug == 1)
-		{
-			print(SQLStatement.formattedSQLStatement());
-		}
+        debugLog(SQLStatement.formattedSQLStatement());
         String calleeMethod = getMethodNameOfSuperMethod(0);
 		new Thread(() ->
         {
             try
             {
-                if (DFDatabase.defaultDatabase.debug == 1)
-                {
-                    print("Downloading Data...");
-                }
+                debugLog("Downloading Data...");
                 String urlParameters = "Password=" + databaseUserPass + "&Username=" + websiteUserName + "&SQLQuery=" + SQLStatement.formattedSQLStatement();
                 byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
                 int postDataLength = postData.length;
@@ -75,11 +67,9 @@ class DFDataDownloader
                     DFWebServerDispatch.current.dataSizePrinter.printDataSize(response.length());
                 else
                     DFWebServerDispatch.current.dataSizePrinter.printDataSize(0);
-                if (DFDatabase.defaultDatabase.debug == 1)
-                {
-                    print("Data Downloaded!");
-                    print(response);
-                }
+
+                debugLog("Data Downloaded!");
+                debugLog(response);
 
                 conn.disconnect();
 
