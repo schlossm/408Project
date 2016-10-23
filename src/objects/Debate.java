@@ -90,6 +90,13 @@ public class Debate implements Serializable {
 	public boolean isOpen() 
 	{
 		 return this.isOpen;
+	}
+	public String getText(){
+		return this.text;
+	}
 
+	public int getId() {
+		// TODO Auto-generated method stub
+		return this.id;
 	}
 }
