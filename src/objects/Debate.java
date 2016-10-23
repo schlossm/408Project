@@ -94,4 +94,9 @@ public class Debate implements Serializable {
 	public String getText(){
 		return this.text;
 	}
+
+	public int getId() {
+		// TODO Auto-generated method stub
+		return this.id;
+	}
 }
