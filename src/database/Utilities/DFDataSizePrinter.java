@@ -3,6 +3,8 @@ package database.Utilities;
 import java.util.Formatter;
 import java.util.Locale;
 
+import static database.DFDatabase.print;
+
 /**
  * Prints human readable data sizes nicely formatted by byte size
  */
@@ -60,6 +62,6 @@ public class DFDataSizePrinter
         	break;
         }
         
-        System.out.println("Downloaded Data Size: " + new String(sb) + " " + fileSize);
+        print("Downloaded Data Size: " + new String(sb) + " " + fileSize);
     }
 }

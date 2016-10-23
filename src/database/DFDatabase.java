@@ -51,7 +51,7 @@ public class DFDatabase
 	/**
 	 * Wanna debug DFDatabase? Set this flag to 1.
 	 */
-	public int debug = 1;
+	public int debug = 0;
 	
 	private Cipher encryptor, decryptor;
 
@@ -248,15 +248,15 @@ public class DFDatabase
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("`");
 		stringBuilder.append(ste[Integer.min(ste.length - 1, Integer.max(0, 0))].getMethodName());
+		stringBuilder.append("(_:");
 		if (numberOfParameters > 0)
 		{
-			stringBuilder.append("(_:");
 			for (int i = 0; i < numberOfParameters - 1; i++)
 			{
 				stringBuilder.append(", _:");
 			}
-			stringBuilder.append(")`");
 		}
+		stringBuilder.append(")`");
 
 		return stringBuilder.toString();
 	}
