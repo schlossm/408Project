@@ -103,15 +103,14 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 			
 			tabs.removeAll();
 
-			dq.getDebateByTitle("Test Debate");
+			//dq.getDebateByTitle("Test Debate");
 			
-			tabs.addTab("Debate", thread);
-			//dq.getCurrentDebate();
+			dq.getCurrentDebate();
+
 			tabs.addTab("Rules", rules);
-			if (user != null && !user.getUserType().equals(UserType.USER)) {
-				tabs.addTab("Administration", admin);
-				admin.setUserType(user.getUserType());
-			}
+
+			tabs.addTab("Administration", admin);
+			admin.setUserType(UserType.ADMIN);
 		}
 		else if (notificationName.equals(UIStrings.failure)) {
 			// Login Action
@@ -125,19 +124,23 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 				System.out.println("Returned user was null");
 			}
 			else if (user != null && !user.getUserType().equals(UserType.USER)) {
-				tabs.addTab("Administration", admin);
+				//tabs.addTab("Administration", admin);
 				admin.setUserType(user.getUserType());
 			}	
 		}
 		else if (notificationName.equals(UIStrings.debateReturned)) {
 			// DebateQuery Action
 			debate = (Debate) obj;
+			tabs.addTab("Debate", thread);
 			
 			if (debate == null) {
 				System.out.println("Returned debate was null");
+				thread.displayNoDebate();
+				thread.setVisible(true);
 			}
 			else if (debate != null) {
 				thread.displayDebate(debate);
+				thread.setVisible(true);
 			}
 		}
 	}
