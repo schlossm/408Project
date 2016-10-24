@@ -205,7 +205,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		}
 	}
 	
-	private boolean checkIfCurrentDebate(String startDate, String endDate){
+	public boolean checkIfCurrentDebate(String startDate, String endDate){
 		Calendar calobj = Calendar.getInstance();
 		java.util.Date startingDate = stringToDateConverter(startDate);
 		java.util.Date endingDate = stringToDateConverter(endDate);
@@ -230,7 +230,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		return dateObject;
 	}
 	
-	private String dateToStringConverter(Date dateObject){
+	public String dateToStringConverter(Date dateObject){
 		DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		String dateString = sdf.format(dateObject);
 		return dateString;
@@ -398,12 +398,12 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		//Date currentDate = calobj.getTime();
 		//System.out.println(debateQuery.dateToStringConverter(currentDate));
 		//debateQuery.getCurrentDebate();
-		//debateQuery.testPostQuery(1);
+		debateQuery.testPostQuery(1);
 		//debateQuery.archivedDebates = debateQuery.loadFromLocalStorage();
 		//System.out.println(debateQuery.checkForOverLappingDates("10/31/2016 12:00 AM", "11/09/2016 12:00 AM"));
 		//debateQuery.printHashMap(debateQuery.archivedDebates);
 		//debateQuery.createNewDebate("Loading Current Debate", "This is the most current Debate", "10/21/2016 12:00 AM", "10/29/2016 12:00 AM");
-		debateQuery.createNewDebate("Encryption Check", "Just checking if encrypting and decrypting works", "03/11/2016 12:00 AM", "03/13/2016 12:00 AM");
+		//debateQuery.createNewDebate("Encryption Check", "Just checking if encrypting and decrypting works", "03/11/2016 12:00 AM", "03/13/2016 12:00 AM");
 		while(true) 
 		{
 		try
