@@ -398,10 +398,10 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		//Date currentDate = calobj.getTime();
 		//System.out.println(debateQuery.dateToStringConverter(currentDate));
 		//debateQuery.getCurrentDebate();
-		//debateQuery.testPostQuery(1);
-		debateQuery.archivedDebates = debateQuery.loadFromLocalStorage();
+		debateQuery.testPostQuery(1);
+		//debateQuery.archivedDebates = debateQuery.loadFromLocalStorage();
 		//System.out.println(debateQuery.checkForOverLappingDates("10/31/2016 12:00 AM", "11/09/2016 12:00 AM"));
-		debateQuery.printHashMap(debateQuery.archivedDebates);
+		//debateQuery.printHashMap(debateQuery.archivedDebates);
 		//debateQuery.createNewDebate("Loading Current Debate", "This is the most current Debate", "10/21/2016 12:00 AM", "10/29/2016 12:00 AM");
 		//debateQuery.createNewDebate("Encryption Check", "Just checking if encrypting and decrypting works", "03/11/2016 12:00 AM", "03/13/2016 12:00 AM");
 		while(true) 
