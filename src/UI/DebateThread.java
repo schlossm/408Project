@@ -21,7 +21,7 @@ public class DebateThread extends JPanel implements ActionListener{
 
 	public JTextArea comment;
 	public JButton postComment, addPoll;
-	public JLabel threadTitle, threadDescription, threadAuthor;
+	public JLabel threadTitle, threadDescription, threadAuthor, noThread;
 	public JPanel commentList;
 	public ArrayList<Post> commentArray;
 	private Debate d;
@@ -83,7 +83,7 @@ public class DebateThread extends JPanel implements ActionListener{
 		for (int i = 0; i < commentArray.size(); i++) {
 			commentList.add(new Comment(commentArray.get(i)));
 		}
-		this.remove(1);
+		//this.remove(1);
 		this.add(scrollPane, c);
 	}
 	
@@ -128,6 +128,12 @@ public class DebateThread extends JPanel implements ActionListener{
 			c.gridy = 2;
 			this.add(new JLabel("Sorry, this debate is closed."), c);
 		}
+	}
+	
+	public void displayNoDebate() {
+		this.removeAll();
+		noThread = new JLabel("A debate is not currently open. Please check again later.");
+		this.add(noThread);
 	}
 	
 }
