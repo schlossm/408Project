@@ -109,8 +109,8 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 
 			tabs.addTab("Rules", rules);
 
-			tabs.addTab("Administration", admin);
-			admin.setUserType(UserType.ADMIN);
+			//tabs.addTab("Administration", admin);
+
 		}
 		else if (notificationName.equals(UIStrings.failure)) {
 			// Login Action
@@ -124,8 +124,8 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 				System.out.println("Returned user was null");
 			}
 			else if (user != null && !user.getUserType().equals(UserType.USER)) {
-				//tabs.addTab("Administration", admin);
-				admin.setUserType(user.getUserType());
+				tabs.addTab("Administration", admin);
+//				admin.setUserType(user.getUserType());
 			}	
 		}
 		else if (notificationName.equals(UIStrings.debateReturned)) {

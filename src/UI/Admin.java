@@ -135,16 +135,6 @@ public class Admin extends JPanel implements ActionListener{
 		}
 	}
 	
-	public void setUserType(UserType ut) {
-		
-		/*
-		for (int i = 0; i < reports.length; i++) {
-			topPanel.add(new Report(reports.get(i)));
-		}
-		*/
-
-	}
-	
 	public void populateReports() {
 		
 	}
