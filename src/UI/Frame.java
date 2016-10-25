@@ -29,6 +29,7 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 	public PostQuery pq;
 	public User user;
 	public Debate debate;
+	public boolean listening;
 	
 	@SuppressWarnings("deprecation")
 	public Frame(String title) {
@@ -68,6 +69,8 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 		
 		add(tabs);
 		setVisible(true);
+		
+		listening = true;
 		
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setMinimumSize(new Dimension(600, 400));
@@ -116,7 +119,8 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 			// Login Action
 			JOptionPane.showMessageDialog(this, "The username or password is invalid.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
-		else if (notificationName.equals(UIStrings.returned)) {
+		else if (notificationName.equals(UIStrings.returned) && listening) {
+			listening = false;
 			// UserQuery Action
 			user = (User) obj;
 			// May need action to set the usertype of admin.

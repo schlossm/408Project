@@ -90,7 +90,9 @@ public class DebateThread extends JPanel implements ActionListener{
 		c.gridy++;
 		//c.gridy = 2;
 		for (int i = 0; i < commentArray.size(); i++) {
-			commentList.add(new Comment(commentArray.get(i)));
+			if (!commentArray.get(i).isHidden()) {
+				commentList.add(new Comment(commentArray.get(i)));
+			}
 		}
 		//this.remove(1);
 		this.add(scrollPane, c);
