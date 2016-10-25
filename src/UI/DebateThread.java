@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
 import JSON_translation.DebateQuery;
+import JSON_translation.PostQuery;
 
 import javax.swing.JOptionPane;
 import java.awt.Dimension;
@@ -28,6 +29,7 @@ public class DebateThread extends JPanel implements ActionListener{
 	private Debate d;
 	private User u;
 	public DebateQuery dq = new DebateQuery();
+	public PostQuery pq = new PostQuery();
 	
 	public Frame frame;
 	
@@ -49,7 +51,7 @@ public class DebateThread extends JPanel implements ActionListener{
 		c.gridx = 1;
 		c.gridy = 0;
 		this.add(threadTitle, c);
-		this.add(Box.createVerticalGlue(), c);
+		//this.add(Box.createVerticalGlue(), c);
 		threadDescription = new JLabel();
 		c.gridx = 1;
 		c.gridy = 1;
@@ -58,7 +60,6 @@ public class DebateThread extends JPanel implements ActionListener{
 		
 		commentList = new JPanel();
 
-		this.setVisible(true);
 	}
 	
 	@Override
@@ -69,6 +70,7 @@ public class DebateThread extends JPanel implements ActionListener{
 			Post userPost = new Post(frame.user.getUsername(), comment.getText());
 			try {
 				d.post(userPost);
+				pq.postToDebate(userPost, d.getId());
 				JOptionPane.showMessageDialog(this, "Your comment has been submitted.");
 				comment.setText("");
 			} catch (Exception exception) {
@@ -87,9 +89,9 @@ public class DebateThread extends JPanel implements ActionListener{
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridwidth = 3;
 		c.gridx = 0;
-		c.gridy++;
-		//c.gridy = 2;
+		c.gridy = 2;
 		for (int i = 0; i < commentArray.size(); i++) {
+			System.out.println(commentArray.get(i).getText());
 			if (!commentArray.get(i).isHidden()) {
 				commentList.add(new Comment(commentArray.get(i)));
 			}

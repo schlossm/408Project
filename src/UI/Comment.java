@@ -32,16 +32,19 @@ public class Comment extends JPanel implements ActionListener{
 		this.comID = new JLabel(String.valueOf(0));
 		this.com = new JLabel(post.getText());
 		this.timestamp = new JLabel(post.getTimestamp());
+		timestamp.setForeground(Color.PINK);
 		this.post = post;
+		/*
 		if (post.isFlagged()) {
 			com.setForeground(Color.RED);
 		}
-		
+		*/
 		this.add(comID, BorderLayout.PAGE_START);
 		this.add(name, BorderLayout.LINE_START);
 		this.add(com, BorderLayout.CENTER);
 		this.add(timestamp, BorderLayout.LINE_END);
 		this.add(report, BorderLayout.PAGE_END);
+		this.setBackground(Color.WHITE);
 	}
 
 	@Override

@@ -24,6 +24,11 @@ public class UserOptions extends JPanel {
 		mod.setActionCommand("setMod");
 		admin = new JButton("Administrator");
 		admin.setActionCommand("setAdmin");
+		ban = new JButton("Ban");
+		ban.setActionCommand("banUser");
+		unban = new JButton("Unban");
+		unban.setActionCommand("unbanUser");
+		
 		if (user.getUserType().equals(UserType.USER)) {
 			type.setText("	User");
 			norm.setEnabled(false);
