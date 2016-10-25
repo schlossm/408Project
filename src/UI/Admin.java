@@ -149,7 +149,7 @@ public class Admin extends JPanel implements ActionListener, DFNotificationCente
 		// TODO Auto-generated method stub
 		if (notificationName.equals(UIStrings.returned) && frame.listening == false) {
 			u = (User) userData;
-			middlePanel.remove(3);
+			//middlePanel.remove(3);
 			userOptions = new UserOptions(u);
 			if (frame.user.getUserType().equals(UserType.MOD)) {
 				userOptions.setTypeDisabled();

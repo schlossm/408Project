@@ -140,11 +140,9 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 			if (debate == null) {
 				System.out.println("Returned debate was null");
 				thread.displayNoDebate();
-				thread.setVisible(true);
 			}
 			else if (debate != null) {
 				thread.displayDebate(debate);
-				thread.setVisible(true);
 			}
 		}
 	}
