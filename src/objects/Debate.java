@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.junit.experimental.theories.Theories;
+
 import com.sun.istack.internal.Nullable;
  
 
@@ -38,7 +40,11 @@ public class Debate implements Serializable {
 		
 		if(Debate.jsonQuery != null){
 			this.title = title;
-			this.list = list;
+			if(list == null){
+				this.list = new ArrayList<Post>();
+			} else {
+				this.list = list;
+			}
 			this.isOpen = isOpen;
 			this.text = text;
 			this.startDate = startDate;
