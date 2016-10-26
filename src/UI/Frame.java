@@ -6,6 +6,7 @@ import objects.User.UserType;
 import UIKit.DFNotificationCenter;
 import UIKit.DFNotificationCenterDelegate;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
@@ -33,9 +34,15 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 	public User user;
 	public Debate debate;
 	public boolean listening;
+	public ImageIcon icon;
 	
 	@SuppressWarnings("deprecation")
 	public Frame(String title) {
+		
+		java.net.URL imgUrl = getClass().getResource("icon.png");
+		icon = new ImageIcon(imgUrl);
+		
+		//this.setIconImage(icon.getImage());
 		
 		uq = new UserQuery();
 		uq2 = new UserQuery();

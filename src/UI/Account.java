@@ -83,9 +83,8 @@ public class Account extends JPanel implements ActionListener {
 				JOptionPane.showMessageDialog(this, "Please choose a username that is 32 characters or shorter.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			else {				
-				frame.uq.getUser(username.getText());
 				// replace line above
-				//frame.uq.usernameExists(username.getText());
+				frame.uq.doesUserExist(username.getText());
 			}
 		}
 	}
