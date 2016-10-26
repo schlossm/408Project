@@ -1,7 +1,6 @@
 package UIKit;
 
 import UI.UIStrings;
-import database.DFDatabase;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -33,17 +32,6 @@ class DFNotificationCenterObject
 	
 	private ArrayList<DFNotificationCenterObject> observers = new ArrayList<>();
 	private DFNotificationCenter() { }
-
-	/**
-	 *  @deprecated
-	 *	@param object The object that will be receiving the notification.  This object must conform to the DFNotificationCenterDelegate interface
-	 *  @param notificationName The notification name the object wishes to listen for.  All other notifications will be ignored
-	 */
-	@Deprecated public void addObserver(DFNotificationCenterDelegate object, String notificationName)
-	{
-		print(DFDatabase.getMethodName(2) + " is now deprecated.  Use `register(_:, _:)` instead");
-		register(object, notificationName);
-	}
 
 	/**
 	 *	@param observer The object that will be receiving the notification.  This object must conform to the DFNotificationCenterDelegate interface

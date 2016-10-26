@@ -28,7 +28,6 @@ import static database.DFError.kMethodName;
 /**
  * The main database communicator class.  All communication with the database will run through this class
  */
-@SuppressWarnings("unused")
 public class DFDatabase
 {
 	/**
@@ -49,8 +48,6 @@ public class DFDatabase
 
 	private SecretKeySpec secretKeySpec;
 	private byte[] iv;
-
-	@Deprecated public DFDatabaseCallbackDelegate delegate;
 
 	/**
 	 * Wanna debug DFDatabase and related components? Set this flag to 1.
@@ -101,7 +98,7 @@ public class DFDatabase
 	 */
 	public void execute(@NotNull DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
 	{
-		if (delegate == null && this.delegate == null)
+		if (delegate == null)
 		{
 			print("Warning! You must give a callback delegate.  System will fall through now.");
 		}
@@ -118,19 +115,7 @@ public class DFDatabase
 			return;
 		}
 
-		DFWebServerDispatch.current.add(SQLStatement.formattedSQLStatement().contains("UPDATE") || SQLStatement.formattedSQLStatement().contains("INSERT") ? DispatchDirection.upload : DispatchDirection.download, SQLStatement, delegate != null ? delegate : this.delegate);
-	}
-
-	/**
-	 * @deprecated
-	 * @param SQLStatement the SQL statement to execute backend side
-	 */
-	@Deprecated public void execute(@NotNull DFSQL SQLStatement)
-	{
-		print(getMethodName(1) + " is now deprecated.  Use `execute(_:, _:)` instead");
-		print("NOTE: You must give a callback delegate or system will fall through.");
-
-		execute(SQLStatement, null);
+		DFWebServerDispatch.current.add(SQLStatement.formattedSQLStatement().contains("UPDATE") || SQLStatement.formattedSQLStatement().contains("INSERT") ? DispatchDirection.upload : DispatchDirection.download, SQLStatement, delegate);
 	}
 
 	public @NotNull String hashString(String decryptedString)
