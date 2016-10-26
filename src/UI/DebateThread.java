@@ -30,16 +30,14 @@ public class DebateThread extends JPanel implements ActionListener{
 	private User u;
 	public DebateQuery dq = new DebateQuery();
 	public PostQuery pq = new PostQuery();
+	public JScrollPane scrollPane;
 	
 	public Frame frame;
 	
 	public DebateThread(Frame frame) {
 		this.frame = frame;
 		this.u = frame.user;
-		this.setLayout(new GridBagLayout());
-		
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
+		this.setLayout(new BorderLayout());
 		
 		/*threadAuthor = new JLabel();
 		c.gridx = 0;
@@ -48,18 +46,25 @@ public class DebateThread extends JPanel implements ActionListener{
 		*/
 		threadTitle = new JLabel();
 		threadTitle.setForeground(Color.BLUE);
-		c.gridx = 1;
-		c.gridy = 0;
-		this.add(threadTitle, c);
+
+		JPanel topPanel = new JPanel();
+		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.PAGE_AXIS));
+		topPanel.add(threadTitle);
+		
 		//this.add(Box.createVerticalGlue(), c);
 		threadDescription = new JLabel();
-		c.gridx = 1;
-		c.gridy = 1;
+		
 		//this.add(Box.createRigidArea(new Dimension(0, 5)), c);
-		this.add(threadDescription, c);
+		topPanel.add(threadDescription);
+		
+		this.add(topPanel, BorderLayout.PAGE_START);
 		
 		commentList = new JPanel();
-
+		commentArray = new ArrayList<Post>();
+		scrollPane = new JScrollPane(commentList);
+		commentList.setLayout(new BoxLayout(commentList, BoxLayout.PAGE_AXIS));
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		this.add(scrollPane, BorderLayout.CENTER);
 	}
 	
 	@Override
@@ -81,80 +86,53 @@ public class DebateThread extends JPanel implements ActionListener{
 	}
 	
 	private void populateComments(ArrayList<Post> commentArray) {
-
-		commentList.setLayout(new BoxLayout(commentList, BoxLayout.PAGE_AXIS));
-		commentList.removeAll();
-		JScrollPane scrollPane = new JScrollPane(commentList);
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridwidth = 3;
-		c.gridx = 0;
-		c.gridy = 2;
 		for (int i = 0; i < commentArray.size(); i++) {
-			System.out.println(commentArray.get(i).getText());
 			if (!commentArray.get(i).isHidden()) {
 				commentList.add(new Comment(commentArray.get(i)));
 			}
 		}
+		this.commentArray = commentArray;
 		//this.remove(1);
-		this.add(scrollPane, c);
 	}
 	
 	public void displayDebate(Debate d) {
 		this.d = d;
-		
-		System.out.println("Title: " + d.getTitle());
-		System.out.println("Description: " + d.getText());
-		System.out.println("Start Date: " + d.getStartDate());
-		System.out.println("End Date: " + d.getEndDate());
-		
-		
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setLayout(new BorderLayout());
 		threadTitle.setText(d.getTitle());
 		threadDescription.setText(d.getText());
-		
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
 		
 		if (d.getPosts() != null) {
 			populateComments(d.getPosts());
 		}
-		System.out.println(frame.user.isBanned());
+
 		if (d.isOpen() && frame.user.isBanned() == false) {
 			addPoll = new JButton("Add Poll");
 			addPoll.setActionCommand("poll");
 			addPoll.setEnabled(false);
-			c.gridx = 0;
-			c.gridy = 3;
-			this.add(addPoll, c);
+			bottomPanel.add(addPoll, BorderLayout.LINE_START);
 			
 			comment = new JTextArea("Write a comment in here.");
-			c.gridx = 1;
-			c.gridy = 3;
-			this.add(comment, c);
+			bottomPanel.add(comment, BorderLayout.CENTER);
 			
 			postComment = new JButton("Submit");
 			postComment.setActionCommand("comment");
 			postComment.addActionListener(this);
-			c.gridx = 2;
-			c.gridy = 3;
-			this.add(postComment, c);
+			bottomPanel.add(postComment, BorderLayout.LINE_END);
 		}
 		else if (frame.user.isBanned()) {
-			c.gridx = 1;
-			c.gridy = 3;
-			this.add(new JLabel("Sorry, your account does not have access to post on this thread."), c);
+			bottomPanel.add(new JLabel("Sorry, your account does not have access to post on this thread."), BorderLayout.CENTER);
 		}
 		else {
-			c.gridx = 1;
-			c.gridy = 2;
-			this.add(new JLabel("Sorry, this debate is closed."), c);
+			bottomPanel.add(new JLabel("Sorry, this debate is closed."), BorderLayout.CENTER);
 		}
+		this.add(bottomPanel, BorderLayout.PAGE_END);
 	}
 	
 	public void displayNoDebate() {
 		this.removeAll();
 		noThread = new JLabel("A debate is not currently open. Please check again later.");
-		this.add(noThread);
+		this.add(noThread, BorderLayout.CENTER);
 	}
 	
 }
