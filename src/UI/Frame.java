@@ -78,6 +78,8 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setMinimumSize(new Dimension(600, 400));
 		this.setTitle(title);
+		
+		dq.getArchivedDebates();
 	}
 
 	@Override
