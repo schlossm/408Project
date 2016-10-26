@@ -4,7 +4,6 @@ package database.WebServer;
 import com.google.gson.JsonObject;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
-import database.DFDatabase;
 import database.DFDatabaseCallbackDelegate;
 import database.DFError;
 import database.DFSQL.DFSQL;
@@ -12,7 +11,7 @@ import database.Utilities.DFDataSizePrinter;
 
 import java.util.ArrayList;
 
-import static database.DFDatabase.print;
+import static database.DFDatabase.debugLog;
 
 /**
  * Manages a Queue of WebServer Dispatch objects to retain atomicity of delegates and sql statements.  prevents overloading DFDataDownloader and DFDataUploader
@@ -39,11 +38,8 @@ public class DFWebServerDispatch implements DFDatabaseCallbackDelegate
 	public void add(DispatchDirection direction, DFSQL statement, DFDatabaseCallbackDelegate delegate)
 	{
 		queue.add(new PrivateDFDispatchObject(direction, statement, delegate));
-		if (DFDatabase.defaultDatabase.debug == 1)
-		{
-			print("Added new entry!");
-			print("Queue size: " + queue.size());
-		}
+		debugLog("Added new entry!");
+		debugLog("Queue size: " + queue.size());
 		if (!isProcessing)
 		{
 			isProcessing = true;
@@ -58,10 +54,7 @@ public class DFWebServerDispatch implements DFDatabaseCallbackDelegate
 			isProcessing = false;
 			return;
 		}
-		if (DFDatabase.defaultDatabase.debug == 1)
-		{
-			print("Processing Next Entry in Dispatch Queue");
-		}
+		debugLog("Processing Next Entry in Dispatch Queue");
 
 		nextObject = queue.remove(0);
 		if (nextObject.fork == DispatchDirection.download)

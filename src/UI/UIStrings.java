@@ -1,6 +1,7 @@
 package UI;
 
-public class UIStrings {
+public class UIStrings
+{
 	public static final String success = "success";
 	// use if username and password from login is correct
 	public static final String failure = "failure";
@@ -17,4 +18,11 @@ public class UIStrings {
 	public static final String debateReturned = "debateReturned";
 	// used to listen for debate object to be returned.
 	public static final String debateCreated = "debateCreated";
+
+
+
+	//TIME MANAGER CONSTANTS
+	public static final String fiveMinutesHavePassed = "Five Minutes Have Passed";
+	public static final String tenMinutesHavePassed = "Ten Minutes Have Passed";
+	public static final String twentyFiveMinutesHavePassed = "Twenty Five Minutes Have Passed";
 }

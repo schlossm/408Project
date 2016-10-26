@@ -296,8 +296,8 @@ import java.util.Objects;
     
     private boolean hasCharacter(String string)
     {
-    	String lowered = string.toLowerCase();
-        return lowered.contains("a") || lowered.contains("b") || lowered.contains("c") ||
+    	String  lowered = string.toLowerCase();
+        return  lowered.contains("a") || lowered.contains("b") || lowered.contains("c") ||
                 lowered.contains("d") || lowered.contains("e") || lowered.contains("f") ||
                 lowered.contains("g") || lowered.contains("h") || lowered.contains("i") ||
                 lowered.contains("j") || lowered.contains("k") || lowered.contains("l") ||
