@@ -126,7 +126,6 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 		
 		getDebatePostsReturn = false;
 		postToDebateReturn = false;
-		String bufferString = null;
 	}
 	
 	private void uploadNewPostToDatabase(int postID){
