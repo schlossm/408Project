@@ -1,24 +1,15 @@
 package JSON_translation;
 
 import UI.UIStrings;
-import UIKit.DFNotificationCenter;
-import UIKit.DFNotificationCenterDelegate;
+import UIKit.LocalStorage;
 import com.google.gson.JsonObject;
-import com.sun.javafx.runtime.VersionInfo;
-
 import database.DFDatabase;
 import database.DFDatabaseCallbackDelegate;
 import database.DFError;
-import database.DFSQL.DFSQL;
-import database.DFSQL.DFSQLClauseStruct;
-import database.DFSQL.DFSQLConjunctionClause;
-import database.DFSQL.DFSQLError;
-import database.DFSQL.WhereStruct;
+import database.DFSQL.*;
 import database.WebServer.DFDataUploaderReturnStatus;
-import static database.DFDatabase.queue;
 import objects.Debate;
 import objects.Post;
-import UIKit.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -27,10 +18,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
-import javax.swing.text.StyledEditorKit.ForegroundAction;
+import static database.DFDatabase.queue;
 
-import org.w3c.dom.css.Counter;
-
+@SuppressWarnings("unchecked")
 public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCenterDelegate{
 	private  int debateIdCounter = 0;
 	private  int maxDebateId = 0;
@@ -64,7 +54,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		DFSQL dfsql = new DFSQL();
 		String[] selectedRows = {"debateID", "title", "text", "startDate", "endDate"};
 		getArchivedDebatesReturn = true;
-		archivedDebates = new HashMap<Integer, Debate>();
+		archivedDebates = new HashMap<>();
 		try {
 			dfsql.select(selectedRows).from("Debate");
 			System.out.println(dfsql.formattedSQLStatement());
@@ -205,7 +195,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		}
 	}
 	
-	public boolean checkIfCurrentDebate(String startDate, String endDate){
+	private boolean checkIfCurrentDebate(String startDate, String endDate){
 		Calendar calobj = Calendar.getInstance();
 		java.util.Date startingDate = stringToDateConverter(startDate);
 		java.util.Date endingDate = stringToDateConverter(endDate);
@@ -223,17 +213,16 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		java.util.Date dateObject = null;
 		try {
-			 dateObject = (Date)sdf.parse(stringDate);
+			 dateObject = sdf.parse(stringDate);
 		} catch (java.text.ParseException e) {
 			System.out.println("Error converting string to date");
 		}
 		return dateObject;
 	}
 	
-	public String dateToStringConverter(Date dateObject){
+	private String dateToStringConverter(Date dateObject){
 		DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
-		String dateString = sdf.format(dateObject);
-		return dateString;
+		return sdf.format(dateObject);
 	}
 	
 	private void uploadNewDebateToDatabase(int debateId){
@@ -247,7 +236,6 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 			DFDatabase.defaultDatabase.execute(dfsql, this);
 			} catch (DFSQLError e1) {
 			e1.printStackTrace();
-			isaddSuccess = false;
 		}
 		resetAttributes();
 	}
@@ -353,8 +341,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 	}
 	
 	private HashMap<Integer, Debate> loadFromLocalStorage(){
-		HashMap<Integer, Debate> cachedDebates = (HashMap<Integer, Debate>) LocalStorage.loadObjectFromFile("cache/archivedDebates.ser");
-		return cachedDebates;
+		return (HashMap<Integer, Debate>) LocalStorage.loadObjectFromFile("cache/archivedDebates.ser");
 	}
 	
 	private void encryptDebateAttributes(){
