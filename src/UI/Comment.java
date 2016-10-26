@@ -39,10 +39,11 @@ public class Comment extends JPanel implements ActionListener{
 			com.setForeground(Color.RED);
 		}
 		*/
-		this.add(comID, BorderLayout.PAGE_START);
+//		this.add(comID, BorderLayout.PAGE_START);
+//		this.add(name, BorderLayout.LINE_START);
 		this.add(name, BorderLayout.LINE_START);
 		this.add(com, BorderLayout.CENTER);
-		this.add(timestamp, BorderLayout.LINE_END);
+		this.add(timestamp, BorderLayout.PAGE_START);
 		this.add(report, BorderLayout.PAGE_END);
 		this.setBackground(Color.WHITE);
 	}

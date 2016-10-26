@@ -7,7 +7,7 @@ package database.DFSQL;
 public enum DFSQLConjunctionClause
 {
 	/**
-	 * Used for JOIN and WHERE
+	 * Used for WHERE
 	 */
 	and, or, none,
 
@@ -17,7 +17,7 @@ public enum DFSQLConjunctionClause
 	equals, notEquals, greaterThan, lessThan, greaterThanOrEqualTo, lessThanOrEqualTo,
 
 	/**
-	 * Used for WHERE
+	 * Used for JOIN and WHERE
 	 */
 	leftOuter, rightOuter, fullOuter, cross, inner, natural
 }
