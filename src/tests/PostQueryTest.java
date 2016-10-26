@@ -73,7 +73,7 @@ public class PostQueryTest implements DFNotificationCenterDelegate {
 	public void testGetDebatePosts() {
 		pq.getDebatePosts(debateID);
 		
-		DFNotificationCenter.defaultCenter.addObserver(this, UIStrings.postsReturned);
+		DFNotificationCenter.defaultCenter.register(this, UIStrings.postsReturned);
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
@@ -88,7 +88,7 @@ public class PostQueryTest implements DFNotificationCenterDelegate {
 	public void testGetInvalidDebatePosts() {
 		pq.getDebatePosts(invalidDebateID);
 		
-		DFNotificationCenter.defaultCenter.addObserver(this, UIStrings.postsReturned);
+		DFNotificationCenter.defaultCenter.register(this, UIStrings.postsReturned);
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
@@ -104,7 +104,7 @@ public class PostQueryTest implements DFNotificationCenterDelegate {
 		Post post = new Post(username, "This is a post!");
 		pq.postToDebate(post, debateID);
 		
-		DFNotificationCenter.defaultCenter.addObserver(this, UIStrings.postsReturned);
+		DFNotificationCenter.defaultCenter.register(this, UIStrings.postsReturned);
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
