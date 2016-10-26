@@ -70,9 +70,10 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 				DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);
 				debugLog("verifylogin returned nothing");
 			}
-<<<<<<< Updated upstream
-			if(databasePassword.equals(bufferString)){DFNotificationCenter.defaultCenter.post(UIStrings.success, Boolean.TRUE);System.out.println("verifylogin returned success");}
-			else {DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);System.out.println("verifylogin returned fail cause passwords don't match");}
+			if(databasePassword.equals(bufferString)){DFNotificationCenter.defaultCenter.post(UIStrings.success, Boolean.TRUE);
+				debugLog("verifylogin returned success");}
+			else {DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);
+				debugLog("verifylogin returned fail cause passwords don't match");}
 		} else if (getUserExistsReturn) {
 			String usernameReceived = null;
 			try {
@@ -83,12 +84,6 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 			if(usernameReceived != null){
 				DFNotificationCenter.defaultCenter.post(UIStrings.exists, true);
 			}
-=======
-			if(databasePassword.equals(bufferString)){DFNotificationCenter.defaultCenter.post(UIStrings.success, Boolean.TRUE);
-				debugLog("verifylogin returned success");}
-			else {DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);
-				debugLog("verifylogin returned fail cause passwords don't match");}
->>>>>>> Stashed changes
 		}
 		
 		getUserReturn = false;
@@ -249,22 +244,12 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		UserQuery userQuery = new UserQuery();
 		//System.out.println(userQuery.getUserBanStatus("naveenTest1"));
 		//userQuery.addNewUser("naveenTest1", "dasdsada", UserType.USER);
-<<<<<<< Updated upstream
-		//userQuery.modifyUserPriv("testUser", UserType.USER);	
-		userQuery.doesUserExist("testuser");
-		/*try{
-			System.out.println(userQuery.getUserPriv("naveenTest1"));
-		} catch (InvalidUserException e){
-			System.out.println("Exception caught");
-		}*/
-=======
 		//userQuery.modifyUserPriv("testUser", UserType.USER);
 		try{
 			debugLog(userQuery.getUserPriv("naveenTest1"));
 		} catch (InvalidUserException e){
 			debugLog("Exception caught");
 		}
->>>>>>> Stashed changes
 		//System.out.println(userQuery.verifyUserLogin("naveenTest", "dasdsada"));
 		//System.out.println(userQuery.getUserPriv("testUser1212"));
 		//userQuery.getUser("testuser");
