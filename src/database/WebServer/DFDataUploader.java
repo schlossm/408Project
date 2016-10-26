@@ -17,15 +17,8 @@ import static database.DFDatabase.*;
 import static database.DFError.*;
 import static database.WebServer.DFWebServerDispatch.*;
 
-/**
- * Uploads an SQL statement to a remote SQL database
- */
 class DFDataUploader
 {
-    /**
-     * Uploads data to the database
-     * @param SQLStatement the SQL statement to execute on the web server
-     */
     void uploadDataWith(DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
 	{
         debugLog(SQLStatement.formattedSQLStatement());

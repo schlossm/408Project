@@ -24,13 +24,13 @@ public class DFDataSizePrinter
      */
 	public void printDataSize(Integer dataSize)
     {
-        Integer startSize = 0;
+        Integer byteSize = 0;
         
         Double length = new Double(dataSize);
         
         while (length >= 1024.0)
         {
-            startSize += 1;
+            byteSize += 1;
             length /= 1024.0;
         }
         
@@ -41,7 +41,7 @@ public class DFDataSizePrinter
         
         String fileSize = "";
         
-        switch (startSize)
+        switch (byteSize)
         {
         case 0:
         	fileSize = "B";
