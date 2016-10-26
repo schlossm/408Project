@@ -8,7 +8,7 @@ import java.util.TimeZone;
 import static database.DFDatabase.debugLog;
 
 @SuppressWarnings("InfiniteLoopStatement")
-public class TimeManager implements Runnable
+public class TimeManager implements Runnable 
 {
 	private final   Calendar calendar           = Calendar.getInstance(TimeZone.getTimeZone("America/Indianapolis"));
 	private long    startMillisecond            = calendar.getTimeInMillis();
