@@ -31,6 +31,9 @@ import static database.DFError.kMethodName;
 @SuppressWarnings("unused")
 public class DFDatabase
 {
+	/**
+	 * A queue for running blocks on the main thread.
+	 */
 	public static final BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
 
 	/**
@@ -40,8 +43,9 @@ public class DFDatabase
 
 	private final String websiteUserName	= "DFJavaApp";
 	private final String websiteUserPass	= "3xT-MA8-HEm-sTd";
+
 	private final char[] hexArray			= "0123456789ABCDEF".toCharArray();
-	private boolean useEncryption           = true;
+	private boolean      useEncryption      = true;
 
 	private SecretKeySpec secretKeySpec;
 	private byte[] iv;
@@ -49,7 +53,7 @@ public class DFDatabase
 	@Deprecated public DFDatabaseCallbackDelegate delegate;
 
 	/**
-	 * Wanna debug DFDatabase? Set this flag to 1.
+	 * Wanna debug DFDatabase and related components? Set this flag to 1.
 	 */
 	public int debug = 0;
 	
@@ -57,7 +61,6 @@ public class DFDatabase
 
 	private DFDatabase()
 	{
-
 		Authenticator.setDefault (new Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication (websiteUserName, websiteUserPass.toCharArray());
@@ -119,9 +122,10 @@ public class DFDatabase
 	}
 
 	/**
+	 * @deprecated
 	 * @param SQLStatement the SQL statement to execute backend side
 	 */
-	public void execute(@NotNull DFSQL SQLStatement)
+	@Deprecated public void execute(@NotNull DFSQL SQLStatement)
 	{
 		print(getMethodName(1) + " is now deprecated.  Use `execute(_:, _:)` instead");
 		print("NOTE: You must give a callback delegate or system will fall through.");

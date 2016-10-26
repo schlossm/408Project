@@ -22,15 +22,8 @@ import static database.DFDatabase.*;
 import static database.DFError.*;
 import static database.WebServer.DFWebServerDispatch.*;
 
-/**
- * The downloader class.  Connects securely to the website, and uploads a POST statement containing the data required to download from the database
- */
 class DFDataDownloader
 {
-    /**
-     * Downloads data from the database
-     * @param SQLStatement the SQL statement to execute on the web server
-     */
     void downloadDataWith(DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
 	{
         debugLog(SQLStatement.formattedSQLStatement());
