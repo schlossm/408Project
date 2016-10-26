@@ -33,7 +33,7 @@ public class Admin extends JPanel implements ActionListener, DFNotificationCente
 	public UserOptions userOptions;
 	
 	public Admin(Frame frame) {
-		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) this, "returned");
+		DFNotificationCenter.defaultCenter.register((DFNotificationCenterDelegate) this, "returned");
 		
 		this.frame = frame;
 		u = frame.user;
