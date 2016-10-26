@@ -78,7 +78,7 @@ public class DebateThread extends JPanel implements ActionListener{
 				pq.postToDebate(userPost, d.getId());
 				JOptionPane.showMessageDialog(this, "Your comment has been submitted.");
 				comment.setText("");
-				dq.getCurrentDebate();
+				//dq.getCurrentDebate();
 				populateComments(d.getPosts());
 			} catch (Exception exception) {
 				JOptionPane.showMessageDialog(this, "An error occurred. Your comment was not submitted", "Error", JOptionPane.ERROR_MESSAGE);

@@ -1,32 +1,28 @@
 package objects;
-import JSON_translation.*;
+import JSON_translation.DebateQuery;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-
-import org.junit.experimental.theories.Theories;
-
-import com.sun.istack.internal.Nullable;
  
 
 public class Debate implements Serializable {
-	boolean isOpen;
-	ArrayList<Post> list;
-	int id;
-	String title;
-	String text;
-	Date startDate;
-	Date endDate;
+	private boolean isOpen;
+	private ArrayList<Post> list;
+	private int id;
+	private String title;
+	private String text;
+	private Date startDate;
+	private Date endDate;
 	
-	static DebateQuery jsonQuery;
-	static PostQuery jsonQuery2;
+	private static DebateQuery jsonQuery;
 	
 	public Debate(String title){
 		try{
 			Debate.jsonQuery = new DebateQuery();
 			if(Debate.jsonQuery != null){
 				this.title = title;
-				this.list = new ArrayList<Post>();
+				this.list = new ArrayList<>();
 				this.isOpen = true;
 			}
 		} catch (Exception e){
@@ -41,7 +37,7 @@ public class Debate implements Serializable {
 		if(Debate.jsonQuery != null){
 			this.title = title;
 			if(list == null){
-				this.list = new ArrayList<Post>();
+				this.list = new ArrayList<>();
 			} else {
 				this.list = list;
 			}
@@ -52,27 +48,9 @@ public class Debate implements Serializable {
 			this.id = id;
 		}
 	}
-	
-	public boolean createDebate(String title, String debateText, String start, String end){
-		boolean debateMade = false;
-		try {
-			Debate.jsonQuery.createNewDebate(title, debateText, start, end);
-			debateMade = true;
-			}
-		 catch (Exception e){
-			e.printStackTrace();
-		}
-		return debateMade;
-	}
+
 	public void closeDebate(Debate toBeClosed){
 		toBeClosed.isOpen = false;
-	}
-	public void getDebateWithTitle(String title){
-		try{
-			Debate.jsonQuery.getCurrentDebate();;
-		}catch (Exception e){
-			e.printStackTrace();
-		}
 	}
 	public ArrayList<Post> getPosts(){
 		return this.list;
