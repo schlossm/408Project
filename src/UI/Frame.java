@@ -3,6 +3,9 @@ import JSON_translation.*;
 import objects.*;
 import objects.User.UserType;
 
+import UIKit.DFNotificationCenter;
+import UIKit.DFNotificationCenterDelegate;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
