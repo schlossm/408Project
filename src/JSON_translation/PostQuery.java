@@ -1,41 +1,29 @@
 package JSON_translation;
 
-import com.google.gson.JsonObject;
-
 import UI.UIStrings;
 import UIKit.DFNotificationCenter;
 import UIKit.DFNotificationCenterDelegate;
+import com.google.gson.JsonObject;
 import database.DFDatabase;
 import database.DFDatabaseCallbackDelegate;
 import database.DFError;
 import database.DFSQL.DFSQL;
 import database.DFSQL.DFSQLError;
-import database.DFSQL.DFSQLClauseStruct;
-import database.DFSQL.DFSQLConjunctionClause;
-import database.DFSQL.WhereStruct;
 import database.WebServer.DFDataUploaderReturnStatus;
-import objects.Debate;
 import objects.Post;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCenterDelegate {
 	private JsonObject jsonObject;
-	private DFDataUploaderReturnStatus uploadSuccess;
-	
+
 	private boolean getDebatePostsReturn;
 	private boolean postToDebateReturn;
 	
 	private int postID = 0;
 	private Post givenPost = null;
 	private int givenDebateID = 0;
-	
-	private String bufferString;
-	
-	private static ArrayList<Post> debatePosts; // for testing
-	
+
 	public void getDebatePosts(int debateID) {
 		DFSQL dfsql = new DFSQL();
 		String[] selectedRows = {"postID", "message", "userID", "timeStamp", "flagged", "isHidden"};
@@ -60,7 +48,6 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 		
 		try {
 			dfsql.select("MAX(postID)").from("Comment");
-			System.out.println(dfsql.formattedSQLStatement());
 			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
@@ -98,14 +85,14 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 	
 	private void returnHandler(){
 		if (getDebatePostsReturn){
-			int postIDReceived = 0;
-			String messageReceived = null;
-			String usernameReceived = null;
-			String timeStampReceived = null;
-			int flaggedReceived = 0;
-			int isHiddenReceived = 0;
+			int postIDReceived;
+			String messageReceived;
+			String usernameReceived;
+			String timeStampReceived;
+			int flaggedReceived;
+			int isHiddenReceived;
 			
-			ArrayList<Post> posts = new ArrayList<Post>();
+			ArrayList<Post> posts = new ArrayList<>();
 			
 			try {
 				for (int i = 0; i < jsonObject.get("Data").getAsJsonArray().size(); ++i) {
@@ -115,8 +102,6 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 					timeStampReceived = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("timeStamp").getAsString();
 					flaggedReceived = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("flagged").getAsInt();
 					isHiddenReceived = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("isHidden").getAsInt();
-					
-					System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 					
 					Post p = new Post(postIDReceived, DFDatabase.defaultDatabase.decryptString(messageReceived), usernameReceived, timeStampReceived, flaggedReceived, isHiddenReceived);
 					posts.add(p);
@@ -138,7 +123,6 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 		
 		getDebatePostsReturn = false;
 		postToDebateReturn = false;
-		bufferString = null;
 	}
 	
 	private void uploadNewPostToDatabase(int postID){
@@ -148,7 +132,6 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 		DFSQL dfsql = new DFSQL();
 		try {
 			dfsql.insert("Comment", values, rows);
-			System.out.println(dfsql.formattedSQLStatement());
 			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
@@ -159,13 +142,11 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 		DFSQL dfsql2 = new DFSQL();
 		try {
 			dfsql2.insert("DebateComment", values2, rows2);
-			System.out.println(dfsql2.formattedSQLStatement());
 			DFDatabase.defaultDatabase.execute(dfsql2, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		}
-		
-		postID = 0;
+
 		givenPost = null;
 		givenDebateID = 0;
 	}
@@ -174,9 +155,7 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 	public void returnedData(JsonObject jsonObject, DFError error) {
 		this.jsonObject = null;
 		if(error != null){
-			System.out.println(error.code);
-			System.out.println(error.description);
-			System.out.println(error.userInfo);
+			DFDatabase.print(error.toString());
 			this.jsonObject = null;
 		} else {
 			this.jsonObject = jsonObject;
@@ -187,7 +166,6 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 
 	@Override
 	public void uploadStatus(DFDataUploaderReturnStatus success, DFError error) {
-		this.uploadSuccess = null;
 		if(success == DFDataUploaderReturnStatus.success){
 			System.out.println("success uploading this");
 		} else if (success == DFDataUploaderReturnStatus.failure) {
@@ -201,15 +179,14 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 		} else {
 			System.out.println("I have no clue!");
 		}
-		this.uploadSuccess = success;
 	}
 	
 	@Override
-	public void performActionFor(String notificationName, Object userData) {
+	@SuppressWarnings("unchecked") public void performActionFor(String notificationName, Object userData) {
 		System.out.println("**** PERFORM ACTION FOR WAS CALLED ****");
 		if(notificationName.equals(UIStrings.postsReturned)){
+			ArrayList<Post> debatePosts;
 			if(userData == null) {
-				debatePosts = null;
 				System.out.println("**** RETURNED USERDATA IS NULL ****");
 			} else {
 				debatePosts = (ArrayList<Post>)userData;
@@ -218,7 +195,7 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 		}
 	}
 
-	public void testPostQuery(int debateId){
+	void testPostQuery(int debateId){
 		PostQuery postQuery = new PostQuery();
 		DFNotificationCenter.defaultCenter.register(this, UIStrings.postsReturned);
 		postQuery.getDebatePosts(debateId);

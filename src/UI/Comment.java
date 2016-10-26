@@ -3,6 +3,9 @@ package UI;
 import objects.*;
 
 import javax.swing.JPanel;
+
+import JSON_translation.PostQuery;
+
 import javax.swing.JButton;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,9 +22,12 @@ public class Comment extends JPanel implements ActionListener{
 	public JLabel name, com, comID, timestamp;
 	
 	public Post post;
+	public PostQuery pq;
 	
 	public Comment(Post post) {
 		//this.id = 0; used for id
+		this.pq = new PostQuery();
+		
 		this.report = new JButton("Report Comment");
 		this.report.setActionCommand("report");
 		this.report.addActionListener(this);
@@ -54,6 +60,8 @@ public class Comment extends JPanel implements ActionListener{
 		if (e.getActionCommand().equals("report")) {
 			JOptionPane.showMessageDialog(this, "Thank you. This comment has been flagged for revision.");
 			this.setForeground(Color.RED);
+			post.numReports++;
+			pq.updateFlags(post);
 		}
 	}
 }

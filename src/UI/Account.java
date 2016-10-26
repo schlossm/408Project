@@ -29,7 +29,6 @@ public class Account extends JPanel implements ActionListener {
 	
 	public Account(Frame frame) {
 		this.frame = frame;
-		//DFNotificationCenter.defaultCenter.addObserver(this, "exists");
 		
 		this.setLayout(new GridBagLayout());
 		Dimension size = new Dimension(40, 40);

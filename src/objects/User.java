@@ -1,6 +1,7 @@
 package objects;
 import JSON_translation.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 /*
  * User.java
@@ -114,7 +115,7 @@ public class User implements Serializable {
 	
 	public boolean equals(Object o) {
 		if (o != null) {
-			if (o instanceof User && this.toString() == o.toString())
+			if (o instanceof User && Objects.equals(this.toString(), o.toString()))
 				return true;
 		}
 		
