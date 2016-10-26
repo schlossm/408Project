@@ -48,7 +48,6 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 		
 		try {
 			dfsql.select("MAX(postID)").from("Comment");
-			System.out.println(dfsql.formattedSQLStatement());
 			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
@@ -104,8 +103,6 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 					flaggedReceived = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("flagged").getAsInt();
 					isHiddenReceived = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("isHidden").getAsInt();
 					
-					System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-					
 					Post p = new Post(postIDReceived, DFDatabase.defaultDatabase.decryptString(messageReceived), usernameReceived, timeStampReceived, flaggedReceived, isHiddenReceived);
 					posts.add(p);
 				}
@@ -135,7 +132,6 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 		DFSQL dfsql = new DFSQL();
 		try {
 			dfsql.insert("Comment", values, rows);
-			System.out.println(dfsql.formattedSQLStatement());
 			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
@@ -146,7 +142,6 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 		DFSQL dfsql2 = new DFSQL();
 		try {
 			dfsql2.insert("DebateComment", values2, rows2);
-			System.out.println(dfsql2.formattedSQLStatement());
 			DFDatabase.defaultDatabase.execute(dfsql2, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
@@ -160,9 +155,7 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 	public void returnedData(JsonObject jsonObject, DFError error) {
 		this.jsonObject = null;
 		if(error != null){
-			System.out.println(error.code);
-			System.out.println(error.description);
-			System.out.println(error.userInfo);
+			DFDatabase.print(error.toString());
 			this.jsonObject = null;
 		} else {
 			this.jsonObject = jsonObject;
@@ -202,7 +195,7 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 		}
 	}
 
-	@SuppressWarnings("unused") public void testPostQuery(int debateId){
+	void testPostQuery(int debateId){
 		PostQuery postQuery = new PostQuery();
 		DFNotificationCenter.defaultCenter.register(this, UIStrings.postsReturned);
 		postQuery.getDebatePosts(debateId);

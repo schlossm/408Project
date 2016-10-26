@@ -13,6 +13,8 @@ import database.WebServer.DFDataUploaderReturnStatus;
 import objects.User;
 import objects.User.UserType;
 
+import static database.DFDatabase.debugLog;
+
 public class UserQuery implements DFDatabaseCallbackDelegate{
 	private JsonObject jsonObject;
 	private DFDataUploaderReturnStatus uploadSuccess;
@@ -66,8 +68,9 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 				databasePassword = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("password").getAsString();
 			} catch (NullPointerException e2){
 				DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);
-				System.out.println("verifylogin returned nothing");
+				debugLog("verifylogin returned nothing");
 			}
+<<<<<<< Updated upstream
 			if(databasePassword.equals(bufferString)){DFNotificationCenter.defaultCenter.post(UIStrings.success, Boolean.TRUE);System.out.println("verifylogin returned success");}
 			else {DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);System.out.println("verifylogin returned fail cause passwords don't match");}
 		} else if (getUserExistsReturn) {
@@ -80,6 +83,12 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 			if(usernameReceived != null){
 				DFNotificationCenter.defaultCenter.post(UIStrings.exists, true);
 			}
+=======
+			if(databasePassword.equals(bufferString)){DFNotificationCenter.defaultCenter.post(UIStrings.success, Boolean.TRUE);
+				debugLog("verifylogin returned success");}
+			else {DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);
+				debugLog("verifylogin returned fail cause passwords don't match");}
+>>>>>>> Stashed changes
 		}
 		
 		getUserReturn = false;
@@ -133,7 +142,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		DFSQL dfsql = new DFSQL();
 		try {
 			dfsql.insert("User", values, rows);
-			System.out.println(dfsql.formattedSQLStatement());
+			debugLog(dfsql.formattedSQLStatement());
 			DFDatabase.defaultDatabase.execute(dfsql, this);
 			} catch (DFSQLError e1) {
 			e1.printStackTrace();
@@ -182,7 +191,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 	public boolean updateBanStatus(String userName, boolean newBanStatus){
 		DFSQL dfsql = new DFSQL();
 		int newbanStatusInt = newBanStatus ? 1 : 0;
-		System.out.println(newbanStatusInt);
+		debugLog(newbanStatusInt);
 		try {
 			dfsql.update("User", "banned", String.valueOf(newbanStatusInt)).whereEquals("userID", userName);
 			DFDatabase.defaultDatabase.execute(dfsql, this);
@@ -210,9 +219,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 	public void returnedData(JsonObject jsonObject, DFError error) {
 		this.jsonObject = null;
 		if(error != null){
-			System.out.println(error.code);
-			System.out.println(error.description);
-			System.out.println(error.userInfo);
+			DFDatabase.print(error.toString());
 			this.jsonObject = null;
 		} else {
 			this.jsonObject = jsonObject;
@@ -224,17 +231,15 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 	public void uploadStatus(DFDataUploaderReturnStatus success, DFError error) {
 		this.uploadSuccess = null;
 		if(success == DFDataUploaderReturnStatus.success){
-			System.out.println("success uploading this");
+			debugLog("success uploading this");
 		} else if (success == DFDataUploaderReturnStatus.failure) {
-			System.out.println("Failure uploading this");
+			debugLog("Failure uploading this");
 		}
 		else if(success == DFDataUploaderReturnStatus.error){
-			System.out.println("Error uploading this");
-			System.out.println(error.code);
-			System.out.println(error.description);
-			System.out.println(error.userInfo);
+			debugLog("Error uploading this");
+			DFDatabase.print(error.toString());
 		} else {
-			System.out.println("I have no clue!");
+			debugLog("I have no clue!");
 		}
 		this.uploadSuccess = success;
 	}
@@ -244,6 +249,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		UserQuery userQuery = new UserQuery();
 		//System.out.println(userQuery.getUserBanStatus("naveenTest1"));
 		//userQuery.addNewUser("naveenTest1", "dasdsada", UserType.USER);
+<<<<<<< Updated upstream
 		//userQuery.modifyUserPriv("testUser", UserType.USER);	
 		userQuery.doesUserExist("testuser");
 		/*try{
@@ -251,9 +257,17 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		} catch (InvalidUserException e){
 			System.out.println("Exception caught");
 		}*/
+=======
+		//userQuery.modifyUserPriv("testUser", UserType.USER);
+		try{
+			debugLog(userQuery.getUserPriv("naveenTest1"));
+		} catch (InvalidUserException e){
+			debugLog("Exception caught");
+		}
+>>>>>>> Stashed changes
 		//System.out.println(userQuery.verifyUserLogin("naveenTest", "dasdsada"));
 		//System.out.println(userQuery.getUserPriv("testUser1212"));
 		//userQuery.getUser("testuser");
-		System.out.println("end reached");
+		debugLog("end reached");
 	}
 }
