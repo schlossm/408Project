@@ -27,7 +27,7 @@ class DFNotificationCenterObject
 *
 *	This class is meant to be used for passing information among different packages(modules)
 */
-@SuppressWarnings({"unused", "unchecked"}) public class DFNotificationCenter
+@SuppressWarnings({"unchecked"}) public class DFNotificationCenter
 {
 	public static final DFNotificationCenter defaultCenter = new DFNotificationCenter();
 	
@@ -77,17 +77,6 @@ class DFNotificationCenterObject
 	public void remove(DFNotificationCenterDelegate observer)
 	{
 		((ArrayList<DFNotificationCenterObject>) observers.clone()).stream().filter(object -> object.observer == observer).forEach(object -> observers.remove(object));
-	}
-
-	/**
-	 *  @deprecated
-	 * 	@param notificationName The notification name the object wishes to post for
-	 * 	@param userData Optional data the object calling this function wishes to pass on to any observers
-	 */
-	@Deprecated public void postNotification(String notificationName, Object userData)
-	{
-		print(DFDatabase.getMethodName(2) + " is now deprecated.  Use `post(_:, _:)` instead");
-		post(notificationName, userData);
 	}
 
 	/**
