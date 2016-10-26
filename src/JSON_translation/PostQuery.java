@@ -118,7 +118,7 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 					
 					System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 					
-					Post p = new Post(postIDReceived, messageReceived, usernameReceived, timeStampReceived, flaggedReceived, isHiddenReceived);
+					Post p = new Post(postIDReceived, DFDatabase.defaultDatabase.decryptString(messageReceived), usernameReceived, timeStampReceived, flaggedReceived, isHiddenReceived);
 					posts.add(p);
 				}
 			} catch (NullPointerException e2){

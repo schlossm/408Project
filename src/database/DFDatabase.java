@@ -28,7 +28,6 @@ import static database.DFError.kMethodName;
 /**
  * The main database communicator class.  All communication with the database will run through this class
  */
-@SuppressWarnings("unused")
 public class DFDatabase
 {
 	/**
@@ -49,8 +48,6 @@ public class DFDatabase
 
 	private SecretKeySpec secretKeySpec;
 	private byte[] iv;
-
-	@Deprecated public DFDatabaseCallbackDelegate delegate;
 
 	/**
 	 * Wanna debug DFDatabase and related components? Set this flag to 1.
@@ -101,7 +98,7 @@ public class DFDatabase
 	 */
 	public void execute(@NotNull DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
 	{
-		if (delegate == null && this.delegate == null)
+		if (delegate == null)
 		{
 			print("Warning! You must give a callback delegate.  System will fall through now.");
 		}
@@ -109,7 +106,7 @@ public class DFDatabase
 		if (SQLStatement == null || Objects.equals(SQLStatement.formattedSQLStatement(), ""))
 		{
 			Map<String, String> errorInfo = new HashMap<>();
-			errorInfo.put(kMethodName, getMethodName(1));
+			errorInfo.put(kMethodName, getMethodName());
 			errorInfo.put(kExpandedDescription, "DFDatabase cannot work with a null or empty DFSQL Object.");
 			if (delegate != null)
 			{
@@ -118,19 +115,7 @@ public class DFDatabase
 			return;
 		}
 
-		DFWebServerDispatch.current.add(SQLStatement.formattedSQLStatement().contains("UPDATE") || SQLStatement.formattedSQLStatement().contains("INSERT") ? DispatchDirection.upload : DispatchDirection.download, SQLStatement, delegate != null ? delegate : this.delegate);
-	}
-
-	/**
-	 * @deprecated
-	 * @param SQLStatement the SQL statement to execute backend side
-	 */
-	@Deprecated public void execute(@NotNull DFSQL SQLStatement)
-	{
-		print(getMethodName(1) + " is now deprecated.  Use `execute(_:, _:)` instead");
-		print("NOTE: You must give a callback delegate or system will fall through.");
-
-		execute(SQLStatement, null);
+		DFWebServerDispatch.current.add(SQLStatement.formattedSQLStatement().contains("UPDATE") || SQLStatement.formattedSQLStatement().contains("INSERT") ? DispatchDirection.upload : DispatchDirection.download, SQLStatement, delegate);
 	}
 
 	public @NotNull String hashString(String decryptedString)
@@ -225,17 +210,17 @@ public class DFDatabase
         return data;
     }
 
-	public @NotNull static String getMethodName(final int numberOfParameters)
+	public @NotNull static String getMethodName()
 	{
 		final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
 
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("`");
 		stringBuilder.append(ste[Integer.min(ste.length - 1, Integer.max(2, 0))].getMethodName());
-		if (numberOfParameters > 0)
+		if (1 > 0)
 		{
 			stringBuilder.append("(_:");
-			for (int i = 0; i < numberOfParameters - 1; i++)
+			for (int i = 0; i < 1 - 1; i++)
 			{
 				stringBuilder.append(", _:");
 			}
@@ -245,7 +230,7 @@ public class DFDatabase
 		return stringBuilder.toString();
 	}
 
-	public @NotNull static String getMethodNameOfSuperMethod(final int numberOfParameters)
+	public @NotNull static String getMethodNameOfSuperMethod()
 	{
 		final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
 
@@ -253,9 +238,9 @@ public class DFDatabase
 		stringBuilder.append("`");
 		stringBuilder.append(ste[Integer.min(ste.length - 1, Integer.max(0, 0))].getMethodName());
 		stringBuilder.append("(_:");
-		if (numberOfParameters > 0)
+		if (0 > 0)
 		{
-			for (int i = 0; i < numberOfParameters - 1; i++)
+			for (int i = 0; i < 0 - 1; i++)
 			{
 				stringBuilder.append(", _:");
 			}

@@ -63,7 +63,7 @@ class DFDataUploader
                 if (Objects.equals(response, ""))
                 {
                     Map<String, String> errorInfo = new HashMap<>();
-                    errorInfo.put(kMethodName, getMethodName(1));
+                    errorInfo.put(kMethodName, getMethodName());
                     errorInfo.put(kExpandedDescription, "No data was returned from the database.  Response: " + response);
                     errorInfo.put(kURL, website + "/" + writeFile);
                     errorInfo.put(kSQLStatement, SQLStatement.formattedSQLStatement());
@@ -89,7 +89,7 @@ class DFDataUploader
                 }
 
                 Map<String, String> errorInfo = new HashMap<>();
-                errorInfo.put(kMethodName, getMethodName(1));
+                errorInfo.put(kMethodName, getMethodName());
                 errorInfo.put(kExpandedDescription, "A(n) "+ e.getCause() + " Exception was raised.  Setting DFDatabase -debug to 1 will print the stack trace for this error");
                 errorInfo.put(kURL, website + "/" + writeFile);
                 errorInfo.put(kSQLStatement, SQLStatement.formattedSQLStatement());

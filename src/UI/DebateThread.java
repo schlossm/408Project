@@ -92,7 +92,7 @@ public class DebateThread extends JPanel implements ActionListener{
 				if (i >= this.commentArray.size() - 1) {
 					commentList.add(new Comment(commentArray.get(i)));
 				}
-				System.out.println("i: " + i + " size: " + this.commentArray.size());
+				//System.out.println("i: " + i + " size: " + this.commentArray.size());
 			}
 		}
 		this.commentArray = commentArray;
