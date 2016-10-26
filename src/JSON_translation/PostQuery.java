@@ -146,10 +146,10 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 	private void uploadNewPostToDatabase(int postID){
 		int isHidden = givenPost.isHidden() ? 1 : 0;
 		String[] rows = {"postID", "message", "userID", "timeStamp", "flagged", "isHidden"};
-		String[] values = {String.valueOf(postID), givenPost.getText(), givenPost.getPoster(), givenPost.getTimestamp(), String.valueOf(givenPost.getNumFlags()), String.valueOf(isHidden)};
+		String[] values = {String.valueOf(postID), DFDatabase.defaultDatabase.encryptString(givenPost.getText()), givenPost.getPoster(), givenPost.getTimestamp(), String.valueOf(givenPost.getNumFlags()), String.valueOf(isHidden)};
 		DFSQL dfsql = new DFSQL();
 		try {
-			dfsql.insert("Post", values, rows);
+			dfsql.insert("Comment", values, rows);
 			System.out.println(dfsql.formattedSQLStatement());
 			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
