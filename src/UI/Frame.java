@@ -42,11 +42,11 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 		dq = new DebateQuery();
 		pq = new PostQuery();
 		
-		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) this, "success");
-		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) this, "failure");
-		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) this, "returned");
-		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) this, "exists");
-		DFNotificationCenter.defaultCenter.addObserver((DFNotificationCenterDelegate) this, "debateReturned");
+		DFNotificationCenter.defaultCenter.register((DFNotificationCenterDelegate) this, "success");
+		DFNotificationCenter.defaultCenter.register((DFNotificationCenterDelegate) this, "failure");
+		DFNotificationCenter.defaultCenter.register((DFNotificationCenterDelegate) this, "returned");
+		DFNotificationCenter.defaultCenter.register((DFNotificationCenterDelegate) this, "exists");
+		DFNotificationCenter.defaultCenter.register((DFNotificationCenterDelegate) this, "debateReturned");
 		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) debate, "debate");
 		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) admin, "admin");
 		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) rules, "rules");
@@ -78,6 +78,8 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setMinimumSize(new Dimension(600, 400));
 		this.setTitle(title);
+		
+		dq.getArchivedDebates();
 	}
 
 	@Override

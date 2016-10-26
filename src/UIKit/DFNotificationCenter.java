@@ -1,7 +1,6 @@
 package UIKit;
 
 import UI.UIStrings;
-import database.DFDatabase;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -27,23 +26,12 @@ class DFNotificationCenterObject
 *
 *	This class is meant to be used for passing information among different packages(modules)
 */
-@SuppressWarnings({"unused", "unchecked"}) public class DFNotificationCenter
+@SuppressWarnings({"unchecked"}) public class DFNotificationCenter
 {
 	public static final DFNotificationCenter defaultCenter = new DFNotificationCenter();
 	
 	private ArrayList<DFNotificationCenterObject> observers = new ArrayList<>();
 	private DFNotificationCenter() { }
-
-	/**
-	 *  @deprecated
-	 *	@param object The object that will be receiving the notification.  This object must conform to the DFNotificationCenterDelegate interface
-	 *  @param notificationName The notification name the object wishes to listen for.  All other notifications will be ignored
-	 */
-	@Deprecated public void addObserver(DFNotificationCenterDelegate object, String notificationName)
-	{
-		print(DFDatabase.getMethodName(2) + " is now deprecated.  Use `register(_:, _:)` instead");
-		register(object, notificationName);
-	}
 
 	/**
 	 *	@param observer The object that will be receiving the notification.  This object must conform to the DFNotificationCenterDelegate interface
@@ -77,17 +65,6 @@ class DFNotificationCenterObject
 	public void remove(DFNotificationCenterDelegate observer)
 	{
 		((ArrayList<DFNotificationCenterObject>) observers.clone()).stream().filter(object -> object.observer == observer).forEach(object -> observers.remove(object));
-	}
-
-	/**
-	 *  @deprecated
-	 * 	@param notificationName The notification name the object wishes to post for
-	 * 	@param userData Optional data the object calling this function wishes to pass on to any observers
-	 */
-	@Deprecated public void postNotification(String notificationName, Object userData)
-	{
-		print(DFDatabase.getMethodName(2) + " is now deprecated.  Use `post(_:, _:)` instead");
-		post(notificationName, userData);
 	}
 
 	/**

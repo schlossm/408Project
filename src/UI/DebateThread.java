@@ -78,17 +78,21 @@ public class DebateThread extends JPanel implements ActionListener{
 				pq.postToDebate(userPost, d.getId());
 				JOptionPane.showMessageDialog(this, "Your comment has been submitted.");
 				comment.setText("");
+				dq.getCurrentDebate();
+				populateComments(d.getPosts());
 			} catch (Exception exception) {
 				JOptionPane.showMessageDialog(this, "An error occurred. Your comment was not submitted", "Error", JOptionPane.ERROR_MESSAGE);
 			}
-			populateComments(d.getPosts());
 		}
 	}
 	
 	private void populateComments(ArrayList<Post> commentArray) {
 		for (int i = 0; i < commentArray.size(); i++) {
 			if (!commentArray.get(i).isHidden()) {
-				commentList.add(new Comment(commentArray.get(i)));
+				if (i >= this.commentArray.size() - 1) {
+					commentList.add(new Comment(commentArray.get(i)));
+				}
+				System.out.println("i: " + i + " size: " + this.commentArray.size());
 			}
 		}
 		this.commentArray = commentArray;
