@@ -16,7 +16,7 @@ import objects.User.UserType;
 public class UserQuery implements DFDatabaseCallbackDelegate{
 	private JsonObject jsonObject;
 	private DFDataUploaderReturnStatus uploadSuccess;
-	private boolean getUserReturn;
+	private boolean getUserReturn, getUserExistsReturn;
 	private boolean verifyUserLoginReturn;
 	private String bufferString;
 	
@@ -24,6 +24,18 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		DFSQL dfsql = new DFSQL();
 		String[] selectedRows = {"userID", "privilegeLevel", "banned"};
 		getUserReturn = true;
+		try {
+			dfsql.select(selectedRows).from("User").whereEquals("userID", username);
+			DFDatabase.defaultDatabase.execute(dfsql, this);
+		} catch (DFSQLError e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	public void doesUserExist(String username) {
+		DFSQL dfsql = new DFSQL();
+		String[] selectedRows = {"userID"};
+		getUserExistsReturn = true;
 		try {
 			dfsql.select(selectedRows).from("User").whereEquals("userID", username);
 			DFDatabase.defaultDatabase.execute(dfsql, this);
@@ -58,10 +70,21 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 			}
 			if(databasePassword.equals(bufferString)){DFNotificationCenter.defaultCenter.post(UIStrings.success, Boolean.TRUE);System.out.println("verifylogin returned success");}
 			else {DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);System.out.println("verifylogin returned fail cause passwords don't match");}
+		} else if (getUserExistsReturn) {
+			String usernameReceived = null;
+			try {
+				 usernameReceived = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("userID").getAsString();
+			}catch (NullPointerException e2){
+				DFNotificationCenter.defaultCenter.post(UIStrings.exists, false);				
+			}
+			if(usernameReceived != null){
+				DFNotificationCenter.defaultCenter.post(UIStrings.exists, true);
+			}
 		}
 		
 		getUserReturn = false;
 		verifyUserLoginReturn = false;
+		getUserExistsReturn = false;
 		bufferString = null;
 	}
 	
@@ -221,12 +244,13 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		UserQuery userQuery = new UserQuery();
 		//System.out.println(userQuery.getUserBanStatus("naveenTest1"));
 		//userQuery.addNewUser("naveenTest1", "dasdsada", UserType.USER);
-		//userQuery.modifyUserPriv("testUser", UserType.USER);
-		try{
+		//userQuery.modifyUserPriv("testUser", UserType.USER);	
+		userQuery.doesUserExist("testuser");
+		/*try{
 			System.out.println(userQuery.getUserPriv("naveenTest1"));
 		} catch (InvalidUserException e){
 			System.out.println("Exception caught");
-		}
+		}*/
 		//System.out.println(userQuery.verifyUserLogin("naveenTest", "dasdsada"));
 		//System.out.println(userQuery.getUserPriv("testUser1212"));
 		//userQuery.getUser("testuser");
