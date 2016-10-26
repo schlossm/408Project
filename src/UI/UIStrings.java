@@ -22,7 +22,9 @@ public class UIStrings
 
 
 	//TIME MANAGER CONSTANTS
-	public static final String fiveMinutesHavePassed = "Five Minutes Have Passed";
-	public static final String tenMinutesHavePassed = "Ten Minutes Have Passed";
-	public static final String twentyFiveMinutesHavePassed = "Twenty Five Minutes Have Passed";
+	public static final String fiveMinutesHavePassedNotification        = "Five Minutes Have Passed";
+	public static final String tenMinutesHavePassedNotification         = "Ten Minutes Have Passed";
+	public static final String twentyFiveMinutesHavePassedNotification  = "Twenty Five Minutes Have Passed";
+	public static final String oneHourHasPassedNotification             = "One Hour Has Passed";
+	public static final String newDayNotification                       = "Midnight Has Passed";
 }
