@@ -20,6 +20,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import static database.DFDatabase.print;
 import static database.DFDatabase.queue;
 
 @SuppressWarnings("unchecked")
@@ -45,7 +46,6 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		getCurrentDebateReturn = true;
 		try {
 			dfsql.select(selectedRows).from("Debate").whereCustom(new WhereStruct[]{new WhereStruct(DFSQLConjunctionClause.and, DFSQLConjunctionClause.lessThan, new DFSQLClauseStruct("startDate", dateToStringConverter(currentDate))), new WhereStruct(DFSQLConjunctionClause.none, DFSQLConjunctionClause.greaterThan, new DFSQLClauseStruct("endDate", dateToStringConverter(currentDate)))});
-			System.out.println(dfsql.formattedSQLStatement());
 			DFDatabase.defaultDatabase.execute(dfsql, this);
 			} catch (DFSQLError e1) {
 			e1.printStackTrace();
@@ -59,7 +59,6 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		archivedDebates = new HashMap<>();
 		try {
 			dfsql.select(selectedRows).from("Debate");
-			System.out.println(dfsql.formattedSQLStatement());
 			DFDatabase.defaultDatabase.execute(dfsql, this);
 			} catch (DFSQLError e1) {
 			e1.printStackTrace();
@@ -85,7 +84,6 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		encryptDebateAttributes();
 		try {
 			dfsql.select("MAX(debateID)").from("Debate");
-			System.out.println(dfsql.formattedSQLStatement());
 			DFDatabase.defaultDatabase.execute(dfsql, this);
 			} catch (DFSQLError e1) {
 			e1.printStackTrace();
@@ -128,9 +126,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		// TODO Auto-generated method stub
 		this.jsonObject = null;
 		if(error != null){
-			System.out.println(error.code);
-			System.out.println(error.description);
-			System.out.println(error.userInfo);
+			DFDatabase.print(error.toString());
 			this.jsonObject = null;
 		} else {
 			this.jsonObject = jsonObject;
@@ -154,7 +150,6 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 			DFNotificationCenter.defaultCenter.register(this, UIStrings.postsReturned);
 			postQuery.getDebatePosts(debateId);
 		} else if (getArchivedDebatesReturn) {
-			System.out.println(jsonObject.get("Data").getAsJsonArray().size());
 			try {
 				for(int i = 0; i < jsonObject.get("Data").getAsJsonArray().size(); i++){
 					debateId = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("debateID").getAsInt();
@@ -202,7 +197,6 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		java.util.Date startingDate = stringToDateConverter(startDate);
 		java.util.Date endingDate = stringToDateConverter(endDate);
 		java.util.Date currentDate = calobj.getTime();
-		System.out.println(startingDate + " "+ endingDate+ " " + currentDate);
 		if(currentDate.before(startingDate)){
 			return false;
 		} else if(currentDate.after(endingDate)) {
@@ -233,7 +227,6 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		DFSQL dfsql = new DFSQL();
 		try {
 			dfsql.insert("Debate", values, rows);
-			System.out.println(dfsql.formattedSQLStatement());
 			DFDatabase.defaultDatabase.execute(dfsql, this);
 			} catch (DFSQLError e1) {
 			e1.printStackTrace();
@@ -259,20 +252,13 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 	public void uploadStatus(DFDataUploaderReturnStatus success, DFError error) {
 		// TODO Auto-generated method stub
 		if(success == DFDataUploaderReturnStatus.success){
-			System.out.println("success uploading this");
 			DFNotificationCenter.defaultCenter.post(UIStrings.debateCreated, Boolean.TRUE);
 		} else if (success == DFDataUploaderReturnStatus.failure) {
-			System.out.println("Failure uploading this");
 			DFNotificationCenter.defaultCenter.post(UIStrings.debateCreated, Boolean.FALSE);
 		}
 		else if(success == DFDataUploaderReturnStatus.error){
-			System.out.println("Error uploading this");
-			System.out.println(error.code);
-			System.out.println(error.description);
-			System.out.println(error.userInfo);
+			print(error.toString());
 			DFNotificationCenter.defaultCenter.post(UIStrings.debateCreated, Boolean.FALSE);
-		} else {
-			System.out.println("I have no clue!");
 		}
 	}
 
@@ -294,8 +280,6 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 			constructCurrentDebateWithPosts(debatePosts);
 		}else if (notificationName.equals(UIStrings.debateReturned)) {
 			Debate debateObject = (Debate)userData;
-			System.out.println(debateObject.getTitle());
-			System.out.println(debateObject.isOpen());
 		} /*else if (notificationName.equals(UIStrings.postsReturned)) {
 			System.out.println("testing posts and comes out safe.");
 			if (userData != null) {
@@ -313,14 +297,6 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		boolean isCurrentDebate = checkIfCurrentDebate(debateStartDate, debateEndDate);
 		Debate debate = new Debate(debateTitle, debatePosts, isCurrentDebate, debateText, stringToDateConverter(debateStartDate), stringToDateConverter(debateEndDate), debateId);
 		DFNotificationCenter.defaultCenter.post(UIStrings.debateReturned, debate);
-	    System.out.println();
-	    System.out.println(debate.getId());
-	    System.out.println(debate.getTitle());
-		System.out.println(debate.getText());
-	    System.out.println(debate.getPosts());
-		System.out.println(debate.getStartDate());
-		System.out.println(debate.getEndDate());
-		System.out.println();
 		resetAttributes();
 	}
 	
@@ -328,7 +304,6 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		if(debateIdCounter > maxDebateId){
 			debateIdCounter = 1; return;
 		}
-		System.out.println(debateIdCounter + "What is going one~DSAFDSGVASDFGDSG");
 		Debate debateAppend = archivedDebates.get(debateIdCounter);
 		 debateAppend.setPosts(debatePosts);
 		 archivedDebates.replace(debateIdCounter, debateAppend);
