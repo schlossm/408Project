@@ -1,8 +1,9 @@
 package objects;
+import JSON_translation.PostQuery;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import JSON_translation.*;
 
 public class Post implements Serializable
 {
@@ -13,15 +14,15 @@ public class Post implements Serializable
 	private int numReports;
 	private Boolean isFlagged; //
 	private int postID; //
-	static PostQuery jsonQuery;
+	private static PostQuery jsonQuery;
 	// Utilized by PostQuery class
 	public  Post(int postID, String message, String username, String timeStamp, int isFlagged, int isHidden){
 		this.username = username;
 		this.message = message;
 		this.timeStamp = timeStamp;
-		this.isHidden =  isHidden == 1 ? true : false;
+		this.isHidden = isHidden == 1;
 		this.postID = postID;
-		this.isFlagged = isFlagged == 1 ? true : false;
+		this.isFlagged = isFlagged == 1;
 		this.numReports = 0;
 	}
 	
@@ -42,9 +43,8 @@ public class Post implements Serializable
 	}
 
 	public Post createPost(User user, String text){
-		Post newPost = new Post(user.getUsername(), text);
 
-		return newPost;
+		return new Post(user.getUsername(), text);
 	}
 
 	public String getPoster(){
@@ -58,7 +58,7 @@ public class Post implements Serializable
 	public String getTimestamp(){
 		return this.timeStamp;
 	}
-	public String makeTimestamp(){
+	private String makeTimestamp(){
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		 this.timeStamp = dateFormat.format(new Date());
 		 return timeStamp;
@@ -66,7 +66,7 @@ public class Post implements Serializable
 	
 	public Boolean hidePost() {
 		this.isHidden = true;
-		return this.isHidden;
+		return true;
 		/*
 		 * TODO: Update the UI on if post was hidden
 		 */
@@ -74,7 +74,7 @@ public class Post implements Serializable
 	
 	public Boolean showPost() {
 		this.isHidden  = false;
-		return this.isHidden;
+		return false;
 		/*
 		 * TODO: Update the UI on if post was shown
 		 */

@@ -34,20 +34,19 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 	
 	private void returnHandler(){
 		if(getUserReturn){
-			String usernameRecieved = null;
+			String usernameReceived = null;
 			boolean isBanned;
 			int isBannedInt = 0, userPrivInt = 0;
 			try {
-				 usernameRecieved = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("userID").getAsString();
+				 usernameReceived = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("userID").getAsString();
 				 isBannedInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsInt();
 				 userPrivInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel").getAsInt();
 			}catch (NullPointerException e2){
 				DFNotificationCenter.defaultCenter.post(UIStrings.returned, null);				
 			}
-			 if(isBannedInt == 0){isBanned = false;}
-			 else {isBanned = true;}
+			isBanned = isBannedInt != 0;
 			 UserType userType = userPriviligeIntToEnumConverter(userPrivInt);
-			 User user = new User(usernameRecieved, userType, isBanned);
+			 User user = new User(usernameReceived, userType, isBanned);
 			 DFNotificationCenter.defaultCenter.post(UIStrings.returned, user);
 		} else if (verifyUserLoginReturn) {
 			String databasePassword = "";
@@ -58,7 +57,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 				System.out.println("verifylogin returned nothing");
 			}
 			if(databasePassword.equals(bufferString)){DFNotificationCenter.defaultCenter.post(UIStrings.success, Boolean.TRUE);System.out.println("verifylogin returned success");}
-			else {DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);System.out.println("verifylogin returned fail cos paswords dont match");}
+			else {DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);System.out.println("verifylogin returned fail cause passwords don't match");}
 		}
 		
 		getUserReturn = false;
@@ -76,11 +75,10 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		} catch (NullPointerException e2){
-			throw new InvalidUserException("Invalid User Supplied. User is not in database. Please check the username carefully");
+			throw new InvalidUserException();
 		}
-		
-		if(isBannedInt == 0){isBanned = false;}
-		else {isBanned = true;}
+
+		isBanned = isBannedInt != 0;
 		return isBanned;
 	}
 		
@@ -93,14 +91,14 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		} catch (NullPointerException e2){
-			throw new InvalidUserException("Invalid User Supplied. User is not in database. Please check the username carefully");
+			throw new InvalidUserException();
 		}
 		
 		return userPriviligeIntToEnumConverter(userTypeInt);
 	}
 	
 	public class InvalidUserException extends Exception{
-		public InvalidUserException(String message) {super(message);}
+		InvalidUserException() {super("Invalid User Supplied. User is not in database. Please check the username carefully");}
 	}
 	
 	
@@ -116,10 +114,8 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 			DFDatabase.defaultDatabase.execute(dfsql, this);
 			} catch (DFSQLError e1) {
 			e1.printStackTrace();
-			isaddSuccess = false;
 		}
-		if(uploadSuccess == DFDataUploaderReturnStatus.success){ isaddSuccess = true; }
-		else{isaddSuccess = false;}
+		isaddSuccess = uploadSuccess == DFDataUploaderReturnStatus.success;
 		/*
 		if(isaddSuccess){
 			return getUser(userName);
