@@ -1,5 +1,6 @@
 package UIKit;
 
+import UI.UIStrings;
 import database.DFDatabase;
 
 import java.util.ArrayList;
@@ -94,6 +95,25 @@ public class DFNotificationCenter
 	 */
 	public void post(String notificationName, Object userData)
 	{
+		if (Objects.equals(notificationName, UIStrings.oneHourHasPassedNotification) ||
+			    Objects.equals(notificationName, UIStrings.tenMinutesHavePassedNotification) ||
+			    Objects.equals(notificationName, UIStrings.twentyFiveMinutesHavePassedNotification) ||
+			    Objects.equals(notificationName, UIStrings.fiveMinutesHavePassedNotification) ||
+			    Objects.equals(notificationName, UIStrings.newDayNotification))
+		{
+			StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+			boolean foundTimeManager = false;
+			for (StackTraceElement element : stackTraceElements)
+			{
+				if (element.getClassName().contains("TimeManager"))
+					foundTimeManager = true;
+			}
+			if (!foundTimeManager)
+			{
+				print("Warning! " + notificationName + " is reserved for the TimeManager class.  Any other use of this notification will be disregarded in order to prevent incorrect timing.");
+				return;
+			}
+		}
 		observers.stream().filter(observer -> Objects.equals(observer.notificationName, notificationName)).forEach(observer -> observer.observer.performActionFor(notificationName, userData));
 	}
 }

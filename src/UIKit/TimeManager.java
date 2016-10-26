@@ -5,41 +5,72 @@ import UI.UIStrings;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-/**
- * Created by michaelschloss on 10/24/16.
- */
+import static database.DFDatabase.debugLog;
+
 @SuppressWarnings("InfiniteLoopStatement")
 public class TimeManager implements Runnable
 {
 	private final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("America/Indianapolis"));
-	private int startMillisecond = calendar.get(Calendar.MILLISECOND);
+	private long startMillisecond = calendar.getTimeInMillis();
 	private int oldDay = calendar.get(Calendar.DAY_OF_YEAR);
+	private boolean justFiredOffNotification = false;
 
 	private void listenForTimeChanges()
 	{
 		while (true)
 		{
-			if (calendar.get(Calendar.DAY_OF_YEAR) != oldDay)
+			int thisDay = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+			long thisTime = Calendar.getInstance().getTimeInMillis();
+			if (thisDay != oldDay)
 			{
-				oldDay = calendar.get(Calendar.DAY_OF_YEAR);
-				startMillisecond = calendar.get(Calendar.MILLISECOND);
-				DFNotificationCenter.defaultCenter.post(UIStrings.newDayNotification, null);
+				if (!justFiredOffNotification)
+				{
+					justFiredOffNotification = true;
+					debugLog("A new day has begun.  Firing notification and resetting time.");
+					oldDay = thisDay;
+					startMillisecond = thisTime;
+					DFNotificationCenter.defaultCenter.post(UIStrings.newDayNotification, null);
+				}
 			}
-			else if ((calendar.get(Calendar.MILLISECOND) - startMillisecond) % 60000 == 0)
+			else if ((thisTime - startMillisecond) % 3600000 == 0)
 			{
-				DFNotificationCenter.defaultCenter.post(UIStrings.oneHourHasPassedNotification, null);
+				if (!justFiredOffNotification)
+				{
+					justFiredOffNotification = true;
+					debugLog("One hour has passed.  Ding!");
+					DFNotificationCenter.defaultCenter.post(UIStrings.oneHourHasPassedNotification, null);
+				}
 			}
-			else if ((calendar.get(Calendar.MILLISECOND) - startMillisecond) % 25000 == 0)
+			else if ((thisTime - startMillisecond) % 1500000 == 0)
 			{
-				DFNotificationCenter.defaultCenter.post(UIStrings.twentyFiveMinutesHavePassedNotification, null);
+				if (!justFiredOffNotification)
+				{
+					justFiredOffNotification = true;
+					debugLog("25 minutes have passed! Dong!");
+					DFNotificationCenter.defaultCenter.post(UIStrings.twentyFiveMinutesHavePassedNotification, null);
+				}
 			}
-			else if ((calendar.get(Calendar.MILLISECOND) - startMillisecond) % 10000 == 0)
+			else if ((thisTime - startMillisecond) % 600000 == 0)
 			{
-				DFNotificationCenter.defaultCenter.post(UIStrings.tenMinutesHavePassedNotification, null);
+				if (!justFiredOffNotification)
+				{
+					justFiredOffNotification = true;
+					debugLog("10 minutes has passed!");
+					DFNotificationCenter.defaultCenter.post(UIStrings.tenMinutesHavePassedNotification, null);
+				}
 			}
-			else if ((calendar.get(Calendar.MILLISECOND) - startMillisecond) % 5000 == 0)
+			else if ((thisTime - startMillisecond) % 300000 == 0)
 			{
-				DFNotificationCenter.defaultCenter.post(UIStrings.fiveMinutesHavePassedNotification, null);
+				if (!justFiredOffNotification)
+				{
+					justFiredOffNotification = true;
+					debugLog("5 minutes has passed!");
+					DFNotificationCenter.defaultCenter.post(UIStrings.fiveMinutesHavePassedNotification, null);
+				}
+			}
+			else
+			{
+				justFiredOffNotification = false;
 			}
 		}
 	}
