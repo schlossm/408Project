@@ -1,5 +1,8 @@
 import UI.Frame;
 import UIKit.TimeManager;
+import database.DFDatabase;
+
+import java.util.Objects;
 
 import static database.DFDatabase.queue;
 
@@ -13,6 +16,14 @@ public class Main
 {
 	public static void main(String[] args)
 	{
+		if (args.length > 0)
+		{
+			if (Objects.equals(args[0], "1") && Objects.equals(args[0], "0"))
+			{
+				DFDatabase.defaultDatabase.debug = Integer.valueOf(args[0]);
+			}
+		}
+
 		new Frame("School of Thought");
 
 		new Thread(new TimeManager()).start();

@@ -10,17 +10,19 @@ import static database.DFDatabase.debugLog;
 @SuppressWarnings("InfiniteLoopStatement")
 public class TimeManager implements Runnable
 {
-	private final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("America/Indianapolis"));
-	private long startMillisecond = calendar.getTimeInMillis();
-	private int oldDay = calendar.get(Calendar.DAY_OF_YEAR);
-	private boolean justFiredOffNotification = false;
+	private final   Calendar calendar           = Calendar.getInstance(TimeZone.getTimeZone("America/Indianapolis"));
+	private long    startMillisecond            = calendar.getTimeInMillis();
+	private int     oldDay                      = calendar.get(Calendar.DAY_OF_YEAR);
+	private boolean justFiredOffNotification    = false;
 
 	private void listenForTimeChanges()
 	{
 		while (true)
 		{
-			int thisDay = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
-			long thisTime = Calendar.getInstance().getTimeInMillis();
+			Calendar tempCalendar   = Calendar.getInstance(TimeZone.getTimeZone("America/Indianapolis"));
+			int      thisDay        = tempCalendar.get(Calendar.DAY_OF_YEAR);
+			long     thisTime       = tempCalendar.getTimeInMillis();
+
 			if (thisDay != oldDay)
 			{
 				if (!justFiredOffNotification)
@@ -37,7 +39,7 @@ public class TimeManager implements Runnable
 				if (!justFiredOffNotification)
 				{
 					justFiredOffNotification = true;
-					debugLog("One hour has passed.  Ding!");
+					debugLog("One hour has passed!");
 					DFNotificationCenter.defaultCenter.post(UIStrings.oneHourHasPassedNotification, null);
 				}
 			}
@@ -46,7 +48,7 @@ public class TimeManager implements Runnable
 				if (!justFiredOffNotification)
 				{
 					justFiredOffNotification = true;
-					debugLog("25 minutes have passed! Dong!");
+					debugLog("25 minutes have passed!");
 					DFNotificationCenter.defaultCenter.post(UIStrings.twentyFiveMinutesHavePassedNotification, null);
 				}
 			}
