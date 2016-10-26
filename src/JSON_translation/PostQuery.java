@@ -12,6 +12,8 @@ import database.DFSQL.DFSQLError;
 import database.WebServer.DFDataUploaderReturnStatus;
 import objects.Post;
 
+import java.util.ArrayList;
+
 public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCenterDelegate {
 	private JsonObject jsonObject;
 
@@ -172,7 +174,6 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 
 	@Override
 	public void uploadStatus(DFDataUploaderReturnStatus success, DFError error) {
-		DFDataUploaderReturnStatus uploadSuccess = null;
 		if(success == DFDataUploaderReturnStatus.success){
 			System.out.println("success uploading this");
 		} else if (success == DFDataUploaderReturnStatus.failure) {
@@ -186,16 +187,14 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 		} else {
 			System.out.println("I have no clue!");
 		}
-		uploadSuccess = success;
 	}
 	
 	@Override
-	public void performActionFor(String notificationName, Object userData) {
+	@SuppressWarnings("unchecked") public void performActionFor(String notificationName, Object userData) {
 		System.out.println("**** PERFORM ACTION FOR WAS CALLED ****");
 		if(notificationName.equals(UIStrings.postsReturned)){
 			ArrayList<Post> debatePosts;
 			if(userData == null) {
-				debatePosts = null;
 				System.out.println("**** RETURNED USERDATA IS NULL ****");
 			} else {
 				debatePosts = (ArrayList<Post>)userData;
@@ -204,7 +203,7 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 		}
 	}
 
-	public void testPostQuery(int debateId){
+	@SuppressWarnings("unused") public void testPostQuery(int debateId){
 		PostQuery postQuery = new PostQuery();
 		DFNotificationCenter.defaultCenter.register(this, UIStrings.postsReturned);
 		postQuery.getDebatePosts(debateId);

@@ -34,11 +34,11 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 	
 	private void returnHandler(){
 		if(getUserReturn){
-			String usernameRecieved = null;
+			String usernameReceived = null;
 			boolean isBanned;
 			int isBannedInt = 0, userPrivInt = 0;
 			try {
-				 usernameRecieved = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("userID").getAsString();
+				 usernameReceived = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("userID").getAsString();
 				 isBannedInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsInt();
 				 userPrivInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel").getAsInt();
 			}catch (NullPointerException e2){
@@ -46,7 +46,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 			}
 			isBanned = isBannedInt != 0;
 			 UserType userType = userPriviligeIntToEnumConverter(userPrivInt);
-			 User user = new User(usernameRecieved, userType, isBanned);
+			 User user = new User(usernameReceived, userType, isBanned);
 			 DFNotificationCenter.defaultCenter.post(UIStrings.returned, user);
 		} else if (verifyUserLoginReturn) {
 			String databasePassword = "";
@@ -57,7 +57,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 				System.out.println("verifylogin returned nothing");
 			}
 			if(databasePassword.equals(bufferString)){DFNotificationCenter.defaultCenter.post(UIStrings.success, Boolean.TRUE);System.out.println("verifylogin returned success");}
-			else {DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);System.out.println("verifylogin returned fail cos paswords dont match");}
+			else {DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);System.out.println("verifylogin returned fail cause passwords don't match");}
 		}
 		
 		getUserReturn = false;
@@ -98,7 +98,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 	}
 	
 	public class InvalidUserException extends Exception{
-		public InvalidUserException() {super("Invalid User Supplied. User is not in database. Please check the username carefully");}
+		InvalidUserException() {super("Invalid User Supplied. User is not in database. Please check the username carefully");}
 	}
 	
 	

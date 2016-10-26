@@ -1,6 +1,8 @@
 package JSON_translation;
 
 import UI.UIStrings;
+import UIKit.DFNotificationCenter;
+import UIKit.DFNotificationCenterDelegate;
 import UIKit.LocalStorage;
 import com.google.gson.JsonObject;
 import database.DFDatabase;
@@ -21,7 +23,8 @@ import java.util.HashMap;
 import static database.DFDatabase.queue;
 
 @SuppressWarnings("unchecked")
-public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCenterDelegate{
+public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCenterDelegate
+{
 	private  int debateIdCounter = 0;
 	private  int maxDebateId = 0;
 	private  int debateId = 0;
@@ -31,7 +34,6 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 	private  String debateEndDate;
 	private  ArrayList<Post> debatePosts;
 	private JsonObject jsonObject;
-	private DFDataUploaderReturnStatus uploadSuccess;
 	private boolean getCurrentDebateReturn, getMaxDebateId, getArchivedDebatesReturn;
 	private HashMap<Integer, Debate> archivedDebates;
 	
@@ -163,7 +165,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 					decryptDebateAttributes();
 					boolean isCurrentDebate = checkIfCurrentDebate(debateStartDate, debateEndDate);
 					Debate debate = new Debate(debateTitle, null, isCurrentDebate, debateText, stringToDateConverter(debateStartDate), stringToDateConverter(debateEndDate), debateId);
-					archivedDebates.put(Integer.valueOf(debateId), debate);
+					archivedDebates.put(debateId, debate);
 				}
 				getPostsForArchivedDebates();
 				//resetBooleans();
@@ -226,7 +228,6 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 	}
 	
 	private void uploadNewDebateToDatabase(int debateId){
-		boolean isaddSuccess;
 		String[] rows = {"debateID", "title", "text", "startDate", "endDate"};
 		String[] values = {String.valueOf(debateId), debateTitle, debateText, debateStartDate, debateEndDate};
 		DFSQL dfsql = new DFSQL();
@@ -328,7 +329,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 			debateIdCounter = 1; return;
 		}
 		System.out.println(debateIdCounter + "What is going one~DSAFDSGVASDFGDSG");
-		Debate debateAppend = archivedDebates.get(Integer.valueOf(debateIdCounter));
+		Debate debateAppend = archivedDebates.get(debateIdCounter);
 		 debateAppend.setPosts(debatePosts);
 		 archivedDebates.replace(debateIdCounter, debateAppend);
 		 debateIdCounter++;
@@ -354,13 +355,13 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		debateText = DFDatabase.defaultDatabase.decryptString(debateText);
 	}
 
-	public void testPostQuery(int debateId){
+	void testPostQuery(int debateId){
 		PostQuery postQuery = new PostQuery();
 		DFNotificationCenter.defaultCenter.register(this, UIStrings.postsReturned);
 		postQuery.getDebatePosts(debateId);
 	}
 	
-	private void printHashMap(HashMap<Integer, Debate> debates){
+	@SuppressWarnings("unused") private void printHashMap(HashMap<Integer, Debate> debates){
 		for (HashMap.Entry<Integer, Debate> entry : debates.entrySet()) {
 		    Integer key = entry.getKey();
 		    Debate debate = entry.getValue();
