@@ -11,7 +11,7 @@ public class Post implements Serializable
 	private String timeStamp;
 	private String message;
 	private Boolean  isHidden;
-	private int numReports;
+	public int numReports;
 	private Boolean isFlagged; //
 	private int postID; //
 	private static PostQuery jsonQuery;
