@@ -30,7 +30,7 @@ class DFNotificationCenterObject
 {
 	public static final DFNotificationCenter defaultCenter = new DFNotificationCenter();
 	
-	private ArrayList<DFNotificationCenterObject> observers = new ArrayList<>();
+	private final ArrayList<DFNotificationCenterObject> observers = new ArrayList<>();
 	private DFNotificationCenter() { }
 
 	/**
@@ -50,21 +50,12 @@ class DFNotificationCenterObject
 	}
 
 	/**
-	 *	@param observer The object that was receiving the notification.  This object must conform to the DFNotificationCenterDelegate interface
-	 *  @param notificationName The notification name the object was listening for.  All other notifications will be ignored
-	 */
-	public void remove(DFNotificationCenterDelegate observer, String notificationName)
-	{
-		((ArrayList<DFNotificationCenterObject>) observers.clone()).stream().filter(object -> object.observer == observer && Objects.equals(object.notificationName, notificationName)).forEach(object -> observers.remove(object));
-	}
-
-	/**
 	 * 	A convenience method for removing all instances of an Object
 	 * 	@param observer The object that wishes to be removed
 	 */
 	public void remove(DFNotificationCenterDelegate observer)
 	{
-		((ArrayList<DFNotificationCenterObject>) observers.clone()).stream().filter(object -> object.observer == observer).forEach(object -> observers.remove(object));
+		((ArrayList<DFNotificationCenterObject>) observers.clone()).stream().filter(object -> object.observer == observer).forEach(observers::remove);
 	}
 
 	/**

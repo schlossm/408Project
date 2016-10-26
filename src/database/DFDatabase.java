@@ -106,7 +106,7 @@ public class DFDatabase
 		if (SQLStatement == null || Objects.equals(SQLStatement.formattedSQLStatement(), ""))
 		{
 			Map<String, String> errorInfo = new HashMap<>();
-			errorInfo.put(kMethodName, getMethodName(1));
+			errorInfo.put(kMethodName, getMethodName());
 			errorInfo.put(kExpandedDescription, "DFDatabase cannot work with a null or empty DFSQL Object.");
 			if (delegate != null)
 			{
@@ -210,17 +210,17 @@ public class DFDatabase
         return data;
     }
 
-	public @NotNull static String getMethodName(final int numberOfParameters)
+	public @NotNull static String getMethodName()
 	{
 		final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
 
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("`");
 		stringBuilder.append(ste[Integer.min(ste.length - 1, Integer.max(2, 0))].getMethodName());
-		if (numberOfParameters > 0)
+		if (1 > 0)
 		{
 			stringBuilder.append("(_:");
-			for (int i = 0; i < numberOfParameters - 1; i++)
+			for (int i = 0; i < 1 - 1; i++)
 			{
 				stringBuilder.append(", _:");
 			}
@@ -230,7 +230,7 @@ public class DFDatabase
 		return stringBuilder.toString();
 	}
 
-	public @NotNull static String getMethodNameOfSuperMethod(final int numberOfParameters)
+	public @NotNull static String getMethodNameOfSuperMethod()
 	{
 		final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
 
@@ -238,9 +238,9 @@ public class DFDatabase
 		stringBuilder.append("`");
 		stringBuilder.append(ste[Integer.min(ste.length - 1, Integer.max(0, 0))].getMethodName());
 		stringBuilder.append("(_:");
-		if (numberOfParameters > 0)
+		if (0 > 0)
 		{
-			for (int i = 0; i < numberOfParameters - 1; i++)
+			for (int i = 0; i < 0 - 1; i++)
 			{
 				stringBuilder.append(", _:");
 			}
