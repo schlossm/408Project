@@ -72,7 +72,6 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 		
 		try {
 			dfsql.update("Comment", "flagged", String.valueOf(post.getNumFlags())).whereEquals("postID", String.valueOf(postID));
-			DFDatabase.defaultDatabase.delegate = this;
 			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
@@ -88,7 +87,6 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 		
 		try {
 			dfsql.update("Comment", "isHidden", String.valueOf(isHidden)).whereEquals("postID", String.valueOf(postID));
-			DFDatabase.defaultDatabase.delegate = this;
 			DFDatabase.defaultDatabase.execute(dfsql, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
@@ -162,7 +160,7 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 		try {
 			dfsql2.insert("DebateComment", values2, rows2);
 			System.out.println(dfsql2.formattedSQLStatement());
-			DFDatabase.defaultDatabase.execute(dfsql2);
+			DFDatabase.defaultDatabase.execute(dfsql2, this);
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		}
