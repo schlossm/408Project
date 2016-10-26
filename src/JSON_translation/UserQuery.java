@@ -44,8 +44,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 			}catch (NullPointerException e2){
 				DFNotificationCenter.defaultCenter.post(UIStrings.returned, null);				
 			}
-			 if(isBannedInt == 0){isBanned = false;}
-			 else {isBanned = true;}
+			isBanned = isBannedInt != 0;
 			 UserType userType = userPriviligeIntToEnumConverter(userPrivInt);
 			 User user = new User(usernameRecieved, userType, isBanned);
 			 DFNotificationCenter.defaultCenter.post(UIStrings.returned, user);
@@ -76,11 +75,10 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		} catch (NullPointerException e2){
-			throw new InvalidUserException("Invalid User Supplied. User is not in database. Please check the username carefully");
+			throw new InvalidUserException();
 		}
-		
-		if(isBannedInt == 0){isBanned = false;}
-		else {isBanned = true;}
+
+		isBanned = isBannedInt != 0;
 		return isBanned;
 	}
 		
@@ -93,14 +91,14 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		} catch (NullPointerException e2){
-			throw new InvalidUserException("Invalid User Supplied. User is not in database. Please check the username carefully");
+			throw new InvalidUserException();
 		}
 		
 		return userPriviligeIntToEnumConverter(userTypeInt);
 	}
 	
 	public class InvalidUserException extends Exception{
-		public InvalidUserException(String message) {super(message);}
+		public InvalidUserException() {super("Invalid User Supplied. User is not in database. Please check the username carefully");}
 	}
 	
 	
@@ -116,10 +114,8 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 			DFDatabase.defaultDatabase.execute(dfsql, this);
 			} catch (DFSQLError e1) {
 			e1.printStackTrace();
-			isaddSuccess = false;
 		}
-		if(uploadSuccess == DFDataUploaderReturnStatus.success){ isaddSuccess = true; }
-		else{isaddSuccess = false;}
+		isaddSuccess = uploadSuccess == DFDataUploaderReturnStatus.success;
 		/*
 		if(isaddSuccess){
 			return getUser(userName);

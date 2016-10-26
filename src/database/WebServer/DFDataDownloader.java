@@ -27,7 +27,7 @@ class DFDataDownloader
     void downloadDataWith(DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
 	{
         debugLog(SQLStatement.formattedSQLStatement());
-        String calleeMethod = getMethodNameOfSuperMethod(0);
+        String calleeMethod = getMethodNameOfSuperMethod();
 		new Thread(() ->
         {
             try
