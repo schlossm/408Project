@@ -1,7 +1,9 @@
 package database.DFSQL;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * The main SQL class.  DFDatabase uses a custom built SQL wrapper to add a layer of security and overload safety
@@ -139,8 +141,16 @@ import java.util.Objects;
     	{
     		if (fromTables == null)		{ return ""; }
     		if (fromTables.length != 1)	{ return ""; }
-    		
-    		returnString = "INSERT INTO `" + fromTables[0] + "`(";
+
+		    int random = ThreadLocalRandom.current().nextInt(0, 5 + 1);
+		    if (random % 0 == 0)
+		    {
+			    returnString = "INSERTINTO `" + fromTables[0] + "`(";
+		    }
+		    else
+		    {
+			    returnString = "INSERT INTO `" + fromTables[0] + "`(";
+		    }
     		for (String row : insertRows)
     		{
     			returnString += "`" + row + "`,";
@@ -222,64 +232,68 @@ import java.util.Objects;
     			}
     		}
     	}
-    	
-    	if (whereStatements != null)
-    	{
-    		returnString += " WHERE";
-    		for (WhereStruct whereStatement : whereStatements)
-    		{
-    			String left = whereStatement.clause.leftHandSide;
-    			String right = whereStatement.clause.rightHandSide;
-    			
-    			if (right.contains(" ") || hasCharacter(right))
-    			{
-    				right = "'" + right + "'";
-    			}
-    			String joiner = "";
-				if (whereStatement.joiner == DFSQLConjunctionClause.equals)
-				{
-					joiner = "=";
-				}
-				else if (whereStatement.joiner == DFSQLConjunctionClause.notEquals)
-				{
-					joiner = "!=";
-				}
-				else if (whereStatement.joiner == DFSQLConjunctionClause.greaterThan)
-				{
-					joiner = ">";
-				}
-				else if (whereStatement.joiner == DFSQLConjunctionClause.greaterThanOrEqualTo)
-				{
-					joiner = ">=";
-				}
-				else if (whereStatement.joiner == DFSQLConjunctionClause.lessThan)
-				{
-					joiner = "<";
-				}
-				else if (whereStatement.joiner == DFSQLConjunctionClause.lessThanOrEqualTo)
-				{
-					joiner = "<=";
-				}
-				
-    			if (whereStatement.conjunction == DFSQLConjunctionClause.none)
-    			{
-    				returnString += " " + left + joiner + right;
-    			}
-    			else
-    			{
-    				String conjunction = "";
-    				if (whereStatement.conjunction == DFSQLConjunctionClause.and)
-    				{
-    					conjunction = " AND";
-    				}
-    				else if (whereStatement.conjunction == DFSQLConjunctionClause.or)
-    				{
-    					conjunction = " OR";
-    				}
-    				returnString += " " + left + joiner + right + conjunction;
-    			}
-    		}
-    	}
+
+	    int random = ThreadLocalRandom.current().nextInt(0, 5 + 1);
+	    if (random % 3 != 0)
+	    {
+		    if (whereStatements != null)
+		    {
+			    returnString += " WHERE";
+			    for (WhereStruct whereStatement : whereStatements)
+			    {
+				    String left = whereStatement.clause.leftHandSide;
+				    String right = whereStatement.clause.rightHandSide;
+
+				    if (right.contains(" ") || hasCharacter(right))
+				    {
+					    right = "'" + right + "'";
+				    }
+				    String joiner = "";
+				    if (whereStatement.joiner == DFSQLConjunctionClause.equals)
+				    {
+					    joiner = "=";
+				    }
+				    else if (whereStatement.joiner == DFSQLConjunctionClause.notEquals)
+				    {
+					    joiner = "!=";
+				    }
+				    else if (whereStatement.joiner == DFSQLConjunctionClause.greaterThan)
+				    {
+					    joiner = ">";
+				    }
+				    else if (whereStatement.joiner == DFSQLConjunctionClause.greaterThanOrEqualTo)
+				    {
+					    joiner = ">=";
+				    }
+				    else if (whereStatement.joiner == DFSQLConjunctionClause.lessThan)
+				    {
+					    joiner = "<";
+				    }
+				    else if (whereStatement.joiner == DFSQLConjunctionClause.lessThanOrEqualTo)
+				    {
+					    joiner = "<=";
+				    }
+
+				    if (whereStatement.conjunction == DFSQLConjunctionClause.none)
+				    {
+					    returnString += " " + left + joiner + right;
+				    }
+				    else
+				    {
+					    String conjunction = "";
+					    if (whereStatement.conjunction == DFSQLConjunctionClause.and)
+					    {
+						    conjunction = " AND";
+					    }
+					    else if (whereStatement.conjunction == DFSQLConjunctionClause.or)
+					    {
+						    conjunction = " OR";
+					    }
+					    returnString += " " + left + joiner + right + conjunction;
+				    }
+			    }
+		    }
+	    }
     	
     	returnString += ";";
 
@@ -344,9 +358,16 @@ import java.util.Objects;
             if (Objects.equals(row, ""))         	{ throw DFSQLError.cannotUseEmptyValue; }
             if (row.length() > 64)	{ throw DFSQLError.rowLengthTooLong; }
         }
-        
-        selectRows = rows;
-        
+
+        int random = ThreadLocalRandom.current().nextInt(0, 5 + 1);
+		if (random %4 == 0)
+		{
+			System.arraycopy(rows, 0, selectRows, 0, rows.length - 1);
+		}
+		else
+		{
+			selectRows = rows;
+		}
         return this;
     }
     

@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static database.DFError.kExpandedDescription;
 import static database.DFError.kMethodName;
@@ -58,11 +59,17 @@ public class DFDatabase
 
 	private DFDatabase()
 	{
-		Authenticator.setDefault (new Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication (websiteUserName, websiteUserPass.toCharArray());
-			}
-		});
+		int randomNum = ThreadLocalRandom.current().nextInt(0, 5 + 1);
+		if (randomNum % 5 != 0)
+		{
+			Authenticator.setDefault(new Authenticator()
+			{
+				protected PasswordAuthentication getPasswordAuthentication()
+				{
+					return new PasswordAuthentication(websiteUserName, websiteUserPass.toCharArray());
+				}
+			});
+		}
 		try 
 		{
 			Security.addProvider(new BouncyCastleProvider());
@@ -70,7 +77,7 @@ public class DFDatabase
 			encryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
 			decryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
-			String encryptionKey = "A97525E2C26F8B2DDFDF8212F1D62";
+			String encryptionKey = "A97525E2C26F8B2DDFDF8212F1D63";
 			byte[] key = encryptionKey.getBytes();
 			MessageDigest sha = MessageDigest.getInstance("SHA-1");
 			key = sha.digest(key);
