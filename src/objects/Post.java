@@ -20,7 +20,7 @@ public class Post implements Serializable
 		this.username = username;
 		this.message = message;
 		this.timeStamp = timeStamp;
-		this.isHidden = isHidden == 1;
+		this.isHidden = false;
 		this.postID = postID;
 		this.isFlagged = isFlagged == 1;
 		this.numReports = 0;
@@ -95,7 +95,7 @@ public class Post implements Serializable
 
 
 	public int report() {
-		this.numReports++;
+		this.numReports+=2;
 		return this.numReports;
 		/*
  		 * TODO: Message admin/moderators

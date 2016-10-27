@@ -113,15 +113,6 @@ public class User implements Serializable {
 		return this.isBanned;
 	}
 	
-	public boolean equals(Object o) {
-		if (o != null) {
-			if (o instanceof User && Objects.equals(this.toString(), o.toString()))
-				return true;
-		}
-		
-		return false;
-	}
-	
 	public int hashCode() {
 		return (this.username + this.userType + this.isBanned).hashCode();
 	}
