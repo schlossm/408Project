@@ -27,31 +27,31 @@ public class Comment extends JPanel implements ActionListener{
 	public Comment(Post post) {
 		//this.id = 0; used for id
 		this.pq = new PostQuery();
-		
-		this.report = new JButton("Report Comment");
-		this.report.setActionCommand("report");
-		this.report.addActionListener(this);
-		this.setLayout(new BorderLayout());
-		
-		this.name = new JLabel(post.getPoster() + " says ");
-		name.setForeground(Color.GREEN);
-		this.comID = new JLabel(String.valueOf(0));
-		this.com = new JLabel(post.getText());
-		this.timestamp = new JLabel(post.getTimestamp());
-		timestamp.setForeground(Color.PINK);
-		this.post = post;
-		/*
-		if (post.isFlagged()) {
-			com.setForeground(Color.RED);
+		if (post != null) {
+			this.report = new JButton("Report Comment");
+			this.report.setActionCommand("report");
+			this.report.addActionListener(this);
+			this.setLayout(new BorderLayout());
+			
+			this.name = new JLabel(post.getPoster() + " says ");
+			name.setForeground(Color.GREEN);
+			this.comID = new JLabel(Integer.toString(post.postID));
+			this.com = new JLabel(post.getText());
+			this.timestamp = new JLabel(post.getTimestamp());
+			timestamp.setForeground(Color.PINK);
+			this.post = post;
+			/*
+			if (post.isFlagged()) {
+				com.setForeground(Color.RED);
+			}
+			*/
+			this.add(comID, BorderLayout.LINE_END);
+			this.add(name, BorderLayout.LINE_START);
+			this.add(com, BorderLayout.CENTER);
+			this.add(timestamp, BorderLayout.PAGE_START);
+			this.add(report, BorderLayout.PAGE_END);
+			this.setBackground(Color.WHITE);
 		}
-		*/
-//		this.add(comID, BorderLayout.PAGE_START);
-//		this.add(name, BorderLayout.LINE_START);
-		this.add(name, BorderLayout.LINE_START);
-		this.add(com, BorderLayout.CENTER);
-		this.add(timestamp, BorderLayout.PAGE_START);
-		this.add(report, BorderLayout.PAGE_END);
-		this.setBackground(Color.WHITE);
 	}
 
 	@Override

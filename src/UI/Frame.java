@@ -39,10 +39,8 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 	@SuppressWarnings("deprecation")
 	public Frame(String title) {
 		
-		java.net.URL imgUrl = getClass().getResource("icon.png");
-		icon = new ImageIcon(imgUrl);
-		
-		//this.setIconImage(icon.getImage());
+		icon = new ImageIcon("UI.assets/icon.png");
+		this.setIconImage(icon.getImage());
 		
 		uq = new UserQuery();
 		uq2 = new UserQuery();

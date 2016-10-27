@@ -83,4 +83,13 @@ public class Debate implements Serializable {
 		// TODO Auto-generated method stub
 		return this.id;
 	}
+	
+	public Post getPost(int id) {
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).postID == id) {
+				return list.get(i);
+			}
+		}
+		return null;
+	}
 }
