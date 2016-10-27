@@ -126,7 +126,7 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 	}
 	
 	private void uploadNewPostToDatabase(int postID){
-		int isHidden = givenPost.isHidden() ? 1 : 0;
+		int isHidden = 0;
 		String[] rows = {"postID", "message", "userID", "timeStamp", "flagged", "isHidden"};
 		String[] values = {String.valueOf(postID), DFDatabase.defaultDatabase.encryptString(givenPost.getText()), givenPost.getPoster(), givenPost.getTimestamp(), String.valueOf(givenPost.getNumFlags()), String.valueOf(isHidden)};
 		DFSQL dfsql = new DFSQL();
@@ -146,9 +146,6 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		}
-
-		givenPost = null;
-		givenDebateID = 0;
 	}
 	
 	@Override
@@ -161,14 +158,13 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 			this.jsonObject = jsonObject;
 		}
 		returnHandler();
-		
 	}
 
 	@Override
 	public void uploadStatus(DFDataUploaderReturnStatus success, DFError error) {
 		if(success == DFDataUploaderReturnStatus.success){
 			System.out.println("success uploading this");
-		} else if (success == DFDataUploaderReturnStatus.failure) {
+		} else if (success == DFDataUploaderReturnStatus.success) {
 			System.out.println("Failure uploading this");
 		}
 		else if(success == DFDataUploaderReturnStatus.error){
