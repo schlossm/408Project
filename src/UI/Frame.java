@@ -31,29 +31,31 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 	public UserQuery uq, uq2;
 	public DebateQuery dq;
 	public PostQuery pq;
+	public RuleQuery rq;
 	public User user;
 	public Debate debate;
+	public CreateDebate createDebate;
 	public boolean listening;
 	public ImageIcon icon;
 	
 	@SuppressWarnings("deprecation")
 	public Frame(String title) {
 		
-		java.net.URL imgUrl = getClass().getResource("icon.png");
-		icon = new ImageIcon(imgUrl);
-		
-		//this.setIconImage(icon.getImage());
+		icon = new ImageIcon("UI.assets/icon.png");
+		this.setIconImage(icon.getImage());
 		
 		uq = new UserQuery();
 		uq2 = new UserQuery();
 		dq = new DebateQuery();
 		pq = new PostQuery();
+		rq = new RuleQuery();
 		
 		DFNotificationCenter.defaultCenter.register((DFNotificationCenterDelegate) this, "success");
 		DFNotificationCenter.defaultCenter.register((DFNotificationCenterDelegate) this, "failure");
 		DFNotificationCenter.defaultCenter.register((DFNotificationCenterDelegate) this, "returned");
 		DFNotificationCenter.defaultCenter.register((DFNotificationCenterDelegate) this, "exists");
 		DFNotificationCenter.defaultCenter.register((DFNotificationCenterDelegate) this, "debateReturned");
+		DFNotificationCenter.defaultCenter.register((DFNotificationCenterDelegate) this, "ruleReturned");
 		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) debate, "debate");
 		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) admin, "admin");
 		//DFNotificationCenter.addObserver((DFNotificationCenterDelegate) rules, "rules");
@@ -75,7 +77,8 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 		admin = new Admin(this);
 
 		rules = new Rules(this);
-		rules.setText("Here are the rules");
+		
+		createDebate = new CreateDebate(this);
 		
 		add(tabs);
 		setVisible(true);
@@ -123,6 +126,8 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 			dq.getCurrentDebate();
 
 			tabs.addTab("Rules", rules);
+			
+			rq.getAllRules();
 
 			//tabs.addTab("Administration", admin);
 
@@ -141,7 +146,7 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 			}
 			else if (user != null && !user.getUserType().equals(UserType.USER)) {
 				tabs.addTab("Administration", admin);
-//				admin.setUserType(user.getUserType());
+				tabs.addTab("Create New Debate", createDebate);
 			}	
 		}
 		else if (notificationName.equals(UIStrings.debateReturned)) {
@@ -156,6 +161,9 @@ public class Frame extends JFrame implements DFNotificationCenterDelegate {
 			else if (debate != null) {
 				thread.displayDebate(debate);
 			}
+		}
+		else if (notificationName.equals(UIStrings.ruleReturned)) {
+			rules.populateRules((java.util.ArrayList<Rule>) obj);
 		}
 	}
 }
