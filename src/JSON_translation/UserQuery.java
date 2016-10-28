@@ -208,6 +208,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		} catch (DFSQLError e1) {
 			e1.printStackTrace();
 		}
+		
 	}
 
 	@Override

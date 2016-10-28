@@ -142,7 +142,6 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 				 debateText = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("text").getAsString();
 				 debateStartDate = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("startDate").getAsString();
 				 debateEndDate = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("endDate").getAsString();
-				 decryptDebateAttributes();
 			}catch (NullPointerException e2){
 				DFNotificationCenter.defaultCenter.post(UIStrings.debateReturned, null);
 			}
@@ -157,7 +156,6 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 					debateText = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("text").getAsString();
 					debateStartDate = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("startDate").getAsString();
 					debateEndDate = jsonObject.get("Data").getAsJsonArray().get(i).getAsJsonObject().get("endDate").getAsString();
-					decryptDebateAttributes();
 					boolean isCurrentDebate = checkIfCurrentDebate(debateStartDate, debateEndDate);
 					Debate debate = new Debate(debateTitle, null, isCurrentDebate, debateText, stringToDateConverter(debateStartDate), stringToDateConverter(debateEndDate), debateId);
 					archivedDebates.put(debateId, debate);
