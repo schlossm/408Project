@@ -5,3 +5,4 @@ DS_Store
 /.idea/
 *.ser
 src/UI/UsernameTextField.java
+*.ser
