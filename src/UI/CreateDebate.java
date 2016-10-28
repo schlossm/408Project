@@ -85,7 +85,7 @@ public class CreateDebate extends JPanel implements ActionListener {
 		//System.out.println(endDate.getText());
 		if (arg0.getActionCommand().equals("submit")) {
 			//start = dq.convertDateToString(startDate.getText());
-			else if (dq.checkForDuplicateDebateTitle(title.getText()) == false) {
+			if (dq.checkForDuplicateDebateTitle(title.getText()) == false) {
 				JOptionPane.showMessageDialog(this, "There was a conflict with the title you have chosen. Please fix and resubmit.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			else if (dq.checkForOverLappingDates(dq.dateToStringConverter((Date) startSpinner.getValue()), dq.dateToStringConverter((Date) endSpinner.getValue())) == false) {

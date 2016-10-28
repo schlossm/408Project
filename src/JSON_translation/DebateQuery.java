@@ -203,7 +203,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		return true;
 	}
 	
-	private Date stringToDateConverter(String stringDate){
+	public Date stringToDateConverter(String stringDate){
 		DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		java.util.Date dateObject = null;
 		try {
@@ -214,7 +214,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		return dateObject;
 	}
 	
-	private String dateToStringConverter(Date dateObject){
+	public String dateToStringConverter(Date dateObject){
 		DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		return sdf.format(dateObject);
 	}
