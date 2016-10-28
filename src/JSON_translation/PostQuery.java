@@ -183,14 +183,14 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 	
 	@Override
 	@SuppressWarnings("unchecked") public void performActionFor(String notificationName, Object userData) {
-		System.out.println("**** PERFORM ACTION FOR WAS CALLED ****");
+		//System.out.println("**** PERFORM ACTION FOR WAS CALLED ****");
 		if(notificationName.equals(UIStrings.postsReturned)){
 			ArrayList<Post> debatePosts;
 			if(userData == null) {
-				System.out.println("**** RETURNED USERDATA IS NULL ****");
+				//System.out.println("**** RETURNED USERDATA IS NULL ****");
 			} else {
 				debatePosts = (ArrayList<Post>)userData;
-				System.out.println("**** DEBATE POSTS WILL APPEAR BELOW ****\n" + debatePosts);
+				//System.out.println("**** DEBATE POSTS WILL APPEAR BELOW ****\n" + debatePosts);
 			}
 		}
 	}
