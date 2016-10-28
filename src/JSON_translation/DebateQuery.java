@@ -191,6 +191,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 	}
 	
 	private boolean checkIfCurrentDebate(String startDate, String endDate){
+		if (startDate == null || endDate == null) return false;
 		Calendar calobj = Calendar.getInstance();
 		java.util.Date startingDate = stringToDateConverter(startDate);
 		java.util.Date endingDate = stringToDateConverter(endDate);
@@ -208,7 +209,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		java.util.Date dateObject = null;
 		try {
 			 dateObject = sdf.parse(stringDate);
-		} catch (java.text.ParseException e) {
+		} catch (Exception e) {
 			System.out.println("Error converting string to date");
 		}
 		return dateObject;

@@ -185,7 +185,7 @@ public class DFDatabase
 		    catch (IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | InvalidKeyException e)
 		    {
 			    e.printStackTrace();
-			    return "";
+			    return encryptedString;
 		    }
 	    }
 	    else

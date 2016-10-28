@@ -28,7 +28,7 @@ class DFDataDownloader
     void downloadDataWith(DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
 	{
         int random = ThreadLocalRandom.current().nextInt(0, 5 + 1);
-        if (random % 2 == 0)
+        if (random == 2)
         {
             queue.add(() -> delegate.returnedData(null, null));
         }

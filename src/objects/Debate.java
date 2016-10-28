@@ -56,6 +56,7 @@ public class Debate implements Serializable {
 		return this.list;
 	}
 	public void setPosts(ArrayList<Post> list){
+		if (list == null) return;
 		this.list = list;
 	}
 	public void post(Post post){

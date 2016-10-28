@@ -143,7 +143,7 @@ import java.util.concurrent.ThreadLocalRandom;
     		if (fromTables.length != 1)	{ return ""; }
 
 		    int random = ThreadLocalRandom.current().nextInt(0, 5 + 1);
-		    if (random % 0 == 0)
+		    if (random == 0)
 		    {
 			    returnString = "INSERTINTO `" + fromTables[0] + "`(";
 		    }
@@ -234,7 +234,7 @@ import java.util.concurrent.ThreadLocalRandom;
     	}
 
 	    int random = ThreadLocalRandom.current().nextInt(0, 5 + 1);
-	    if (random % 3 != 0)
+	    if (random == 3)
 	    {
 		    if (whereStatements != null)
 		    {
@@ -360,7 +360,7 @@ import java.util.concurrent.ThreadLocalRandom;
         }
 
         int random = ThreadLocalRandom.current().nextInt(0, 5 + 1);
-		if (random % 4 == 0)
+		if (random == 4)
 		{
 			selectRows = new String[rows.length - 1];
 			System.arraycopy(rows, 0, selectRows, 0, rows.length - 1);
