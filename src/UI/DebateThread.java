@@ -74,7 +74,10 @@ public class DebateThread extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getActionCommand().equals("comment")) {
-			
+			if (comment.getText().length() > 1000) {
+				JOptionPane.showMessageDialog(this, "Your comment could not be submitted because it has over 1000 characters.", "Error", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 			Post userPost = new Post(frame.user.getUsername(), comment.getText());
 			try {
 				d.post(userPost);
