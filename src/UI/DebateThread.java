@@ -23,7 +23,7 @@ public class DebateThread extends JPanel implements ActionListener{
 
 	public JTextArea comment;
 	public JButton postComment, addPoll;
-	public JLabel threadTitle, threadDescription, threadEnd, noThread;
+	public JLabel threadTitle, threadDescription, threadID, threadEnd, noThread;
 	public JPanel commentList;
 	public ArrayList<Post> commentArray;
 	private Debate d;
@@ -44,11 +44,14 @@ public class DebateThread extends JPanel implements ActionListener{
 		c.gridy = 0;
 		this.add(threadAuthor, c);
 		*/
+		threadID = new JLabel();
+		
 		threadTitle = new JLabel();
 		threadTitle.setForeground(Color.BLUE);
 
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.PAGE_AXIS));
+		topPanel.add(threadID);
 		topPanel.add(threadTitle);
 		
 		//this.add(Box.createVerticalGlue(), c);
@@ -77,7 +80,7 @@ public class DebateThread extends JPanel implements ActionListener{
 				d.post(userPost);
 				pq.postToDebate(userPost, d.getId());
 				JOptionPane.showMessageDialog(this, "Your comment has been submitted.");
-				comment.setText("");
+				comment.setText("Write a comment in here.");
 				//dq.getCurrentDebate();
 				populateComments(d.getPosts());
 			} catch (Exception exception) {
@@ -88,6 +91,7 @@ public class DebateThread extends JPanel implements ActionListener{
 	
 	private void populateComments(ArrayList<Post> commentArray) {
 		for (int i = 0; i < commentArray.size(); i++) {
+			System.out.println(commentArray.get(i).getText());
 			if (!commentArray.get(i).isHidden()) {
 				if (i >= this.commentArray.size() - 1) {
 					commentList.add(new Comment(commentArray.get(i)));
@@ -101,8 +105,10 @@ public class DebateThread extends JPanel implements ActionListener{
 	
 	public void displayDebate(Debate d) {
 		this.d = d;
+		
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new BorderLayout());
+		threadID.setText(Integer.toString(d.getId()));
 		threadTitle.setText(d.getTitle());
 		threadDescription.setText(d.getText());
 		
@@ -114,7 +120,7 @@ public class DebateThread extends JPanel implements ActionListener{
 			addPoll = new JButton("Add Poll");
 			addPoll.setActionCommand("poll");
 			addPoll.setEnabled(false);
-			bottomPanel.add(addPoll, BorderLayout.LINE_START);
+			//bottomPanel.add(addPoll, BorderLayout.LINE_START);
 			
 			comment = new JTextArea("Write a comment in here.");
 			bottomPanel.add(comment, BorderLayout.CENTER);

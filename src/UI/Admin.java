@@ -12,75 +12,89 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.*;
 
 public class Admin extends JPanel implements ActionListener, DFNotificationCenterDelegate {
-	public JLabel label1, label2;
-	public JFormattedTextField searchUser, searchComment;
-	public JButton searchUserButton;
+	public JLabel label1, label2, label3;
+	public JFormattedTextField searchUser, searchComment, searchDebate;
+	public JButton searchUserButton, searchCommentButton;
 	public JRadioButton user, mod, admin;
-	public JPanel topPanel, middlePanel, bottomPanel;
+	public JPanel topPanel, middlePanel, middlePanel2, middlePanel3, bottomPanel;
 	public User u;
 	public Frame frame;
 	public UserOptions userOptions;
+	public Comment comment;
+	public PostQuery pq;
+	public boolean listening;
 	
 	public Admin(Frame frame) {
 		DFNotificationCenter.defaultCenter.register((DFNotificationCenterDelegate) this, "returned");
+		listening = false;
+		
+		pq = new PostQuery();
 		
 		this.frame = frame;
-		u = frame.user;
 		
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		this.setLayout(new GridBagLayout());
-
+		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		
 		// Top Panel
-		this.topPanel = new JPanel();
+		/*this.topPanel = new JPanel();
 		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.PAGE_AXIS));
 		JScrollPane scroll = new JScrollPane(topPanel);
-		
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth = 3;
 		this.add(scroll, c);
-		
-		// Left Middle Panel
-		this.middlePanel = new JPanel();
-		middlePanel.setLayout(new BorderLayout());
+		*/
+		// Top Panel
+		this.topPanel = new JPanel();
+		topPanel.setLayout(new FlowLayout());
 		
 		label1 = new JLabel("Enter a Username");
 
 		searchUser = new JFormattedTextField();
 		searchUser.setColumns(36);
+		searchUser.setText("username");
 		
 		searchUserButton = new JButton("Search");
 		searchUserButton.setActionCommand("searchUser");
 		searchUserButton.addActionListener(this);
 		
-		middlePanel.add(label1, BorderLayout.PAGE_START);
-		middlePanel.add(searchUser, BorderLayout.PAGE_START);
-		middlePanel.add(searchUserButton, BorderLayout.PAGE_START);
+		topPanel.add(label1);
+		topPanel.add(searchUser);
+		topPanel.add(searchUserButton);
 		
-		c.gridx = 1;
-		c.gridy = 1;
-		c.gridwidth = 1;
-		this.add(middlePanel, c);
+		this.add(topPanel);
+	
+		middlePanel3 = new JPanel();
 		
-		// Right Middle Panel
+		this.add(middlePanel3);
+		// Middle Panel
+
+		middlePanel2 = new JPanel();
+		label3 = new JLabel("Enter a Debate ID");
 		
-		//this.rightMiddlePanel = new JPanel();
-		//rightMiddlePanel.setLayout(new BorderLayout());
+		searchDebate = new JFormattedTextField();
+		searchDebate.setColumns(36);
+
+		middlePanel2.add(label3);
+		middlePanel2.add(searchDebate);
 		
-		//label2 = new JLabel("Enter a Comment ID");
-		/*
+		this.add(middlePanel2);
+		
+		this.middlePanel = new JPanel();
+		middlePanel.setLayout(new FlowLayout());
+		
+		label2 = new JLabel("Enter a Comment ID");
+		
 		searchComment = new JFormattedTextField();
 		searchComment.setColumns(36);
 		
@@ -88,21 +102,17 @@ public class Admin extends JPanel implements ActionListener, DFNotificationCente
 		searchCommentButton.setActionCommand("searchComment");
 		searchCommentButton.addActionListener(this);
 		
-		rightMiddlePanel.add(label2, BorderLayout.PAGE_START);
-		rightMiddlePanel.add(searchComment, BorderLayout.PAGE_START);
-		rightMiddlePanel.add(searchCommentButton, BorderLayout.PAGE_START);
+		middlePanel.add(label2);
+		middlePanel.add(searchComment);
+		middlePanel.add(searchCommentButton);
 		
-		c.gridx = 2;
-		c.gridy = 1;
-		c.gridwidth = 1;
-		this.add(rightMiddlePanel, c);
-		*/
+		this.add(middlePanel);
+		
 		// Bottom Panel
 		bottomPanel = new JPanel();
-		c.gridx = 1;
-		c.gridy = 2;
-		c.gridwidth = 1;
-		this.add(bottomPanel, c);
+		comment = new Comment(null);
+		bottomPanel.add(comment);
+		this.add(bottomPanel);
 		// Edit Rules?
 		
 		this.setVisible(true);
@@ -114,30 +124,22 @@ public class Admin extends JPanel implements ActionListener, DFNotificationCente
 		if (e.getActionCommand().equals("searchUser")) {
 			frame.uq.getUser(searchUser.getText());
 		}
-		else if (e.getActionCommand().equals("banUser")) {
-			frame.uq.updateBanStatus(u.getUsername(), true);
-		}
-		else if (e.getActionCommand().equals("unbanUser")) {
-			frame.uq.updateBanStatus(u.getUsername(), false);
-		}
-		else if (e.getActionCommand().equals("setUser")) {
-			frame.uq.modifyUserPriv(u.getUsername(), UserType.USER);
-		}
-		else if (e.getActionCommand().equals("setMod")) {
-			frame.uq.modifyUserPriv(u.getUsername(), UserType.MOD);
-		}
-		else if (e.getActionCommand().equals("setAdmin")) {
-			frame.uq.modifyUserPriv(u.getUsername(), UserType.ADMIN);
-		}
+		
 		else if (e.getActionCommand().equals("searchComment")) {
-			
+			if (!searchDebate.getText().matches("[0-9]+")) {
+				JOptionPane.showMessageDialog(this, "Please enter a valid debate ID.", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			else if (!searchComment.getText().matches("[0-9]+")) {
+				JOptionPane.showMessageDialog(this, "Please enter a valid comment ID.", "Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 		else if (e.getActionCommand().equals("hideComment")) {
-			
+			//pq.updateIsHidden();
 		}
 		else if (e.getActionCommand().equals("showComment")) {
-			
+			//pq.updateIsHidden()
 		}
+		frame.repaint();
 	}
 	
 	public void populateReports() {
@@ -147,14 +149,29 @@ public class Admin extends JPanel implements ActionListener, DFNotificationCente
 	@Override
 	public void performActionFor(String notificationName, Object userData) {
 		// TODO Auto-generated method stub
-		if (notificationName.equals(UIStrings.returned) && frame.listening == false) {
+		System.out.println("Listening: " + listening);
+		if (notificationName.equals(UIStrings.returned) && listening) {
 			u = (User) userData;
-			//middlePanel.remove(3);
-			userOptions = new UserOptions(u);
-			if (frame.user.getUserType().equals(UserType.MOD)) {
-				userOptions.setTypeDisabled();
+			System.out.println("returned");
+			if (u == null) {
+				System.out.println("null");
+				middlePanel3.removeAll();
+				JOptionPane.showMessageDialog(this, "This username does not exist", "Error", JOptionPane.ERROR_MESSAGE);
+				frame.repaint();
 			}
-			middlePanel.add(userOptions);
+			else {
+				userOptions = new UserOptions((User) userData, this);
+				
+				if (frame.user.getUserType().equals(UserType.MOD)) {
+					userOptions.setTypeDisabled();
+				}
+				middlePanel3.removeAll();
+				middlePanel3.add(userOptions);
+				frame.repaint();
+			}
+		}
+		else {
+			listening = true;
 		}
 	}
 	

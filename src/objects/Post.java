@@ -13,7 +13,7 @@ public class Post implements Serializable
 	private Boolean  isHidden;
 	public int numReports;
 	private Boolean isFlagged; //
-	private int postID; //
+	public int postID; //
 	private static PostQuery jsonQuery;
 	// Utilized by PostQuery class
 	public  Post(int postID, String message, String username, String timeStamp, int isFlagged, int isHidden){
