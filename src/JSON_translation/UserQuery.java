@@ -55,25 +55,26 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 				 usernameReceived = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("userID").getAsString();
 				 isBannedInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("banned").getAsInt();
 				 userPrivInt = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("privilegeLevel").getAsInt();
+				 isBanned = isBannedInt != 0;
+				 UserType userType = userPriviligeIntToEnumConverter(userPrivInt);
+				 User user = new User(usernameReceived, userType, isBanned);
+				 DFNotificationCenter.defaultCenter.post(UIStrings.returned, user);
 			}catch (NullPointerException e2){
 				DFNotificationCenter.defaultCenter.post(UIStrings.returned, null);				
 			}
-			isBanned = isBannedInt != 0;
-			 UserType userType = userPriviligeIntToEnumConverter(userPrivInt);
-			 User user = new User(usernameReceived, userType, isBanned);
-			 DFNotificationCenter.defaultCenter.post(UIStrings.returned, user);
 		} else if (verifyUserLoginReturn) {
 			String databasePassword = "";
 			try {
 				databasePassword = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("password").getAsString();
+				if(databasePassword.equals(bufferString)){DFNotificationCenter.defaultCenter.post(UIStrings.success, Boolean.TRUE);
+				debugLog("verifylogin returned success");}
+				else {DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);
+				debugLog("verifylogin returned fail cause passwords don't match");}
 			} catch (NullPointerException e2){
 				DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);
 				debugLog("verifylogin returned nothing");
 			}
-			if(databasePassword.equals(bufferString)){DFNotificationCenter.defaultCenter.post(UIStrings.success, Boolean.TRUE);
-				debugLog("verifylogin returned success");}
-			else {DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);
-				debugLog("verifylogin returned fail cause passwords don't match");}
+			
 		} else if (getUserExistsReturn) {
 			String usernameReceived = null;
 			try {
