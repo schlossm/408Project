@@ -295,9 +295,6 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 	
 	private void constructCurrentDebateWithPosts(ArrayList<Post> debatePosts) {
 		ArrayList<Post> posts = debatePosts;
-		for (int x=0; x<posts.size(); x++){
-			System.out.println(posts.get(x).getText());
-		}
 		boolean isCurrentDebate = checkIfCurrentDebate(debateStartDate, debateEndDate);
 		Debate debate = new Debate(debateTitle, debatePosts, isCurrentDebate, debateText, stringToDateConverter(debateStartDate), stringToDateConverter(debateEndDate), debateId);
 		DFNotificationCenter.defaultCenter.post(UIStrings.debateReturned, debate);
@@ -369,8 +366,8 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		//Calendar calobj = Calendar.getInstance();
 		//Date currentDate = calobj.getTime();
 		//System.out.println(debateQuery.dateToStringConverter(currentDate));
-		//debateQuery.getCurrentDebate();
-		debateQuery.testPostQuery(5);
+		debateQuery.getCurrentDebate();
+		//debateQuery.testPostQuery(5);
 		//debateQuery.archivedDebates = debateQuery.loadFromLocalStorage();
 		//System.out.println(debateQuery.checkForOverLappingDates("10/31/2016 12:00 AM", "11/09/2016 12:00 AM"));
 		//debateQuery.printHashMap(debateQuery.archivedDebates);
