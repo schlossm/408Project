@@ -76,11 +76,14 @@ public class Account extends JPanel implements ActionListener {
 			if (username.getText().equals("") && password.getPassword() == null) {
 				JOptionPane.showMessageDialog(this, "Please fill in all of the fields.", "Error", JOptionPane.ERROR_MESSAGE);	
 			}
-			else if (!username.getText().matches("[A-Za-z0-9._%+-]+")) {
-				JOptionPane.showMessageDialog(this, "Please choose a username with valid characters (alphabetical letters, numbers, _, %, +, -, or .", "Error", JOptionPane.ERROR_MESSAGE);
+			else if (!username.getText().matches("[A-Z][A-Za-z0-9._%+-]+")) {
+				JOptionPane.showMessageDialog(this, "Please choose a username beginning with a letter and uses only valid characters (alphabetical letters, numbers, _, %, +, -, or .", "Error", JOptionPane.ERROR_MESSAGE);
 			}
-			else if (username.getText().length() > 32) {
-				JOptionPane.showMessageDialog(this, "Please choose a username that is 32 characters or shorter.", "Error", JOptionPane.ERROR_MESSAGE);
+			else if (username.getText().length() < 8 && username.getText().length() > 16) {
+				JOptionPane.showMessageDialog(this, "Please choose a username between 8 and 16 characters.", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			else if (password.getPassword().length < 8 && password.getPassword().length > 16) {
+				JOptionPane.showMessageDialog(this, "Please choose a password between 8 and 16 characters.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			else {				
 				// replace line above
