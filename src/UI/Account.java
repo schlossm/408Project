@@ -76,7 +76,7 @@ public class Account extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getActionCommand().equals("account")) {
-			if (username.getText().equals("") && password.getPassword().equals("")) {
+			if (username.getText().equals("") || password.getPassword().equals("")) {
 				JOptionPane.showMessageDialog(this, "Please fill in all of the fields.", "Error", JOptionPane.ERROR_MESSAGE);	
 			}
 			else if (!username.getText().matches("[A-Za-z][A-Za-z0-9._%+-]+")) {
