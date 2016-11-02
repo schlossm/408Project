@@ -65,6 +65,8 @@ public class Account extends JPanel implements ActionListener {
 		c.gridx = 1;
 		c.gridy = 2;
 		this.add(createAccount, c);
+		username.setText("");
+		password.setText("");
 		
 		username.setText("");
 		password.setText("");
