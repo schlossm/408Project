@@ -303,6 +303,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		if(debateIdCounter > maxDebateId){
 			debateIdCounter = 1; return;
 		}
+		if (debatePosts == null) return;
 		Debate debateAppend = archivedDebates.get(debateIdCounter);
 		 debateAppend.setPosts(debatePosts);
 		 archivedDebates.replace(debateIdCounter, debateAppend);
