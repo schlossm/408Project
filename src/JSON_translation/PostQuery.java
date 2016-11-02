@@ -114,7 +114,7 @@ public class PostQuery implements DFDatabaseCallbackDelegate, DFNotificationCent
 		} else if (postToDebateReturn) {
 			try {
 				 postID = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("MAX(postID)").getAsInt() + 1;
-				 DFNotificationCenter.defaultCenter.post(UIStrings.postUploadSuccess, null);
+				 DFNotificationCenter.defaultCenter.post(UIStrings.postUploadSuccess, givenPost);
 			} catch (NullPointerException e2){
 				DFNotificationCenter.defaultCenter.post(UIStrings.postUploadFailure, null);
 			}
