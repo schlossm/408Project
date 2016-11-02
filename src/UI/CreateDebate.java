@@ -21,7 +21,6 @@ import java.util.Date;
 public class CreateDebate extends JPanel implements ActionListener {
 	// Mods and Admin only
 	public JLabel date1, date2, title1, description1;
-	public JFormattedTextField startDate, endDate;
 	public JSpinner startSpinner, endSpinner;
 	public JTextField title, description;
 	public JButton submit;
@@ -65,10 +64,12 @@ public class CreateDebate extends JPanel implements ActionListener {
 		title1 = new JLabel("Title: ");
 		this.add(title1);
 		title = new JTextField();
+		title.setText("");
 		this.add(title);
 		description1 = new JLabel("Description: ");
 		this.add(description1);
 		description = new JTextField();
+		description.setText("");
 		this.add(description);
 		submit = new JButton("Submit Post");
 		submit.setActionCommand("submit");
@@ -80,25 +81,29 @@ public class CreateDebate extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		System.out.println(arg0.getActionCommand());
-		System.out.println(startDate.getText());
-		System.out.println(endDate.getText());
+		//System.out.println(startDate.getText());
+		//System.out.println(endDate.getText());
 		if (arg0.getActionCommand().equals("submit")) {
 			//start = dq.convertDateToString(startDate.getText());
-			if (dq.checkForDuplicateDebateTitle(title.getText()) == false) {
+			if (startSpinner.getValue() == null || endSpinner.getValue() == null || title.getText().equals("") || description.getText().equals("")) {
+				JOptionPane.showMessageDialog(this, "Please fill in all fields before submitting.", "Error", JOptionPane.ERROR_MESSAGE);
+
+			}
+			else if (dq.checkForDuplicateDebateTitle(title.getText()) == false) {
 				JOptionPane.showMessageDialog(this, "There was a conflict with the title you have chosen. Please fix and resubmit.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
-			else if (dq.checkForOverLappingDates((String) startSpinner.getValue(), (String) endSpinner.getValue()) == false) {
+			else if (dq.checkForOverLappingDates(dq.dateToStringConverter((Date) startSpinner.getValue()), dq.dateToStringConverter((Date) endSpinner.getValue())) == false) {
 				JOptionPane.showMessageDialog(this, "There was a conflict with the time you have chosen. Please fix and resubmit.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			
 			else {
-				dq.createNewDebate(title.getText(), description.getText(), (String) startSpinner.getValue(), (String) endSpinner.getValue());
+				dq.createNewDebate(title.getText(), description.getText(), dq.dateToStringConverter((Date) startSpinner.getValue()), dq.dateToStringConverter((Date) endSpinner.getValue()));
 				
 				JOptionPane.showMessageDialog(this, "Debate was created.");
 				title.setText("");
 				description.setText("");
-				startDate.setText("");
-				endDate.setText("");
+				startSpinner.setValue(new Date());
+				endSpinner.setValue(new Date());
 			}
 		}
 	}
