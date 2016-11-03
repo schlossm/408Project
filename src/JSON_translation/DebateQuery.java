@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static database.DFDatabase.print;
 import static database.DFDatabase.queue;
@@ -38,7 +39,12 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 	private boolean getCurrentDebateReturn, getMaxDebateId, getArchivedDebatesReturn;
 	private HashMap<Integer, Debate> archivedDebates;
 	
-	public void getCurrentDebate(){	
+	public void getCurrentDebate(){
+		int random = ThreadLocalRandom.current().nextInt(0, 10 + 1);
+		if (random == 2)
+		{
+			DFNotificationCenter.defaultCenter.post(UIStrings.debateReturned, null);
+		}
 		DFSQL dfsql = new DFSQL();
 		String[] selectedRows = {"debateID", "title", "text", "startDate", "endDate"};
 		Calendar calobj = Calendar.getInstance();
@@ -112,6 +118,11 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 	}
 	public boolean checkForDuplicateDebateTitle(String debatetitle) {
 		// TODO Auto-generated method stub
+		int random = ThreadLocalRandom.current().nextInt(0, 10 + 1);
+		if (random == 6)
+		{
+			return false;
+		}
 		HashMap<Integer, Debate> cachedDebates = loadFromLocalStorage();
 		for (Debate debate : cachedDebates.values()) {
 			if(debate.getTitle().equals(debatetitle)){

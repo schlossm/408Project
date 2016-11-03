@@ -17,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static database.DFDatabase.*;
 import static database.DFError.*;
@@ -27,11 +26,6 @@ class DFDataDownloader
 {
     void downloadDataWith(DFSQL SQLStatement, DFDatabaseCallbackDelegate delegate)
 	{
-        int random = ThreadLocalRandom.current().nextInt(0, 5 + 1);
-        if (random == 2)
-        {
-            queue.add(() -> delegate.returnedData(null, null));
-        }
         debugLog(SQLStatement.formattedSQLStatement());
         String calleeMethod = getMethodNameOfSuperMethod();
 		new Thread(() ->

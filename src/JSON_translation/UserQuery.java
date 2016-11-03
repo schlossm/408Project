@@ -13,6 +13,8 @@ import database.WebServer.DFDataUploaderReturnStatus;
 import objects.User;
 import objects.User.UserType;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import static database.DFDatabase.debugLog;
 
 public class UserQuery implements DFDatabaseCallbackDelegate{
@@ -198,6 +200,11 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 	}
 	
 	public void verifyUserLogin(String userName, String password){
+		int random = ThreadLocalRandom.current().nextInt(0, 10 + 1);
+		if (random == 9)
+		{
+			DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);
+		}
 		DFSQL dfsql = new DFSQL();
 		String[] selectedRows = {"userID", "password"};
 		bufferString = password;
