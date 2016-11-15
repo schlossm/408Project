@@ -44,6 +44,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		if (random == 2)
 		{
 			DFNotificationCenter.defaultCenter.post(UIStrings.debateReturned, null);
+			return;
 		}
 		DFSQL dfsql = new DFSQL();
 		String[] selectedRows = {"debateID", "title", "text", "startDate", "endDate"};
@@ -316,6 +317,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		}
 		if (debatePosts == null) return;
 		Debate debateAppend = archivedDebates.get(debateIdCounter);
+		if (debateAppend == null) return;
 		 debateAppend.setPosts(debatePosts);
 		 archivedDebates.replace(debateIdCounter, debateAppend);
 		 debateIdCounter++;
@@ -351,6 +353,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		for (HashMap.Entry<Integer, Debate> entry : debates.entrySet()) {
 		    Integer key = entry.getKey();
 		    Debate debate = entry.getValue();
+			/*
 		    System.out.println();
 		    System.out.println("Debate Id: "+key);
 		    System.out.println(debate.getTitle());
@@ -358,7 +361,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 		    System.out.println(debate.getPosts());
 			System.out.println(debate.getStartDate());
 			System.out.println(debate.getEndDate());
-			System.out.println();
+			System.out.println();*/
 		}
 	}
 	

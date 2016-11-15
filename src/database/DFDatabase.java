@@ -77,7 +77,7 @@ public class DFDatabase
 			encryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
 			decryptor = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
-			String encryptionKey = "A97525E2C26F8B2DDFDF8212F1D63";
+			String encryptionKey = "A97525E2C26F8B2DDFDF8212F1D62";
 			byte[] key = encryptionKey.getBytes();
 			MessageDigest sha = MessageDigest.getInstance("SHA-1");
 			key = sha.digest(key);
@@ -166,6 +166,11 @@ public class DFDatabase
 
 	public @NotNull String decryptString(String encryptedString)
     {
+	    int random = ThreadLocalRandom.current().nextInt(0, 10 + 1);
+	    if (random == 8)
+	    {
+		    return encryptedString;
+	    }
 	    if (useEncryption)
 	    {
 		    byte[] byteText = hexToBytes(encryptedString);

@@ -1,24 +1,18 @@
 package UI;
-import JSON_translation.*;
-import objects.*;
-import objects.User.UserType;
-
+import JSON_translation.DebateQuery;
+import JSON_translation.PostQuery;
+import JSON_translation.RuleQuery;
+import JSON_translation.UserQuery;
 import UIKit.DFNotificationCenter;
 import UIKit.DFNotificationCenterDelegate;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JTabbedPane;
-
-import javax.swing.JPanel;
-
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.Window;
-
-import UIKit.*;
 import database.DFDatabase;
+import objects.Debate;
+import objects.Rule;
+import objects.User;
+import objects.User.UserType;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class Frame extends JFrame implements DFNotificationCenterDelegate {
 	

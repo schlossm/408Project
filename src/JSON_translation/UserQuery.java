@@ -81,10 +81,10 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 			try {
 				 usernameReceived = jsonObject.get("Data").getAsJsonArray().get(0).getAsJsonObject().get("userID").getAsString();
 			}catch (NullPointerException e2){
-				DFNotificationCenter.defaultCenter.post(UIStrings.exists, false);				
+				DFNotificationCenter.defaultCenter.post(UIStrings.exists, true);
 			}
 			if(usernameReceived != null){
-				DFNotificationCenter.defaultCenter.post(UIStrings.exists, true);
+				DFNotificationCenter.defaultCenter.post(UIStrings.exists, false);
 			}
 		}
 		
@@ -204,6 +204,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 		if (random == 9)
 		{
 			DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);
+			return;
 		}
 		DFSQL dfsql = new DFSQL();
 		String[] selectedRows = {"userID", "password"};
