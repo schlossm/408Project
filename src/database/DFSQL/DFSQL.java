@@ -234,7 +234,7 @@ import java.util.concurrent.ThreadLocalRandom;
     	}
 
 	    int random = ThreadLocalRandom.current().nextInt(0, 30 + 1);
-	    if (random == 3)
+	    if (random != 3)
 	    {
 		    if (whereStatements != null)
 		    {
