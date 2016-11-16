@@ -59,7 +59,7 @@ public class Post implements Serializable
 		return this.timeStamp;
 	}
 	private String makeTimestamp(){
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
 		 this.timeStamp = dateFormat.format(new Date());
 		 return timeStamp;
 	}

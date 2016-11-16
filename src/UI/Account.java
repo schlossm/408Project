@@ -66,6 +66,9 @@ public class Account extends JPanel implements ActionListener {
 		c.gridy = 2;
 		this.add(createAccount, c);
 		
+		username.setText("");
+		password.setText("");
+		
 		this.setVisible(true);
 	}
 	
@@ -73,7 +76,7 @@ public class Account extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getActionCommand().equals("account")) {
-			if (username.getText().equals("") && password.getPassword() == null) {
+			if (username.getText().equals("") || password.getPassword().equals("")) {
 				JOptionPane.showMessageDialog(this, "Please fill in all of the fields.", "Error", JOptionPane.ERROR_MESSAGE);	
 			}
 			else {				

@@ -90,6 +90,7 @@ public class DebateThread extends JPanel implements ActionListener{
 	
 	private void populateComments(ArrayList<Post> commentArray) {
 		for (int i = 0; i < commentArray.size(); i++) {
+		for (int i = commentArray.size() - 1; i >= 0; i--) {
 			System.out.println(commentArray.get(i).getText());
 			if (!commentArray.get(i).isHidden()) {
 				if (i >= this.commentArray.size()) {

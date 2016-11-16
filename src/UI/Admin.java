@@ -162,9 +162,14 @@ public class Admin extends JPanel implements ActionListener, DFNotificationCente
 			else {
 				userOptions = new UserOptions((User) userData, this);
 				
-				
 				middlePanel3.removeAll();
 				middlePanel3.add(userOptions);
+				if (frame.user.getUserType().equals(UserType.MOD)) {
+					userOptions.setTypeDisabled();
+				}
+				middlePanel3.removeAll();
+				middlePanel3.add(userOptions);
+				frame.repaint();
 			}
 		}
 		else {
