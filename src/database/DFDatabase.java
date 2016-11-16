@@ -93,7 +93,6 @@ public class DFDatabase
 		} 
 		catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e)
 		{
-			e.printStackTrace();
 			print("Encryption failed to initialize.  Falling back to NO encryption.");
 			useEncryption = false;
 		}
@@ -137,7 +136,6 @@ public class DFDatabase
 		}
 		catch (NoSuchAlgorithmException e)
 		{
-			e.printStackTrace();
 			return "";
 		}
 	}
@@ -154,8 +152,7 @@ public class DFDatabase
 		    }
 		    catch (IllegalBlockSizeException | BadPaddingException e)
 		    {
-			    e.printStackTrace();
-			    return "";
+			    return decryptedString;
 		    }
 	    }
 	    else
@@ -166,7 +163,7 @@ public class DFDatabase
 
 	public @NotNull String decryptString(String encryptedString)
     {
-	    int random = ThreadLocalRandom.current().nextInt(0, 10 + 1);
+	    int random = ThreadLocalRandom.current().nextInt(0, 20 + 1);
 	    if (random == 8)
 	    {
 		    return encryptedString;
@@ -189,7 +186,6 @@ public class DFDatabase
 		    }
 		    catch (IllegalBlockSizeException | BadPaddingException | InvalidAlgorithmParameterException | InvalidKeyException e)
 		    {
-			    e.printStackTrace();
 			    return encryptedString;
 		    }
 	    }
@@ -226,40 +222,21 @@ public class DFDatabase
 	{
 		final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
 
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("`");
-		stringBuilder.append(ste[Integer.min(ste.length - 1, Integer.max(2, 0))].getMethodName());
-		if (1 > 0)
-		{
-			stringBuilder.append("(_:");
-			for (int i = 0; i < 1 - 1; i++)
-			{
-				stringBuilder.append(", _:");
-			}
-			stringBuilder.append(")`");
-		}
-
-		return stringBuilder.toString();
+		return "`" +
+			                       ste[Integer.min(ste.length - 1, Integer.max(2, 0))].getMethodName() +
+			                       "(_:" +
+			                       ", _:" +
+			                       ")`";
 	}
 
 	public @NotNull static String getMethodNameOfSuperMethod()
 	{
 		final StackTraceElement[] ste = Thread.currentThread().getStackTrace();
 
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("`");
-		stringBuilder.append(ste[Integer.min(ste.length - 1, Integer.max(0, 0))].getMethodName());
-		stringBuilder.append("(_:");
-		if (0 > 0)
-		{
-			for (int i = 0; i < 0 - 1; i++)
-			{
-				stringBuilder.append(", _:");
-			}
-		}
-		stringBuilder.append(")`");
-
-		return stringBuilder.toString();
+		return "`" +
+			                       ste[Integer.min(ste.length - 1, Integer.max(0, 0))].getMethodName() +
+			                       "(_:" +
+			                       ")`";
 	}
 
 	public static void print(Object object)

@@ -1,23 +1,16 @@
 package UI;
 
-import objects.*;
-import java.util.ArrayList;
-
-import javax.swing.JPanel;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
-
 import JSON_translation.DebateQuery;
 import JSON_translation.PostQuery;
+import objects.Debate;
+import objects.Post;
+import objects.User;
 
-import javax.swing.JOptionPane;
-import java.awt.Dimension;
-import java.awt.event.*;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class DebateThread extends JPanel implements ActionListener{
 
@@ -89,7 +82,6 @@ public class DebateThread extends JPanel implements ActionListener{
 	}
 	
 	private void populateComments(ArrayList<Post> commentArray) {
-		for (int i = 0; i < commentArray.size(); i++) {
 		for (int i = commentArray.size() - 1; i >= 0; i--) {
 			System.out.println(commentArray.get(i).getText());
 			if (!commentArray.get(i).isHidden()) {
@@ -99,6 +91,7 @@ public class DebateThread extends JPanel implements ActionListener{
 				//System.out.println("i: " + i + " size: " + this.commentArray.size());
 			}
 		}
+
 		this.commentArray = commentArray;
 		//this.remove(1);
 	}

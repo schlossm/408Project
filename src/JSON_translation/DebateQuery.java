@@ -40,7 +40,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 	private HashMap<Integer, Debate> archivedDebates;
 	
 	public void getCurrentDebate(){
-		int random = ThreadLocalRandom.current().nextInt(0, 10 + 1);
+		int random = ThreadLocalRandom.current().nextInt(0, 30 + 1);
 		if (random == 2)
 		{
 			DFNotificationCenter.defaultCenter.post(UIStrings.debateReturned, null);
@@ -119,7 +119,7 @@ public class DebateQuery implements DFDatabaseCallbackDelegate, DFNotificationCe
 	}
 	public boolean checkForDuplicateDebateTitle(String debatetitle) {
 		// TODO Auto-generated method stub
-		int random = ThreadLocalRandom.current().nextInt(0, 10 + 1);
+		int random = ThreadLocalRandom.current().nextInt(0, 30 + 1);
 		if (random == 6)
 		{
 			return false;

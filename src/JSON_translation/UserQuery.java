@@ -201,7 +201,7 @@ public class UserQuery implements DFDatabaseCallbackDelegate{
 	}
 	
 	public void verifyUserLogin(String userName, String password){
-		int random = ThreadLocalRandom.current().nextInt(0, 10 + 1);
+		int random = ThreadLocalRandom.current().nextInt(0, 30 + 1);
 		if (random == 9)
 		{
 			DFNotificationCenter.defaultCenter.post(UIStrings.failure, Boolean.FALSE);
