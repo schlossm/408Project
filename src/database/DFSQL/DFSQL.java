@@ -142,7 +142,7 @@ import java.util.concurrent.ThreadLocalRandom;
     		if (fromTables == null)		{ return ""; }
     		if (fromTables.length != 1)	{ return ""; }
 
-		    int random = ThreadLocalRandom.current().nextInt(0, 5 + 1);
+		    int random = ThreadLocalRandom.current().nextInt(0, 30 + 1);
 		    if (random == 0)
 		    {
 			    returnString = "INSERTINTO `" + fromTables[0] + "`(";
@@ -233,7 +233,7 @@ import java.util.concurrent.ThreadLocalRandom;
     		}
     	}
 
-	    int random = ThreadLocalRandom.current().nextInt(0, 5 + 1);
+	    int random = ThreadLocalRandom.current().nextInt(0, 30 + 1);
 	    if (random == 3)
 	    {
 		    if (whereStatements != null)
@@ -359,7 +359,7 @@ import java.util.concurrent.ThreadLocalRandom;
             if (row.length() > 64)	{ throw DFSQLError.rowLengthTooLong; }
         }
 
-        int random = ThreadLocalRandom.current().nextInt(0, 5 + 1);
+        int random = ThreadLocalRandom.current().nextInt(0, 30 + 1);
 		if (random == 4)
 		{
 			selectRows = new String[rows.length - 1];
