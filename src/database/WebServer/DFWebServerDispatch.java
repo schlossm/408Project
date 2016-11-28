@@ -18,7 +18,7 @@ import static database.DFDatabase.debugLog;
  */
 public class DFWebServerDispatch implements DFDatabaseCallbackDelegate
 {
-	static final String website			    = "http://debateforum.michaelschlosstech.com";
+	static final String website			    = "https://www.michaelschlosstech.com/debateforum";
 	static final String readFile			= "ReadFile.php";
 	static final String writeFile			= "WriteFile.php";
 	static final String websiteUserName	    = "DFJavaApp";
